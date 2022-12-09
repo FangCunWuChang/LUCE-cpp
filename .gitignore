@@ -52,6 +52,7 @@
 [Oo]ut/**
 [Bb]uild/**
 [Ii]nstall/**
+cmake-build-*/**
 
 # Resources
 *.aps
