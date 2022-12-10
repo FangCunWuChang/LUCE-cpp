@@ -734,7 +734,8 @@ endif (MSVC)
 #LUCE
 #=============================================================================================================================
 file (GLOB LUCE_SRC "*.cpp" "*.h")
-add_library (libLUCE SHARED ${LUCE_SRC})
+file (GLOB_RECURSE LUCE_MODULE_SRC "adapters/*.cpp" "adapters/*.h")
+add_library (libLUCE SHARED ${LUCE_SRC} ${LUCE_MODULE_SRC})
 
 if (MSVC)
     target_compile_definitions (libLUCE PUBLIC "JUCE_DLL=1" "JUCE_DISABLE_DLL_ALLOCATORS=1")
