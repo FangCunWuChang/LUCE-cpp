@@ -2,12 +2,15 @@
 
 namespace luce {
 	int createLUCETable(lua_State* L) {
+		/** luce table */
 		lua_newtable(L);
 
+		/** adapter table */
 		lua_pushstring(L, "adapters");
 		lua_newtable(L);
 		lua_settable(L, -3);
 
+		/** luce table */
 		lua_setglobal(L, "luce");
 
 		return 0;
@@ -38,7 +41,7 @@ namespace luce {
 		lua_gettable(L, -2);
 		int ret_value = luaL_checkinteger(L, -1);
 
-		lua_pop(L, -2);
+		lua_pop(L, 2);
 
 		return ret_value;
 	}

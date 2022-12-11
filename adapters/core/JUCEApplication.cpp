@@ -2,58 +2,56 @@
 
 namespace luce {
 	namespace utils {
-		LUCEApplication::LUCEApplication(const juce::String& appName, const juce::String& appVersion)
-			: appName(appName), appVersion(appVersion) {}
+		juce::String LUCEApplication::appName;
+		juce::String LUCEApplication::appVersion;
+
+		LUCEApplication::LUCEApplication() {}
 
 		const juce::String LUCEApplication::getApplicationName() {
-			return this->appName;
+			return LUCEApplication::appName;
 		}
 
 		const juce::String LUCEApplication::getApplicationVersion() {
-			return this->appVersion;
+			return LUCEApplication::appVersion;
+		}
+
+		void LUCEApplication::initialise(const juce::String& commandLineParameters) {
+			printf("App started! Name:%s Version:%s", this->appName.toStdString().c_str(), this->appVersion.toStdString().c_str());
+		}
+
+		void LUCEApplication::shutdown() {
+
 		}
 	}
 
-	luaL_Reg LUCEApplication::__funcList[] = {
-		{"test", LUCEApplication::test},
-		{NULL, NULL}
-	};
+	LUCE_MAKE_ADAPTER_FUNCTION_LIST(LUCEApplication, exec);
 
-	int LUCEApplication::__new(lua_State* L) {
-		auto pInstance = reinterpret_cast<LUCEApplication*>(lua_newuserdata(L, sizeof(LUCEApplication)));
-		new(pInstance) LUCEApplication();
+	LUCE_ADAPTER_NEW(LUCEApplication) {
+		auto appName = luaL_checkstring(L, 1);
+		auto appVersion = luaL_checkstring(L, 2);
 
-		luaL_newmetatable(L, "LUCEApplication");
-
-		luaL_setfuncs(L, LUCEApplication::__funcList, 0);
-
-		lua_pushcfunction(L, LUCEApplication::__gc);
-		lua_setfield(L, -2, "__gc");
-
-		lua_pushvalue(L, -1);
-		lua_setfield(L, -2, "__index");
-
-		lua_setmetatable(L, -2);
+		auto pInstance = LUCE_CREATE_USERDATA_WITH_METATABLE(L, LUCEApplication);
+		LUCE_ADAPTER_INIT(pInstance, appName, appVersion);
 
 		return 1;
 	}
 
-	LUCEApplication::LUCEApplication() {
-		printf("constructor\n");
+	static juce::JUCEApplicationBase* createApp() { return new utils::LUCEApplication; }
+
+	LUCEApplication::LUCEApplication(const juce::String& appName, const juce::String& appVersion) {
+		utils::LUCEApplication::appName = appName;
+		utils::LUCEApplication::appVersion = appVersion;
+
+		juce::JUCEApplicationBase::createInstance = &createApp;
 	}
 
-	LUCEApplication::~LUCEApplication() {
-		printf("destructor\n");
+	int LUCEApplication::exec(lua_State* L) {
+		auto pInstance = LUCE_CHECK_USERDATA(L, 1, LUCEApplication);
+		lua_pushinteger(L, pInstance->exec());
+		return 1;
 	}
 
-	int LUCEApplication::test(lua_State* L) {
-		auto pInstance = reinterpret_cast<LUCEApplication*>(luaL_checkudata(L, 1, "LUCEApplication"));
-		auto mes = luaL_checkstring(L, 2);
-		pInstance->test(mes);
-		return 0;
-	}
-
-	void LUCEApplication::test(const char* m) {
-		printf("test:%s\n", m);
+	int LUCEApplication::exec() {
+		return juce::JUCEApplicationBase::main();
 	}
 }

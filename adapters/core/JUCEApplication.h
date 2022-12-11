@@ -6,29 +6,30 @@ namespace luce {
 	namespace utils {
 		class LUCEApplication : public juce::JUCEApplication {
 		public:
-			explicit LUCEApplication(const juce::String& appName, const juce::String& appVersion);
+			LUCEApplication();
 
 			const juce::String getApplicationName() override;
 			const juce::String getApplicationVersion() override;
 
-		private:
-			const juce::String& appName;
-			const juce::String& appVersion;
+			void initialise(const juce::String& commandLineParameters) override;
+			void shutdown() override;
+
+		public:
+			static juce::String appName;
+			static juce::String appVersion;
 		};
 	}
 
-	class LUCE_API LUCEApplication : public LUCE_UserData<LUCEApplication> {
+
+	LUCE_ADAPTER_WITH_API(LUCEApplication) {
 	public:
-		static luaL_Reg __funcList[];
-		static int __new(lua_State* L);
+		static int exec(lua_State * L);
+		int exec();
 
 	public:
-		static int test(lua_State* L);
+		LUCEApplication(const juce::String & appName, const juce::String & appVersion);
+		~LUCEApplication() override = default;
 
-	public:
-		LUCEApplication();
-		~LUCEApplication();
-
-		void test(const char* m);
+		LUCE_ADAPTER_STANDARD_PROPERTIES
 	};
 }

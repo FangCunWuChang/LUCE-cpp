@@ -5,7 +5,7 @@ int main(int argc, char* argv[]) {
 	if (!L) { return -1; }
 
 	int ret_value = 0;
-	try {
+	LUCE_TRY {
 		luaL_openlibs(L);
 		
 		luce::createLUCETable(L);
@@ -13,18 +13,11 @@ int main(int argc, char* argv[]) {
 
 		luce::loadCore(L);
 
-		if (luaL_dofile(L, (SCRIPT_DIR "demo1.lua"))) {
-			printf(luaL_checkstring(L, -1));
-			lua_close(L);
-			return -1;
-		}
+		LUCE_RUN(L, SCRIPT_DIR "demo1.lua");
 
 		ret_value = luce::getRET(L);
 	}
-	catch (...) {
-		lua_close(L);
-		return -1;
-	}
+	LUCE_CATCH_EXCEPTION(L);
 	
 	lua_close(L);
 	return ret_value;

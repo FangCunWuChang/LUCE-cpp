@@ -157,7 +157,7 @@ if (MSVC)
     target_compile_definitions (libJUCE PRIVATE "JUCE_DISABLE_DLL_ALLOCATORS=1")
 endif (MSVC)
 
-target_compile_definitions (libJUCE PUBLIC "JUCE_MODAL_LOOPS_PERMITTED=1")
+target_compile_definitions (libJUCE PUBLIC "JUCE_MODAL_LOOPS_PERMITTED=1" "JUCE_CATCH_UNHANDLED_EXCEPTIONS=1")
 
 if (NOT MSVC)
     target_compile_options (libJUCE PRIVATE
@@ -742,6 +742,16 @@ if (MSVC)
 endif (MSVC)
 target_compile_definitions (libLUCE PRIVATE "LUCE_DLL_BUILD=1")
 target_link_libraries (libLUCE PUBLIC libLuaJIT libJUCE)
+
+if (MSVC)
+    if (MSVC_VERSION GREATER_EQUAL 1925)
+        target_compile_options (libJUCE PUBLIC "/Zc:preprocessor")
+    elseif (MSVC_VERSION GREATER_EQUAL 1915)
+        target_compile_options (libJUCE PUBLIC "/experimental:preprocessor")
+    else ()
+        message (FATAL_ERROR "MSVC can't support C++20 __VA_OPT__")
+    endif ()
+endif (MSVC)
 
 
 
