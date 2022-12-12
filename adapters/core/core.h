@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "JUCEApplication.h"
+#include "LUCEApplication.h"
 #include "String.h"
 
 namespace luce {

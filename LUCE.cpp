@@ -10,6 +10,11 @@ namespace luce {
 		lua_newtable(L);
 		lua_settable(L, -3);
 
+		/** refs table */
+		lua_pushstring(L, "refs");
+		lua_newtable(L);
+		lua_settable(L, -3);
+
 		/** luce table */
 		lua_setglobal(L, "luce");
 

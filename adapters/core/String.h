@@ -5,13 +5,10 @@
 namespace luce {
 	LUCE_ADAPTER_WITH_API(String) {
 	public:
-		static int test(lua_State* L);
-		void test(const char* m);
-
-	public:
 		String();
 		~String();
 
+		LUCE_CREATE_ADAPTER_METHOD_WITH_INTERFACE(test, void, const char* m);
 		LUCE_ADAPTER_STANDARD_PROPERTIES
 	};
 }
