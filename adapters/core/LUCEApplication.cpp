@@ -14,7 +14,6 @@ namespace luce {
 	LUCEApplication::LUCEApplication()
 		: LUCE_Adapter() {
 		utils::LUCEApplication::appState = this->__lState;
-		utils::LUCEApplication::appAdapterName = this->__name;
 		utils::LUCEApplication::appAdapterRef = this->__objRef;
 
 		juce::JUCEApplicationBase::createInstance = &createApp;

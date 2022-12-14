@@ -3,7 +3,6 @@
 namespace luce {
 	namespace utils {
 		lua_State* LUCEApplication::appState = nullptr;
-		const char* LUCEApplication::appAdapterName = nullptr;
 		int LUCEApplication::appAdapterRef = 0;
 
 		LUCEApplication::LUCEApplication() {}
@@ -13,20 +12,22 @@ namespace luce {
 				return juce::String();
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_NAME_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "getApplicationName");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return juce::String();
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_call(LUCEApplication::appState, 1, 1);
 
 			auto result = luaL_checkstring(LUCEApplication::appState, -1);
 
-			lua_pop(LUCEApplication::appState, 2);
+			lua_pop(LUCEApplication::appState, 3);
 
 			return result;
 		}
@@ -36,20 +37,22 @@ namespace luce {
 				return juce::String();
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_VER_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "getApplicationVersion");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return juce::String();
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_call(LUCEApplication::appState, 1, 1);
 
 			auto result = luaL_checkstring(LUCEApplication::appState, -1);
 
-			lua_pop(LUCEApplication::appState, 2);
+			lua_pop(LUCEApplication::appState, 3);
 
 			return result;
 		}
@@ -59,19 +62,21 @@ namespace luce {
 				return;
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_INIT_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "initialise");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return;
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_pushstring(LUCEApplication::appState, commandLineParameters.toStdString().c_str());
 			lua_call(LUCEApplication::appState, 2, 0);
 
-			lua_pop(LUCEApplication::appState, 1);
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		void LUCEApplication::shutdown() {
@@ -79,18 +84,20 @@ namespace luce {
 				return;
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_SHUTDOWN_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "shutdown");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return;
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_call(LUCEApplication::appState, 1, 0);
 
-			lua_pop(LUCEApplication::appState, 1);
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		bool LUCEApplication::moreThanOneInstanceAllowed() {
@@ -98,20 +105,22 @@ namespace luce {
 				return true;
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_ALLOW_MULTI_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "moreThanOneInstanceAllowed");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return true;
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_call(LUCEApplication::appState, 1, 1);
 
 			auto result = lua_toboolean(LUCEApplication::appState, -1);
 
-			lua_pop(LUCEApplication::appState, 2);
+			lua_pop(LUCEApplication::appState, 3);
 
 			return result;
 		}
@@ -121,45 +130,109 @@ namespace luce {
 				return;
 			}
 
-			lua_getglobal(LUCEApplication::appState, "luce");
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-			lua_getfield(LUCEApplication::appState, -1, "APP_ANOTHER_START_FUNC");
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "anotherInstanceStarted");
 			if (!lua_isfunction(LUCEApplication::appState, -1)) {
-				lua_pop(LUCEApplication::appState, 2);
+				lua_pop(LUCEApplication::appState, 3);
 				return;
 			}
 
-			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterName, LUCEApplication::appAdapterRef);
+			lua_pushvalue(LUCEApplication::appState, -2);
 			lua_pushstring(LUCEApplication::appState, commandLine.toStdString().c_str());
 			lua_call(LUCEApplication::appState, 2, 0);
 
-			lua_pop(LUCEApplication::appState, 1);
-		}
-
-		void LUCEApplication::systemRequestedQuit() {
-
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		void LUCEApplication::suspended() {
+			if (!LUCEApplication::appState) {
+				return;
+			}
 
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
+
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "suspended");
+			if (!lua_isfunction(LUCEApplication::appState, -1)) {
+				lua_pop(LUCEApplication::appState, 3);
+				return;
+			}
+
+			lua_pushvalue(LUCEApplication::appState, -2);
+			lua_call(LUCEApplication::appState, 1, 0);
+
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		void LUCEApplication::resumed() {
+			if (!LUCEApplication::appState) {
+				return;
+			}
 
-		}
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
 
-		void LUCEApplication::unhandledException(const std::exception*,
-			const juce::String& sourceFilename,
-			int lineNumber) {
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
 
+			lua_getfield(LUCEApplication::appState, -1, "resumed");
+			if (!lua_isfunction(LUCEApplication::appState, -1)) {
+				lua_pop(LUCEApplication::appState, 3);
+				return;
+			}
+
+			lua_pushvalue(LUCEApplication::appState, -2);
+			lua_call(LUCEApplication::appState, 1, 0);
+
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		void LUCEApplication::memoryWarningReceived() {
+			if (!LUCEApplication::appState) {
+				return;
+			}
 
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
+
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "memoryWarningReceived");
+			if (!lua_isfunction(LUCEApplication::appState, -1)) {
+				lua_pop(LUCEApplication::appState, 3);
+				return;
+			}
+
+			lua_pushvalue(LUCEApplication::appState, -2);
+			lua_call(LUCEApplication::appState, 1, 0);
+
+			lua_pop(LUCEApplication::appState, 2);
 		}
 
 		bool LUCEApplication::backButtonPressed() {
-			return false;
+			if (!LUCEApplication::appState) {
+				return false;
+			}
+
+			LUCE_PUSH_OBJ(LUCEApplication::appState, LUCEApplication::appAdapterRef);
+
+			LUCE_PUSH_PARENT(LUCEApplication::appState, -1);
+
+			lua_getfield(LUCEApplication::appState, -1, "backButtonPressed");
+			if (!lua_isfunction(LUCEApplication::appState, -1)) {
+				lua_pop(LUCEApplication::appState, 3);
+				return false;
+			}
+
+			lua_pushvalue(LUCEApplication::appState, -2);
+			lua_call(LUCEApplication::appState, 1, 1);
+
+			auto result = lua_toboolean(LUCEApplication::appState, -1);
+
+			lua_pop(LUCEApplication::appState, 3);
+
+			return result;
 		}
 	}
 }

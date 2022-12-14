@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 
 		luce::loadCore(L);
 
-		LUCE_RUN(L, SCRIPT_DIR "demo1.lua");
+		LUCE_RUN(L, "demo1.lua");
 
 		ret_value = luce::getRET(L);
 	}

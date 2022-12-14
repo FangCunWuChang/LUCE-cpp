@@ -3,7 +3,7 @@
 /**
  * @file		Defs-internal.h
  * @author		Wu Chang
- * @brief		Some internal macros.
+ * @brief		Some internal macros and functtions.
  * @attention	Requires C++20.
  */
 

@@ -17,18 +17,13 @@ namespace luce {
 			bool moreThanOneInstanceAllowed() override;
 			void anotherInstanceStarted(const juce::String& commandLine) override;
 
-			void systemRequestedQuit() override;
 			void suspended() override;
 			void resumed() override;
-			void unhandledException(const std::exception*,
-				const juce::String& sourceFilename,
-				int lineNumber) override;
 			void memoryWarningReceived() override;
 			bool backButtonPressed() override;
 
 		public:
 			static lua_State* appState;
-			static const char* appAdapterName;
 			static int appAdapterRef;
 		};
 	}

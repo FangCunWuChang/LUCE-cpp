@@ -100,13 +100,12 @@
  * @brief		Push current Lua adapter object on stack top.
  * 
  * @param L		The Lua state.
- * @param n		The name of the adapter.
  * @param r		The obj reference.
  */
-#define LUCE_PUSH_OBJ(L, n, r) \
+#define LUCE_PUSH_OBJ(L, r) \
 	lua_getglobal(L, "luce"); \
-	lua_getfield(L, -1, "refs"); \
-	lua_getfield(L, -1, n); \
+	lua_getfield(L, -1, "adapters"); \
+	lua_getfield(L, -1, "__refs"); \
 	 \
 	lua_rawgeti(L, -1, r); \
 	 \
@@ -117,7 +116,24 @@
  * @brief		Push current Lua adapter object on stack top.
  */
 #define LUCE_ADAPTER_PUSH_OBJ() \
-	LUCE_PUSH_OBJ(LUCE_ADAPTER_GET_STATE(), LUCE_ADAPTER_GET_NAME(), LUCE_ADAPTER_GET_OBJ_REF())
+	LUCE_PUSH_OBJ(LUCE_ADAPTER_GET_STATE(), LUCE_ADAPTER_GET_OBJ_REF())
+/**
+ * @brief		Push current Lua object on stack top.
+ * 
+ * @param L		The Lua state.
+ * @param ud	The index of the adapter on stack.
+ */
+#define LUCE_PUSH_PARENT(L, ud) \
+	lua_getfield(L, -1, "__parent"); \
+	lua_pushvalue(L, (ud) - 1); \
+	lua_call(L, 1, 1)
+/**
+ * @brief		Push current Lua object on stack top.
+ *
+ * @param ud	The index of the adapter on stack.
+ */
+#define LUCE_ADAPTER_PUSH_PARENT(ud) \
+	LUCE_PUSH_PARENT(LUCE_ADAPTER_GET_STATE(), ud)
 
 /**
  * @brief		Create Lua state pointer instance for adapter.
@@ -207,7 +223,7 @@
  */
 #define LUCE_SET_METATABLE(L, t) \
 	luaL_getmetatable(L, LUCE_NAME(t)); \
-	lua_setmetatable(L, -2)
+	lua_setmetatable(L, -2);
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack, 
  *				then set the metatable as which has the same name of the type.
@@ -292,6 +308,18 @@ namespace luce {
 		class LUCE_API LUCE_AdapterBase {
 		public:
 			virtual ~LUCE_AdapterBase() = default;
+
+		public:
+			int& getObjRef() {
+				return this->__objRef;
+			};
+			int& getParentRef() {
+				return this->__parentRef;
+			};
+
+		protected:
+			int __objRef = 0;
+			int __parentRef = 0;
 		};
 	}
 
@@ -349,45 +377,48 @@ namespace luce {
 			/** Leave adapters table */
 			lua_pop(L, 1);
 
-			/** Create weak refs table */
-			lua_getfield(L, -1, "refs");
-
-			/** Create factory userdata ref table */
-			lua_pushstring(L, s);
-			lua_newtable(L);
-
-			/** Create refs table metatable */
-			lua_newtable(L);
-			lua_pushstring(L, "v");
-			lua_setfield(L, -2, "__mode");
-			lua_setmetatable(L, -2);
-
-			/** Add factory userdata ref table */
-			lua_settable(L, -3);
-
-			/** Leave refs table */
-			lua_pop(L, 1);
-
 			/** Leave luce table */
 			lua_pop(L, 1);
 
 			/** Create object metatable */
 			luaL_newmetatable(L, s);
+			
 			luaL_setfuncs(L, T::__funcList, 0);
 			lua_pushcfunction(L, T::__gc);
 			lua_setfield(L, -2, "__gc");
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -2, "__index");
+			lua_pushcfunction(L, T::__parent);
+			lua_setfield(L, -2, "__parent");
+			
+			/** Leave metatable */
 			lua_pop(L, 1);
 
 			return 0;
 		};
+		/**
+		 * @brief		Find adapter parent.
+		 */
+		static int __parent(lua_State* L) {
+			auto pInstance = reinterpret_cast<LUCE_Adapter<T>*>(lua_touserdata(L, 1));
+
+			/** Get global refs table */
+			lua_getglobal(L, "luce");
+			lua_getfield(L, -1, "__refs");
+
+			lua_rawgeti(L, -1, pInstance->__parentRef);
+
+			lua_remove(L, -2);
+			lua_remove(L, -2);
+
+			return 1;
+		}
 
 	public:
 		LUCE_Adapter() {
 			lua_getglobal(LUCE_ADAPTER_GET_STATE(), "luce");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "refs");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, LUCE_ADAPTER_GET_NAME());
+			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "adapters");
+			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "__refs");
 
 			lua_pushvalue(LUCE_ADAPTER_GET_STATE(), -4);
 			LUCE_ADAPTER_GET_OBJ_REF() = luaL_ref(LUCE_ADAPTER_GET_STATE(), -2);
@@ -396,8 +427,8 @@ namespace luce {
 		};
 		virtual ~LUCE_Adapter() {
 			lua_getglobal(LUCE_ADAPTER_GET_STATE(), "luce");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "refs");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, LUCE_ADAPTER_GET_NAME());
+			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "adapters");
+			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "__refs");
 
 			luaL_unref(LUCE_ADAPTER_GET_STATE(), -1, LUCE_ADAPTER_GET_OBJ_REF());
 
@@ -407,8 +438,5 @@ namespace luce {
 	protected:
 		static lua_State* __lState;
 		static const char* __name;
-
-	protected:
-		int __objRef = 0;
 	};
 }
