@@ -1,6 +1,6 @@
 ﻿#include "../../LUCE.h"
 
-int main(int argc, char* argv[]) {
+LUCE_MAIN {
 	lua_State* L = luaL_newstate();
 	if (!L) { return -1; }
 
@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
 		luaL_openlibs(L);
 		
 		luce::createLUCETable(L);
-		luce::setENV(L, argc, argv);
+		LUCE_SET_ENV(L);
 
 		luce::loadCore(L);
 		luce::loadGUI(L);

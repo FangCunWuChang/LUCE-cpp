@@ -8,7 +8,7 @@ namespace luce {
 		LUCEApplication();
 		~LUCEApplication() override = default;
 
-		LUCE_CREATE_ADAPTER_METHOD_WITH_INTERFACE(exec, int);
+		LUCE_CREATE_ADAPTER_METHOD_WITH_INTERFACE(exec, int, int argc, const char** argv);
 		LUCE_ADAPTER_STANDARD_PROPERTIES
 	};
 }

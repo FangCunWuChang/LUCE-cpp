@@ -11,6 +11,7 @@
 
 #include "Macros.h"
 #include "Defs.h"
+#include "WinMainHelper.h"
 
 #include "adapters/core/core.h"
 #include "adapters/gui/gui.h"
@@ -26,12 +27,8 @@ namespace luce {
 
 	/**
 	 * @brief		Set command args in the "luce" table.
-	 * 
-	 * @param L		The Lua state which you want to set args.
-	 * @param argc	The count of arguments.
-	 * @param argv	The pointer of argument list.
 	 */
-	int LUCE_API setENV(lua_State* L, int argc, char* argv[]);
+	LUCE_SET_ENV_FUNCTION();
 
 	/**
 	 * @brief		Get application return code in the "luce" table.

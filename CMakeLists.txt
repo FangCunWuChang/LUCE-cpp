@@ -227,7 +227,7 @@ if (NOT MSVC)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS}" )
 else (NOT MSVC)
     if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        target_compile_options (libJUCE PRIVATE
+        target_compile_options (libJUCE PUBLIC
             /permissive-#符合模式:是
 	        /GS#安全检查:启用安全检查
 	        /Zc:wchar_t#将WChar_t视为内置类型:是
@@ -239,7 +239,7 @@ else (NOT MSVC)
 	        /nologo#取消显示启动版权标志:是
 	        /bigobj#较大生成对象:是
         )
-        target_link_options (libJUCE PRIVATE
+        target_link_options (libJUCE PUBLIC
 	        /MANIFEST#生成清单:是
 	        /NXCOMPAT#数据执行保护(DEP):是
 	        /DYNAMICBASE#随机基址:是
@@ -249,7 +249,7 @@ else (NOT MSVC)
 	        /NOLOGO#取消显示启动版权标志:是
         )
     else (CMAKE_BUILD_TYPE STREQUAL Debug)
-        target_compile_options (${DYNAMIC_LIBRARY} PRIVATE
+        target_compile_options (${DYNAMIC_LIBRARY} PUBLIC
             /permissive-#符合模式:是
 	        /GS#安全检查:启用安全检查
 	        /GL#全程序优化:是
@@ -264,7 +264,7 @@ else (NOT MSVC)
 	        /nologo#取消显示启动版权标志:是
 	        /bigobj#较大生成对象:是
         )
-        target_link_options (libJUCE PRIVATE
+        target_link_options (libJUCE PUBLIC
 	        /MANIFEST#生成清单:是
 	        /LTCG:incremental#链接时间代码生成:使用快速链接时间代码生成
 	        /NXCOMPAT#数据执行保护(DEP):是

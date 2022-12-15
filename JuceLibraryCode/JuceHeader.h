@@ -1,4 +1,4 @@
-/*
+﻿/*
 
     IMPORTANT! This file is auto-generated each time you save your
     project - if you alter its contents, your changes may be overwritten!
@@ -45,7 +45,7 @@
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
-    const char* const  projectName    = "VocalShaper";
+    const char* const  projectName    = "LUCE";
     const char* const  companyName    = "";
     const char* const  versionString  = "0.0.1";
     const int          versionNumber  = 0x00001;

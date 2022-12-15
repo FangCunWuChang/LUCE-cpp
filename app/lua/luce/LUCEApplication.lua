@@ -7,7 +7,7 @@ function luce.LUCEApplication.new()
 end
 
 function luce.LUCEApplication:exec()
-	luce.APP_RET = self.__adapter:exec()
+	luce.APP_RET = self.__adapter:exec(luce.APP_ARGC, luce.APP_ARGV)
 end
 
 function luce.LUCEApplication:getApplicationName()

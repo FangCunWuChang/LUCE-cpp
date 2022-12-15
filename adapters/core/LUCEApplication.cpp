@@ -21,11 +21,14 @@ namespace luce {
 
 	LUCE_ADAPTER_METHOD_INTERFACE(LUCEApplication, exec) {
 		auto pInstance = LUCE_CHECK_USERDATA(L, 1, LUCEApplication);
-		lua_pushinteger(L, pInstance->exec());
+		int argc = luaL_checkinteger(L, 2);
+		luaL_checktype(L, 3, LUA_TLIGHTUSERDATA);
+		const char** argv = (const char**)(lua_topointer(L, 3));
+		lua_pushinteger(L, pInstance->exec(argc, argv));
 		return 1;
 	}
 
-	LUCE_ADAPTER_METHOD(LUCEApplication, exec, int) {
-		return juce::JUCEApplicationBase::main();
+	LUCE_ADAPTER_METHOD(LUCEApplication, exec, int, int argc, const char** argv) {
+		return juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);
 	}
 }
