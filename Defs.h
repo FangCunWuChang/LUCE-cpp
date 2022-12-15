@@ -196,6 +196,17 @@
 	LUCE_ADAPTER_NEW(t)
 
 /**
+ * @brief		Create data object.
+ * 
+ * @param t		The type of the data object.
+ */
+#define LUCE_ADAPTER_OBJECT(t) \
+	private: \
+		std::unique_ptr<t> __object = nullptr; \
+	public: \
+		t* __getObject() { return this->__object.get(); }
+
+/**
  * @brief		Create a Lua userdata and push it on the top of the stack.
  * 
  * @param L		The Lua state.

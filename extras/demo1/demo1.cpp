@@ -12,6 +12,8 @@ int main(int argc, char* argv[]) {
 		luce::setENV(L, argc, argv);
 
 		luce::loadCore(L);
+		luce::loadGUI(L);
+		luce::loadGraphics(L);
 
 		LUCE_RUN(L, "demo1.lua");
 

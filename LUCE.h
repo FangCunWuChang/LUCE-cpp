@@ -13,6 +13,8 @@
 #include "Defs.h"
 
 #include "adapters/core/core.h"
+#include "adapters/gui/gui.h"
+#include "adapters/graphics/graphics.h"
 
 namespace luce {
 	/**
