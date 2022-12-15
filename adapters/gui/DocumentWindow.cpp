@@ -12,7 +12,8 @@ namespace luce {
 
 	DocumentWindow::DocumentWindow(
 		const juce::String& name, luce::Colour* backgroundColour,
-		int requiredButtons, bool addToDesktop) {
+		int requiredButtons, bool addToDesktop) 
+		: LUCE_Adapter() {
 		this->__object = std::make_unique<utils::DocumentWindow>(
 			this->__lState, this->__objRef,
 			name, *(backgroundColour->__getObject()),

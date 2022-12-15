@@ -7,9 +7,7 @@ namespace luce {
 			const juce::String& name, juce::Colour backgroundColour,
 			int requiredButtons, bool addToDesktop)
 			: juce::DocumentWindow(name, backgroundColour, requiredButtons, addToDesktop),
-			appState(appState), appAdapterRef(appAdapterRef) {
-
-		}
+			appState(appState), appAdapterRef(appAdapterRef) {}
 
 		void DocumentWindow::closeButtonPressed() {
 			if (!this->appState) {

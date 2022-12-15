@@ -1,5 +1,7 @@
-﻿
-require "luce.LUCEApplication"
+﻿require "luce.LUCEApplication"
+require "luce.DocumentWindow"
+require "luce.Colour"
+require "luce.Flag"
 
 app = luce.LUCEApplication.new()
 
@@ -14,6 +16,11 @@ end
 function app:initialise(commandLineParameters)
 	print("command:", commandLineParameters)
 	print("app init")
+
+	self.mainWindow = 
+		luce.DocumentWindow.new("LUCE-demo1", luce.Colours.pink,
+			luce.DocumentWindow.TitleBarButtons.allButtons, false)
+	self.mainWindow:setVisible(true)
 end
 
 function app:shutdown()
@@ -29,4 +36,4 @@ function app:anotherInstanceStarted(commandLine)
 	print("another start")
 end
 
-luce.APP_RET = app:exec()
+app:exec()

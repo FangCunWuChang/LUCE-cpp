@@ -19,14 +19,16 @@ namespace luce {
 		return 1;
 	}
 
-	Colour::Colour() {
+	Colour::Colour()
+		: LUCE_Adapter() {
 		this->__object = std::make_unique<juce::Colour>();
 	}
 
 	Colour::Colour(juce::uint8 red,
 		juce::uint8 green,
 		juce::uint8 blue, 
-		juce::uint8 alpha) {
+		juce::uint8 alpha)
+		: LUCE_Adapter() {
 		this->__object = std::make_unique<juce::Colour>(red, green, blue, alpha);
 	}
 

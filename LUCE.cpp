@@ -57,6 +57,25 @@ namespace luce {
 
 			return 0;
 		}
+		/**
+		 * @brief	Bind adapter to object.
+		 */
+		int LUCENewFunction(lua_State* L) {
+			/** Check arg 1 */
+			luaL_checktype(L, 1, LUA_TTABLE);
+
+			/** Object */
+			lua_newtable(L);
+
+			lua_pushvalue(L, 1);
+
+			lua_pushvalue(L, 1);
+			lua_setfield(L, -2, "__index");
+
+			lua_setmetatable(L, -2);
+
+			return 1;
+		}
 	}
 
 	int createLUCETable(lua_State* L) {
@@ -96,6 +115,10 @@ namespace luce {
 		/** bind function */
 		lua_pushcfunction(L, utils::LUCEBindFunction);
 		lua_setfield(L, -2, "bind");
+
+		/** new function */
+		lua_pushcfunction(L, utils::LUCENewFunction);
+		lua_setfield(L, -2, "new");
 
 		/** luce table */
 		lua_setglobal(L, "luce");

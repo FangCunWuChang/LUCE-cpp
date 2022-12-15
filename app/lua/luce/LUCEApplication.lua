@@ -1,16 +1,13 @@
 ﻿luce.LUCEApplication = {}
 
-luce.LUCEApplication.__index = luce.LUCEApplication
-
 function luce.LUCEApplication.new()
-	o = {}
-	setmetatable(o, luce.LUCEApplication)
+	o = luce.new(luce.LUCEApplication)
 	luce.bind(o, luce.adapters.LUCEApplication.new())
 	return o
 end
 
 function luce.LUCEApplication:exec()
-	return self.__adapter:exec()
+	luce.APP_RET = self.__adapter:exec()
 end
 
 function luce.LUCEApplication:getApplicationName()
