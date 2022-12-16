@@ -1,28 +1,4 @@
-﻿luce.Colour = {}
-
-function luce.Colour.new(r, g, b, a)
-	o = luce.new(luce.Colour)
-	luce.bind(o, luce.adapters.Colour.new(r, g, b, a))
-	return o
-end
-
-function luce.Colour:getRed()
-	return self.__adapter:getRed()
-end
-
-function luce.Colour:getGreen()
-	return self.__adapter:getGreen()
-end
-
-function luce.Colour:getBlue()
-	return self.__adapter:getBlue()
-end
-
-function luce.Colour:getAlpha()
-	return self.__adapter:getAlpha()
-end
-
-luce.Colours = {}
+﻿luce.Colours = {}
 
 luce.Colours.transparentBlack = luce.Colour.new(0, 0, 0, 0)
 luce.Colours.transparentWhite = luce.Colour.new(255, 255, 255, 0)
@@ -169,4 +145,4 @@ luce.Colours.whitesmoke = luce.Colour.new(245, 245, 245, 255)
 luce.Colours.yellow = luce.Colour.new(255, 255, 0, 255)
 luce.Colours.yellowgreen = luce.Colour.new(154, 205, 50, 255)
 
-return luce.Colour
+return luce.Colours

@@ -1,8 +1,10 @@
 ﻿#include "graphics.h"
 
 namespace luce {
+	using juce::Colour;
+
 	int loadGraphics(lua_State* L) {
-		LUCE_ADAPTER_REG(L, Colour);
+		LUCE_REG(L, Colour);
 
 		return 0;
 	}

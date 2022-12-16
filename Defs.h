@@ -20,7 +20,7 @@
  * @param L		The Lua state which you want to register the class into.
  * @param t		The class which you want to register.
  */
-#define LUCE_ADAPTER_REG(L, t)		t::__open(L, LUCE_NAME(t))
+#define LUCE_REG(L, t)		LUCE_Adapter<t>::__open(L, LUCE_NAME(t))
 
 /**
  * @brief		Try to run the script. If Lua throws an error, then print the message, close the state and return -1.
@@ -51,12 +51,11 @@
 /**
  * @brief		Make a luaL_Reg value.
  * 
- * @param t		The name of the adapter class.
  * @param f		The name of the method.
  * 
  * @return		A luaL_Reg value.
  */
-#define LUCE_TO_LUA_REG(t, f)			{LUCE_NAME(f), t::f}
+#define LUCE_TO_LUA_REG(f)			{LUCE_NAME(f), f}
 /**
  * @brief		Make a empty luaL_Reg value as the end of the list.
  * 
@@ -68,143 +67,19 @@
  * @brief		Make a luaL_Reg value list if method list exists.
  * @attention	50 methods max.
  * 
- * @param t		The name of the adapter class.
  * @param ...	The method list.
  * 
  * @return		A list of luaL_Reg values.
  */
-#define LUCE_MAKE_REG_LIST(t, ...)					__VA_OPT__(LUCE_MAKE_REG_LIST_INTERNAL(t, __VA_ARGS__))
+#define LUCE_MAKE_REG_LIST(...)					__VA_OPT__(LUCE_MAKE_REG_LIST_INTERNAL(__VA_ARGS__))
 /**
- * @brief		Make a method list of the adapter class.
+ * @brief		Make a method list of the object class.
  * @attention	50 methods max.
  *
  * @param t		The name of the adapter class.
  * @param ...	The method list.
  */
-#define LUCE_MAKE_ADAPTER_FUNCTION_LIST(t, ...)		luaL_Reg t::__funcList[] = {LUCE_MAKE_REG_LIST(t, __VA_ARGS__) LUCE_NULL_LUA_REG()}
-
-/**
- * @brief		Get the Lua state.
- */
-#define LUCE_ADAPTER_GET_STATE()						this->__lState
-/**
- * @brief		Get the adapter name.
- */
-#define LUCE_ADAPTER_GET_NAME()							this->__name
-/**
- * @brief		Get the Lua obj ref.
- */
-#define LUCE_ADAPTER_GET_OBJ_REF()						this->__objRef
-
-/**
- * @brief		Push current Lua adapter object on stack top.
- * 
- * @param L		The Lua state.
- * @param r		The obj reference.
- */
-#define LUCE_PUSH_OBJ(L, r) \
-	lua_getglobal(L, "luce"); \
-	lua_getfield(L, -1, "adapters"); \
-	lua_getfield(L, -1, "__refs"); \
-	 \
-	lua_rawgeti(L, -1, r); \
-	 \
-	lua_remove(L, -2); \
-	lua_remove(L, -2); \
-	lua_remove(L, -2)
-/**
- * @brief		Push current Lua adapter object on stack top.
- */
-#define LUCE_ADAPTER_PUSH_OBJ() \
-	LUCE_PUSH_OBJ(LUCE_ADAPTER_GET_STATE(), LUCE_ADAPTER_GET_OBJ_REF())
-/**
- * @brief		Push current Lua object on stack top.
- * 
- * @param L		The Lua state.
- * @param ud	The index of the adapter on stack.
- */
-#define LUCE_PUSH_PARENT(L, ud) \
-	lua_getfield(L, -1, "__parent"); \
-	lua_pushvalue(L, (ud) - 1); \
-	lua_call(L, 1, 1)
-/**
- * @brief		Push current Lua object on stack top.
- *
- * @param ud	The index of the adapter on stack.
- */
-#define LUCE_ADAPTER_PUSH_PARENT(ud) \
-	LUCE_PUSH_PARENT(LUCE_ADAPTER_GET_STATE(), ud)
-
-/**
- * @brief		Create Lua state pointer instance for adapter.
- * 
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_CREATE_STATE_INSTANCE(t)			lua_State* luce::LUCE_Adapter<t>::__lState = nullptr
-/**
- * @brief		Create Lua state pointer instance for adapter.
- * 
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_CREATE_NAME_INSTANCE(t)			const char* luce::LUCE_Adapter<t>::__name = nullptr
-/**
- * @brief		Create static instances for adapter.
- * 
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_CREATE_STANDARD_INSTANCES(t) \
-	LUCE_ADAPTER_CREATE_STATE_INSTANCE(t); \
-	LUCE_ADAPTER_CREATE_NAME_INSTANCE(t)
-
-/**
- * @brief		Adapter class with JUCE_API export flag.
- * 
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_WITH_API(t)					class LUCE_API t : public luce::LUCE_Adapter<t>
-
-/**
- * @brief	The list of methods in metatable.
- */
-#define LUCE_ADAPTER_METHOD_LIST					static luaL_Reg __funcList[];
-/**
- * @brief	The method to create Lua object.
- */
-#define LUCE_ADAPTER_NEW_METHOD						static int __new(lua_State* L);
-
-/**
- * @brief	Some standard properties of adapter class.
- */
-#define LUCE_ADAPTER_STANDARD_PROPERTIES \
-	public: \
-		LUCE_ADAPTER_METHOD_LIST \
-		LUCE_ADAPTER_NEW_METHOD
-
-/**
- * @brief		Create the instance of the __new method of the adapter class.
- * 
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_NEW(t)						int t::__new(lua_State* L)
-/**
- * @brief		Create the instance of the __new method of the adapter class with static instances.
- *
- * @param t		The name of the adapter class.
- */
-#define LUCE_ADAPTER_NEW_WITH_STANDARD_INSTANCES(t) \
-	LUCE_ADAPTER_CREATE_STANDARD_INSTANCES(t); \
-	LUCE_ADAPTER_NEW(t)
-
-/**
- * @brief		Create data object.
- * 
- * @param t		The type of the data object.
- */
-#define LUCE_ADAPTER_OBJECT(t) \
-	private: \
-		std::unique_ptr<t> __object = nullptr; \
-	public: \
-		t* __getObject() { return this->__object.get(); }
+#define LUCE_FUNCTION_LIST(t, ...)		luaL_Reg LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
 
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack.
@@ -246,13 +121,13 @@
  */
 #define LUCE_CREATE_USERDATA_WITH_METATABLE(L, t)		LUCE_CREATE_USERDATA(L, t); LUCE_SET_METATABLE(L, t)
 /**
- * @brief		Construct the adapter object.
- * @attention	The type of the point must match the true type of the adapter.
+ * @brief		Construct the object object.
+ * @attention	The type of the point must match the true type of the object.
  * 
- * @param p		The pointer of the adapter object.
+ * @param p		The pointer of the object object.
  * @param ...	The arg list when the constructor function called.
  */
-#define LUCE_ADAPTER_INIT(p, ...) \
+#define LUCE_INIT(p, ...) \
 	new(p) std::remove_reference<decltype(*p)>::type(__VA_ARGS__)
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack,
@@ -261,55 +136,97 @@
  *
  * @param L		The Lua state.
  * @param t		The userdata type.
- * @param p		The pointer of the adapter object.
+ * @param p		The pointer of the object object.
  * @param ...	The arg list when the constructor function called.
  */
 #define LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, t, p, ...) \
 	auto p = LUCE_CREATE_USERDATA_WITH_METATABLE(L, t); \
-	LUCE_ADAPTER_INIT(p, __VA_ARGS__)
+	LUCE_INIT(p, __VA_ARGS__)
 
 /**
- * @brief		Create a Lua interface of the adapter method.
+ * @brief		Create a Lua type object create function.
  * 
- * @param n		The name of the method.
+ * @param t		The type of the object.
  */
-#define LUCE_CREATE_ADAPTER_METHOD_INTERFACE(n)			static int n(lua_State * L)
+#define LUCE_NEW_FUNCTION(t) \
+	lua_State* LUCE_Adapter<t>::__lState = nullptr; \
+	const char* LUCE_Adapter<t>::__name = nullptr; \
+	int LUCE_Adapter<t>::__new(lua_State* L)
+
 /**
- * @brief		Create an adapter method.
+ * @breif		Create a Lua CFunction.
  * 
- * @param n		The name of the method.
- * @param r		The return type of the method.
- * @param ...	The arg list of the method.
+ * @param n		Function name.
  */
-#define LUCE_CREATE_ADAPTER_METHOD(n, r, ...)			r n(__VA_ARGS__)
+#define LUCE_METHOD(n)									static int n(lua_State* L)
+
 /**
- * @brief		Create an adapter method with Lua interface.
- * 
- * @param n		The name of the method.
- * @param r		The return type of the method.
- * @param ...	The arg list of the method.
+ * @brief		Create LUCE object attributes and methods.
  */
-#define LUCE_CREATE_ADAPTER_METHOD_WITH_INTERFACE(n, r, ...) \
+#define LUCE_REF_DATA \
+	private: \
+		lua_State* __LUCEState = nullptr; \
+		int __LUCERef = -1; \
+	 \
 	public: \
-		LUCE_CREATE_ADAPTER_METHOD_INTERFACE(n); \
-		LUCE_CREATE_ADAPTER_METHOD(n, r, __VA_ARGS__)
+		lua_State*& LUCE_state() { return this->__LUCEState; }; \
+		int& LUCE_ref() { return this->__LUCERef; }
 
 /**
- * @brief		Create the instance of Lua interface of the adapter method.
+ * @brief		Get LUCE object reference of the object.
  * 
- * @param t		The name of the adapter class.
- * @param n		The name of the method.
+ * @param p		The object pointer.
  */
-#define LUCE_ADAPTER_METHOD_INTERFACE(t, n)				int t::n(lua_State * L)
+#define LUCE_OBJ_REF(p)									p->LUCE_ref()
 /**
- * @brief		Create the instance of adapter method.
+ * @brief		Get Lua state of the object.
  *
- * @param t		The name of the adapter class.
- * @param n		The name of the method.
- * @param r		The return type of the method.
- * @param ...	The arg list of the method.
+ * @param p		The object pointer.
  */
-#define LUCE_ADAPTER_METHOD(t, n, r, ...)				r t::n(__VA_ARGS__)
+#define LUCE_OBJ_STATE(p)								p->LUCE_state()
+
+/**
+ * @brief		Get LUCE object reference.
+ */
+#define LUCE_GET_REF()									LUCE_OBJ_REF(this)
+/**
+ * @brief		Get Lua state.
+ */
+#define LUCE_GET_STATE()								LUCE_OBJ_STATE(this)
+
+
+ /**
+  * @brief		Push current Lua adapter object on stack top.
+  *
+  * @param L	The Lua state.
+  * @param r	The obj reference.
+  */
+#define LUCE_PUSH_OBJ(L, r) \
+	lua_getglobal(L, "luce"); \
+	lua_getfield(L, -1, "__refs"); \
+	 \
+	lua_rawgeti(L, -1, r); \
+	 \
+	lua_remove(L, -2); \
+	lua_remove(L, -2)
+
+/**
+ * @brief		Reference the object on stack and return the ref value.
+ * 
+ * @param L		The Lua state.
+ * @param ud	The object index on stack.
+ */
+#define LUCE_REF(L, ud) \
+	[L, udx = ud] { \
+		lua_getglobal(L, "luce"); \
+		lua_getfield(L, -1, "__refs"); \
+		 \
+		lua_pushvalue(L, udx - 2); \
+		int result = luaL_ref(L, -2); \
+		 \
+		lua_pop(L, 2); \
+		return result; \
+	}()
 
 namespace luce {
 	namespace utils {
@@ -319,18 +236,6 @@ namespace luce {
 		class LUCE_API LUCE_AdapterBase {
 		public:
 			virtual ~LUCE_AdapterBase() = default;
-
-		public:
-			int& getObjRef() {
-				return this->__objRef;
-			};
-			int& getParentRef() {
-				return this->__parentRef;
-			};
-
-		protected:
-			int __objRef = 0;
-			int __parentRef = 0;
 		};
 	}
 
@@ -351,8 +256,8 @@ namespace luce {
 		 *				This method will be registered in the metatable of the userdata.
 		 */
 		static int __gc(lua_State* L) {
-			auto pInstance = reinterpret_cast<LUCE_AdapterBase*>(lua_touserdata(L, 1));
-			pInstance->~LUCE_AdapterBase();
+			auto pInstance = reinterpret_cast<T*>(lua_touserdata(L, 1));
+			pInstance->~T();
 			return 0;
 		};
 		/**
@@ -368,7 +273,6 @@ namespace luce {
 
 			/** Get global adapters table */
 			lua_getglobal(L, "luce");
-			lua_getfield(L, -1, "adapters");
 
 			/** Create factory userdata */
 			lua_pushstring(L, s);
@@ -376,8 +280,10 @@ namespace luce {
 
 			/** Create factory metatable */
 			lua_newtable(L);
-			lua_pushcfunction(L, T::__new);
+			lua_pushcfunction(L, LUCE_Adapter<T>::__new);
 			lua_setfield(L, -2, "new");
+			lua_pushcfunction(L, LUCE_Adapter<T>::__bind);
+			lua_setfield(L, -2, "bind");
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -2, "__index");
 			lua_setmetatable(L, -2);
@@ -385,22 +291,17 @@ namespace luce {
 			/** Add factory userdata */
 			lua_settable(L, -3);
 
-			/** Leave adapters table */
-			lua_pop(L, 1);
-
 			/** Leave luce table */
 			lua_pop(L, 1);
 
 			/** Create object metatable */
 			luaL_newmetatable(L, s);
 			
-			luaL_setfuncs(L, T::__funcList, 0);
-			lua_pushcfunction(L, T::__gc);
+			luaL_setfuncs(L, LUCE_Adapter<T>::__funcList, 0);
+			lua_pushcfunction(L, LUCE_Adapter<T>::__gc);
 			lua_setfield(L, -2, "__gc");
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -2, "__index");
-			lua_pushcfunction(L, T::__parent);
-			lua_setfield(L, -2, "__parent");
 			
 			/** Leave metatable */
 			lua_pop(L, 1);
@@ -408,45 +309,28 @@ namespace luce {
 			return 0;
 		};
 		/**
-		 * @brief		Find adapter parent.
+		 * @brief		Create object.
 		 */
-		static int __parent(lua_State* L) {
-			auto pInstance = reinterpret_cast<LUCE_Adapter<T>*>(lua_touserdata(L, 1));
+		static int __new(lua_State* L);
+		/**
+		 * @brief		Bind a function to object.
+		 */
+		static int __bind(lua_State* L) {
+			/** Get metatable */
+			luaL_getmetatable(L, LUCE_Adapter<T>::__name);
 
-			/** Get global refs table */
-			lua_getglobal(L, "luce");
-			lua_getfield(L, -1, "__refs");
+			lua_pushvalue(L, 1);
+			lua_pushvalue(L, 2);
+			lua_settable(L, -3);
 
-			lua_rawgeti(L, -1, pInstance->__parentRef);
-
-			lua_remove(L, -2);
-			lua_remove(L, -2);
-
-			return 1;
+			/** Leave metatable */
+			lua_pop(L, 1);
+			return 0;
 		}
 
-	public:
-		LUCE_Adapter() {
-			lua_getglobal(LUCE_ADAPTER_GET_STATE(), "luce");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "adapters");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "__refs");
+	private:
+		static luaL_Reg __funcList[];
 
-			lua_pushvalue(LUCE_ADAPTER_GET_STATE(), -4);
-			LUCE_ADAPTER_GET_OBJ_REF() = luaL_ref(LUCE_ADAPTER_GET_STATE(), -2);
-
-			lua_pop(LUCE_ADAPTER_GET_STATE(), 3);
-		};
-		virtual ~LUCE_Adapter() {
-			lua_getglobal(LUCE_ADAPTER_GET_STATE(), "luce");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "adapters");
-			lua_getfield(LUCE_ADAPTER_GET_STATE(), -1, "__refs");
-
-			luaL_unref(LUCE_ADAPTER_GET_STATE(), -1, LUCE_ADAPTER_GET_OBJ_REF());
-
-			lua_pop(LUCE_ADAPTER_GET_STATE(), 3);
-		};
-
-	protected:
 		static lua_State* __lState;
 		static const char* __name;
 	};

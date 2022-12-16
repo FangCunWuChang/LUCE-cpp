@@ -1,39 +1,40 @@
 ﻿require "luce.LUCEApplication"
 require "luce.DocumentWindow"
-require "luce.Colour"
+require "luce.Colours"
 require "luce.Flag"
 
 app = luce.LUCEApplication.new()
 
-function app:getApplicationName()
+luce.LUCEApplication.bind("getApplicationName", function(self)
 	return "testAppName"
-end
+end)
 
-function app:getApplicationVersion()
+luce.LUCEApplication.bind("getApplicationVersion", function(self)
 	return "testVersion"
-end
+end)
 
-function app:initialise(commandLineParameters)
+luce.LUCEApplication.bind("initialise", function(self, commandLineParameters)
 	print("command:", commandLineParameters)
 	print("app init")
 
-	self.mainWindow = 
-		luce.DocumentWindow.new("LUCE-demo1", luce.Colours.pink,
-			luce.DocumentWindow.TitleBarButtons.allButtons, false)
+	luce.LUCEApplication.bind("mainWindow", 
+		luce.DocumentWindow.new(
+			"LUCE-demo1", luce.Colours.pink,
+			luce.TitleBarButtons.allButtons, false))
 	self.mainWindow:setVisible(true)
-end
+end)
 
-function app:shutdown()
+luce.LUCEApplication.bind("shutdown", function(self)
 	print("app shutdown")
-end
+end)
 
-function app:moreThanOneInstanceAllowed()
+luce.LUCEApplication.bind("moreThanOneInstanceAllowed", function(self)
 	return false
-end
+end)
 
-function app:anotherInstanceStarted(commandLine)
+luce.LUCEApplication.bind("anotherInstanceStarted", function(self, commandLine)
 	print("another command:", commandLine)
 	print("another start")
-end
+end)
 
-app:exec()
+luce.exec(app)

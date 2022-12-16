@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Colour.h"
+#include "../Defs.h"
 
 namespace luce {
 	/**

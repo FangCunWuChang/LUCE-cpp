@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "DocumentWindow.h"
+#include "../Defs.h"
+#include "utils/DocumentWindow.h"
 
 namespace luce {
 	/**

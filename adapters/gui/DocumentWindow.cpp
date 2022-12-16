@@ -1,32 +1,26 @@
-﻿#include "DocumentWindow.h"
+﻿#include "../Defs.h"
+#include "utils/DocumentWindow.h"
 
 namespace luce {
-	LUCE_MAKE_ADAPTER_FUNCTION_LIST(DocumentWindow, setVisible);
+	using utils::DocumentWindow;
+	using juce::Colour;
 
-	LUCE_ADAPTER_NEW_WITH_STANDARD_INSTANCES(DocumentWindow) {
-		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, DocumentWindow, pInstance,
-			luaL_checkstring(L, 1), reinterpret_cast<luce::Colour*>(luaL_checkudata(L, 2, "Colour")),
-			luaL_checkinteger(L, 3), lua_toboolean(L, 4));
-		return 1;
-	}
-
-	DocumentWindow::DocumentWindow(
-		const juce::String& name, luce::Colour* backgroundColour,
-		int requiredButtons, bool addToDesktop) 
-		: LUCE_Adapter() {
-		this->__object = std::make_unique<utils::DocumentWindow>(
-			this->__lState, this->__objRef,
-			name, *(backgroundColour->__getObject()),
-			requiredButtons, addToDesktop);
-	}
-
-	LUCE_ADAPTER_METHOD_INTERFACE(DocumentWindow, setVisible) {
+	LUCE_METHOD(setVisible) {
 		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setVisible(lua_toboolean(L, 2));
 		return 0;
 	}
 
-	LUCE_ADAPTER_METHOD(DocumentWindow, setVisible, void, bool visible) {
-		this->__object->setVisible(visible);
+	LUCE_FUNCTION_LIST(DocumentWindow, setVisible);
+
+	LUCE_NEW_FUNCTION(DocumentWindow) {
+		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, DocumentWindow, pInstance,
+			juce::String(luaL_checkstring(L, 1)), *LUCE_CHECK_USERDATA(L, 2, Colour),
+			(int)luaL_checkinteger(L, 3), (bool)lua_toboolean(L, 4));
+
+		LUCE_OBJ_STATE(pInstance) = L;
+		LUCE_OBJ_REF(pInstance) = LUCE_REF(L, -1);
+
+		return 1;
 	}
 }

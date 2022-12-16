@@ -1,12 +1,13 @@
 ﻿#pragma once
 #include "../../Defs.h"
-#include "../../Macros.h"
 
 namespace luce {
 	namespace utils {
-		class LUCEApplication : public juce::JUCEApplication {
+		class LUCEApplication {};
+
+		class ApplicationHelper : public juce::JUCEApplication {
 		public:
-			LUCEApplication();
+			ApplicationHelper();
 
 			const juce::String getApplicationName() override;
 			const juce::String getApplicationVersion() override;
@@ -22,9 +23,13 @@ namespace luce {
 			void memoryWarningReceived() override;
 			bool backButtonPressed() override;
 
+		private:
+			static lua_State* __LUCEState;
+			static int __LUCERef;
+
 		public:
-			static lua_State* appState;
-			static int appAdapterRef;
+			static lua_State*& LUCE_state() { return ApplicationHelper::__LUCEState; };
+			static int& LUCE_ref() { return ApplicationHelper::__LUCERef; };
 		};
 	}
 }
