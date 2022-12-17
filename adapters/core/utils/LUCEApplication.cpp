@@ -59,13 +59,13 @@ namespace luce {
 			}
 
 			LUCE_PUSH_OBJ(LUCE_GET_STATE(), LUCE_GET_REF());
-
+			
 			lua_getfield(LUCE_GET_STATE(), -1, "initialise");
 			if (!lua_isfunction(LUCE_GET_STATE(), -1)) {
 				lua_pop(LUCE_GET_STATE(), 2);
 				return;
 			}
-
+			
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			lua_pushstring(LUCE_GET_STATE(), commandLineParameters.toStdString().c_str());
 			lua_call(LUCE_GET_STATE(), 2, 0);
@@ -98,7 +98,7 @@ namespace luce {
 			}
 
 			LUCE_PUSH_OBJ(LUCE_GET_STATE(), LUCE_GET_REF());
-
+			
 			lua_getfield(LUCE_GET_STATE(), -1, "moreThanOneInstanceAllowed");
 			if (!lua_isfunction(LUCE_GET_STATE(), -1)) {
 				lua_pop(LUCE_GET_STATE(), 2);

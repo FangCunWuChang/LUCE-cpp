@@ -1,9 +1,11 @@
 ﻿#pragma once
-#include "Macros.h"
+
 #include <lua.hpp>
 #include <JuceHeader.h>
 
+#include "Macros.h"
 #include "Defs-internal.h"
+#include "Debug.h"
 
 /**
  * @brief		Get the name of the type or function.

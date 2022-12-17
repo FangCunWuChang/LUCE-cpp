@@ -9,7 +9,7 @@ namespace luce {
 		int argc = luaL_checkinteger(L, 2);
 		luaL_checktype(L, 3, LUA_TLIGHTUSERDATA);
 		const char** argv = (const char**)(lua_topointer(L, 3));
-
+		
 		lua_pushinteger(L, juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS));
 		return 1;
 	}
@@ -25,6 +25,7 @@ namespace luce {
 		utils::ApplicationHelper::LUCE_ref() = LUCE_REF(L, -1);
 
 		juce::JUCEApplicationBase::createInstance = &createApp;
+		
 		return 1;
 	}
 }
