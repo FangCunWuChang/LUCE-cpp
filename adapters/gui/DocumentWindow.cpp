@@ -10,6 +10,7 @@ namespace luce {
 	LUCE_METHOD(setVisible) {
 		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setVisible(lua_toboolean(L, 2));
+		
 		return 0;
 	}
 

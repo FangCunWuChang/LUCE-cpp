@@ -64,11 +64,7 @@ namespace luce {
 		lua_getmetatable(L, 1);
 		fprintf(stderr, "meta table: %p\n", lua_topointer(L, -1));
 
-		/** Get size */
-		lua_len(L, -1);
-		int num = lua_tointeger(L, -1);
-		lua_pop(L, 1);
-
+		int num = 0;
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
 			fprintf(stderr, "\t%s\t\t\t\t%s : %p\n",
@@ -76,6 +72,7 @@ namespace luce {
 				lua_typename(L, lua_type(L, -1)),
 				lua_topointer(L, -1));
 			lua_pop(L, 1);
+			num++;
 		}
 
 		/** Leave metatable */
@@ -103,11 +100,7 @@ namespace luce {
 		lua_getfield(L, -1, "__refs");
 		fprintf(stderr, "__refs table: %p\n", lua_topointer(L, -1));
 		
-		/** Get size */
-		lua_len(L, -1);
-		int num = lua_tointeger(L, -1);
-		lua_pop(L, 1);
-
+		int num = 0;
 		int count = 0;
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
@@ -118,6 +111,7 @@ namespace luce {
 				count++;
 			}
 			lua_pop(L, 1);
+			num++;
 		}
 
 		/** Leave luce table */
@@ -140,10 +134,7 @@ namespace luce {
 		lua_getfield(L, -1, "__refs");
 		fprintf(stderr, "__refs table: %p\n", lua_topointer(L, -1));
 
-		/** Get size */
-		lua_len(L, -1);
-		int num = lua_tointeger(L, -1);
-		lua_pop(L, 1);
+		int num = 0;
 
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
@@ -151,6 +142,7 @@ namespace luce {
 				(int)lua_tointeger(L, -2),
 				lua_topointer(L, -1));
 			lua_pop(L, 1);
+			num++;
 		}
 
 		/** Leave luce table */
