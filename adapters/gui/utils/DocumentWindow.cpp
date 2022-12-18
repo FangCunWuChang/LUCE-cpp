@@ -10,6 +10,7 @@ namespace luce {
 
 		void DocumentWindow::closeButtonPressed() {
 			if (!LUCE_GET_STATE()) {
+				juce::JUCEApplication::getInstance()->systemRequestedQuit();
 				return;
 			}
 
@@ -18,6 +19,7 @@ namespace luce {
 			lua_getfield(LUCE_GET_STATE(), -1, "closeButtonPressed");
 			if (!lua_isfunction(LUCE_GET_STATE(), -1)) {
 				lua_pop(LUCE_GET_STATE(), 2);
+				juce::JUCEApplication::getInstance()->systemRequestedQuit();
 				return;
 			}
 
@@ -29,6 +31,7 @@ namespace luce {
 
 		void DocumentWindow::minimiseButtonPressed() {
 			if (!LUCE_GET_STATE()) {
+				this->juce::DocumentWindow::minimiseButtonPressed();
 				return;
 			}
 
@@ -37,6 +40,7 @@ namespace luce {
 			lua_getfield(LUCE_GET_STATE(), -1, "minimiseButtonPressed");
 			if (!lua_isfunction(LUCE_GET_STATE(), -1)) {
 				lua_pop(LUCE_GET_STATE(), 2);
+				this->juce::DocumentWindow::minimiseButtonPressed();
 				return;
 			}
 
@@ -48,6 +52,7 @@ namespace luce {
 		
 		void DocumentWindow::maximiseButtonPressed() {
 			if (!LUCE_GET_STATE()) {
+				this->juce::DocumentWindow::maximiseButtonPressed();
 				return;
 			}
 
@@ -56,6 +61,7 @@ namespace luce {
 			lua_getfield(LUCE_GET_STATE(), -1, "maximiseButtonPressed");
 			if (!lua_isfunction(LUCE_GET_STATE(), -1)) {
 				lua_pop(LUCE_GET_STATE(), 2);
+				this->juce::DocumentWindow::maximiseButtonPressed();
 				return;
 			}
 

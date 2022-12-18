@@ -1,40 +1,32 @@
-﻿require "luce.LUCEApplication"
-require "luce.DocumentWindow"
+﻿require "luce.DocumentWindow"
 require "luce.Colours"
 require "luce.Flag"
 
-app = luce.LUCEApplication.new()
-
-luce.LUCEApplication.bind("getApplicationName", function(self)
-	return "testAppName"
-end)
-
-luce.LUCEApplication.bind("getApplicationVersion", function(self)
-	return "testVersion"
-end)
-
-luce.LUCEApplication.bind("initialise", function(self, commandLineParameters)
+luce.initialise = function(commandLineParameters)
 	print("command:", commandLineParameters)
 	print("app init")
 
-	luce.LUCEApplication.bind("mainWindow", 
-		luce.DocumentWindow.new(
-			"LUCE-demo1", luce.Colours.pink,
-			luce.TitleBarButtons.allButtons, false))
-	self.mainWindow:setVisible(true)
-end)
+	mainWindow = luce.DocumentWindow.new(
+		"LUCE-demo1", luce.Colours.pink,
+		luce.Flag(luce.TitleBarButtons.allButtons), true)
+	mainComponent = luce.Component.new("LUCE-demo1")
 
-luce.LUCEApplication.bind("shutdown", function(self)
+	mainWindow:setUsingNativeTitleBar(true)
+	mainWindow:setResizable(true, false)
+	mainWindow:setContentNonOwned(mainComponent, false)
+
+	mainWindow:centreWithSize(800, 600)
+
+	mainComponent:setVisible(true)
+	mainWindow:setVisible(true)
+end
+
+luce.shutdown = function()
 	print("app shutdown")
-end)
+	mainWindow = nil
+end
 
-luce.LUCEApplication.bind("moreThanOneInstanceAllowed", function(self)
-	return false
-end)
-
-luce.LUCEApplication.bind("anotherInstanceStarted", function(self, commandLine)
+luce.anotherInstanceStarted = function(commandLine)
 	print("another command:", commandLine)
 	print("another start")
-end)
-
-luce.exec(app)
+end

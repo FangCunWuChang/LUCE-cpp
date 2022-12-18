@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "../Defs.h"
-#include "utils/LUCEApplication.h"
 
 namespace luce {
 	/**

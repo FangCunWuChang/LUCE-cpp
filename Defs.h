@@ -25,19 +25,6 @@
 #define LUCE_REG(L, t)		LUCE_Adapter<t>::__open(L, LUCE_NAME(t))
 
 /**
- * @brief		Try to run the script. If Lua throws an error, then print the message, close the state and return -1.
- * 
- * @param L		The Lua state which you want to run on.
- * @param s		The script file.
- */
-#define LUCE_RUN(L, s) \
-	if (luaL_dofile(L, s)) { \
-		printf(luaL_checkstring(L, -1)); \
-		lua_close(L); \
-		return -1; \
-	}
-
-/**
  * @brief		Try.
  */
 #define LUCE_TRY try
@@ -57,13 +44,13 @@
  * 
  * @return		A luaL_Reg value.
  */
-#define LUCE_TO_LUA_REG(f)			{LUCE_NAME(f), f}
+#define LUCE_TO_LUA_REG(f)						{LUCE_NAME(f), f}
 /**
  * @brief		Make a empty luaL_Reg value as the end of the list.
  * 
  * @return		A luaL_Reg value has NULL value.
  */
-#define LUCE_NULL_LUA_REG()				{NULL, NULL}
+#define LUCE_NULL_LUA_REG()						{NULL, NULL}
 
 /**
  * @brief		Make a luaL_Reg value list if method list exists.
@@ -81,7 +68,7 @@
  * @param t		The name of the adapter class.
  * @param ...	The method list.
  */
-#define LUCE_FUNCTION_LIST(t, ...)		luaL_Reg LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
+#define LUCE_FUNCTION_LIST(t, ...)				luaL_Reg LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
 
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack.

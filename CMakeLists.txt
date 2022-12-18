@@ -59,11 +59,7 @@ option (LUA_USE_ASSERT "Turn on assertions for the whole LuaJIT VM." ON)
 mark_as_advanced (LUAJIT_DISABLE_FFI LUAJIT_ENABLE_LUA52COMPAT LUAJIT_DISABLE_JIT LUAJIT_DISABLE_GC64 LUAJIT_DISABLE_BUFFER
   LUAJIT_USE_SYSMALLOC LUAJIT_USE_VALGRIND LUAJIT_USE_GDBJIT LUA_USE_APICHECK LUA_USE_ASSERT)
 
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/app)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/app)
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/app)
-
-
+set (LUCE_APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/app CACHE STRING INTERNAL)
 
 #=============================================================================================================================
 #JUCE
@@ -767,14 +763,17 @@ add_executable (LUCE-demo1 ${LUCE_DEMO1_SRC})
 target_compile_definitions (LUCE-demo1 PRIVATE "LUCE_DLL=1")
 target_link_libraries (LUCE-demo1 PRIVATE libLUCE)
 
-#set (LUA_SCRIPT_DIR "${CMAKE_CURRENT_BINARY_DIR}/lua/")
-#if (NOT (EXISTS "${LUA_SCRIPT_DIR}" AND IS_DIRECTORY "${LUA_SCRIPT_DIR}"))
-#        file (MAKE_DIRECTORY ${LUA_SCRIPT_DIR})
-#endif (NOT (EXISTS "${LUA_SCRIPT_DIR}" AND IS_DIRECTORY "${LUA_SCRIPT_DIR}"))
+set_target_properties (LUCE-demo1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LUCE_APP_DIR})
 
-#file (GLOB LUA_SCRIPT_LIST "${CMAKE_CURRENT_SOURCE_DIR}/extras/demo1/lua/*.lua")
-#foreach (SCRIPT ${LUA_SCRIPT_LIST})
-#    add_custom_command (TARGET LUCE-demo1 POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SCRIPT}" "${LUA_SCRIPT_DIR}"
-#)
-#endforeach (SCRIPT ${LUA_SCRIPT_LIST})
+add_custom_command (TARGET LUCE-demo1 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libJUCE> $<TARGET_FILE_DIR:LUCE-demo1>
+)
+add_custom_command (TARGET LUCE-demo1 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libLuaJIT> $<TARGET_FILE_DIR:LUCE-demo1>
+)
+add_custom_command (TARGET LUCE-demo1 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libLUCE> $<TARGET_FILE_DIR:LUCE-demo1>
+)

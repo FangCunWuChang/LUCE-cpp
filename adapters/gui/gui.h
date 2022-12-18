@@ -2,6 +2,7 @@
 
 #include "../Defs.h"
 #include "utils/DocumentWindow.h"
+#include "utils/Component.h"
 
 namespace luce {
 	/**

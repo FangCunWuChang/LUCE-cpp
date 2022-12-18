@@ -1,9 +1,11 @@
 ﻿#include "../Defs.h"
 #include "utils/DocumentWindow.h"
+#include "utils/Component.h"
 
 namespace luce {
 	using utils::DocumentWindow;
 	using juce::Colour;
+	using utils::Component;
 
 	LUCE_METHOD(setVisible) {
 		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
@@ -11,7 +13,39 @@ namespace luce {
 		return 0;
 	}
 
-	LUCE_FUNCTION_LIST(DocumentWindow, setVisible);
+	LUCE_METHOD(setContentNonOwned) {
+		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		pInstance->setContentNonOwned(
+			LUCE_CHECK_USERDATA(L, 2, Component), lua_toboolean(L, 3));
+		return 0;
+	}
+
+	LUCE_METHOD(centreWithSize) {
+		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		pInstance->centreWithSize(
+			luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
+		return 0;
+	}
+
+	LUCE_METHOD(setUsingNativeTitleBar) {
+		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		pInstance->setUsingNativeTitleBar(lua_toboolean(L, 2));
+		return 0;
+	}
+
+	LUCE_METHOD(setResizable) {
+		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		pInstance->setResizable(lua_toboolean(L, 2), lua_toboolean(L, 2));
+		return 0;
+	}
+
+	LUCE_FUNCTION_LIST(DocumentWindow,
+		setVisible,
+		setContentNonOwned,
+		centreWithSize,
+		setUsingNativeTitleBar,
+		setResizable
+	);
 
 	LUCE_NEW_FUNCTION(DocumentWindow) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, DocumentWindow, pInstance,
