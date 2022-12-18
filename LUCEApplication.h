@@ -12,7 +12,8 @@
  */
 #define LUCE_APPLICATION(n, v, ami, f, m) \
 	class LUCEApplication : public juce::JUCEApplication { \
-	std::unique_ptr<lua_State, std::function<void(lua_State*)>> _L = nullptr; \
+		std::unique_ptr<lua_State, std::function<void(lua_State*)>> _L = nullptr; \
+		 \
 	public: \
 		const juce::String getApplicationName() override { return n; }; \
 		const juce::String getApplicationVersion() override { return v; }; \

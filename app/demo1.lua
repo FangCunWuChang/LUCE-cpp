@@ -1,6 +1,5 @@
 ﻿require "luce.DocumentWindow"
 require "luce.Colours"
-require "luce.Flag"
 
 luce.initialise = function(commandLineParameters)
 	print("command:", commandLineParameters)
@@ -8,7 +7,7 @@ luce.initialise = function(commandLineParameters)
 
 	mainWindow = luce.DocumentWindow.new(
 		"LUCE-demo1", luce.Colours.pink,
-		luce.Flag(luce.TitleBarButtons.allButtons), true)
+		luce.TitleBarButtons.allButtons, true)
 	mainComponent = luce.Component.new("LUCE-demo1")
 
 	mainWindow:setUsingNativeTitleBar(true)

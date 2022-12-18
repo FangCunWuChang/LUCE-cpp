@@ -7,7 +7,7 @@
  */
 
 #include <JuceHeader.h>
-#include <lua.hpp>
+#include "lua.hpp"
 
 #include "Macros.h"
 #include "Defs.h"

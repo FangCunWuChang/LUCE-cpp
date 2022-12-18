@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <lua.hpp>
+#include "lua.hpp"
 #include "Macros.h"
 
 namespace luce {
