@@ -5,13 +5,13 @@ namespace luce {
 	using utils::Component;
 
 	LUCE_METHOD(setVisible) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
 		pInstance->setVisible(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	LUCE_METHOD(setSize) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
 		pInstance->setSize(
 			luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
 		return 0;

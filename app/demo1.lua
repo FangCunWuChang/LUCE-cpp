@@ -1,5 +1,6 @@
 ﻿require "luce.DocumentWindow"
 require "luce.Colours"
+require "luce.Debug"
 
 luce.initialise = function(commandLineParameters)
 	print("command:", commandLineParameters)

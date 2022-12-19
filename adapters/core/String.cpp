@@ -4,7 +4,7 @@ namespace luce {
 	using juce::String;
 
 	LUCE_METHOD(test) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, String);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, String);
 		auto mes = luaL_checkstring(L, 2);
 
 		printf("test:%s\n", mes);

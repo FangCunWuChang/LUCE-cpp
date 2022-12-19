@@ -8,34 +8,34 @@ namespace luce {
 	using utils::Component;
 
 	LUCE_METHOD(setVisible) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setVisible(lua_toboolean(L, 2));
 		
 		return 0;
 	}
 
 	LUCE_METHOD(setContentNonOwned) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setContentNonOwned(
 			LUCE_CHECK_USERDATA(L, 2, Component), lua_toboolean(L, 3));
 		return 0;
 	}
 
 	LUCE_METHOD(centreWithSize) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->centreWithSize(
 			luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
 		return 0;
 	}
 
 	LUCE_METHOD(setUsingNativeTitleBar) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setUsingNativeTitleBar(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	LUCE_METHOD(setResizable) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, DocumentWindow);
 		pInstance->setResizable(lua_toboolean(L, 2), lua_toboolean(L, 2));
 		return 0;
 	}

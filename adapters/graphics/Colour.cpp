@@ -4,25 +4,25 @@ namespace luce {
 	using juce::Colour;
 
 	LUCE_METHOD(getRed) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
 		lua_pushinteger(L, pInstance->getRed());
 		return 1;
 	}
 
 	LUCE_METHOD(getGreen) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
 		lua_pushinteger(L, pInstance->getGreen());
 		return 1;
 	}
 
 	LUCE_METHOD(getBlue) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
 		lua_pushinteger(L, pInstance->getBlue());
 		return 1;
 	}
 
 	LUCE_METHOD(getAlpha) {
-		auto pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Colour);
 		lua_pushinteger(L, pInstance->getAlpha());
 		return 1;
 	}

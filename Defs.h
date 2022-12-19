@@ -22,7 +22,7 @@
  * @param L		The Lua state which you want to register the class into.
  * @param t		The class which you want to register.
  */
-#define LUCE_REG(L, t)		LUCE_Adapter<t>::__open(L, LUCE_NAME(t))
+#define LUCE_REG(L, t)		luce::LUCE_Adapter<t>::__open(L, LUCE_NAME(t))
 
 /**
  * @brief		Try.
@@ -68,7 +68,7 @@
  * @param t		The name of the adapter class.
  * @param ...	The method list.
  */
-#define LUCE_FUNCTION_LIST(t, ...)				luaL_Reg LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
+#define LUCE_FUNCTION_LIST(t, ...)				luaL_Reg luce::LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
 
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack.
@@ -76,9 +76,12 @@
  * @param L		The Lua state.
  * @param t		The userdata type.
  * 
- * @return		The pointer of the userdata memory.
+ * @return		The lvalue reference of the userdata memory.
  */
-#define LUCE_CREATE_USERDATA(L, t)						reinterpret_cast<t*>(lua_newuserdata(L, sizeof(t)))
+#define LUCE_CREATE_USERDATA(L, t) \
+	reinterpret_cast<luce::LUCE_FullContainer<t>&>( \
+		*reinterpret_cast<luce::LUCE_FullContainer<t>*>(lua_newuserdata(L, sizeof(luce::LUCE_FullContainer<t>))))
+
 /**
  * @brief		Check the param at ud if it is an userdata.
  *
@@ -86,9 +89,11 @@
  * @param ud	The index of the arg on stack.
  * @param t		The userdata type.
  *
- * @return		The pointer of the userdata.
+ * @return		The lvalue reference of the userdata.
  */
-#define LUCE_CHECK_USERDATA(L, ud, t)					reinterpret_cast<t*>(luaL_checkudata(L, ud, LUCE_NAME(t)))
+#define LUCE_CHECK_USERDATA(L, ud, t) \
+	reinterpret_cast<luce::LUCE_Container<t>&>( \
+		*reinterpret_cast<luce::LUCE_Container<t>*>(luaL_checkudata(L, ud, LUCE_NAME(t))))
 /**
  * @brief		Get the metatable which has the same name of the type, 
  *				then set for the table or userdata on the top of the stack.
@@ -106,18 +111,18 @@
  * @param L		The Lua state.
  * @param t		The userdata type.
  *
- * @return		The pointer of the userdata memory.
+ * @return		The lvalue reference of the userdata memory.
  */
 #define LUCE_CREATE_USERDATA_WITH_METATABLE(L, t)		LUCE_CREATE_USERDATA(L, t); LUCE_SET_METATABLE(L, t)
 /**
  * @brief		Construct the object object.
  * @attention	The type of the point must match the true type of the object.
  * 
- * @param p		The pointer of the object object.
+ * @param p		The reference varible name of the object.
  * @param ...	The arg list when the constructor function called.
  */
 #define LUCE_INIT(p, ...) \
-	new(p) std::remove_reference<decltype(*p)>::type(__VA_ARGS__)
+	new(&p) std::remove_reference<decltype(p)>::type(__VA_ARGS__)
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack,
  *				then set the metatable as which has the same name of the type.
@@ -125,12 +130,25 @@
  *
  * @param L		The Lua state.
  * @param t		The userdata type.
- * @param p		The pointer of the object object.
+ * @param p		The reference varible name of the object.
  * @param ...	The arg list when the constructor function called.
  */
 #define LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, t, p, ...) \
-	auto p = LUCE_CREATE_USERDATA_WITH_METATABLE(L, t); \
+	auto& p = LUCE_CREATE_USERDATA_WITH_METATABLE(L, t); \
 	LUCE_INIT(p, __VA_ARGS__)
+/**
+ * @brief		Push a C++ object on the top of the stack.
+ *
+ * @param L		The Lua state.
+ * @param t		The userdata type.
+ * @param p		The reference varible name of the object.
+ * @param o		The object.
+ */
+#define LUCE_PUSH_USERDATA(L, t, p, o) \
+	auto& p = reinterpret_cast<luce::LUCE_LightContainer<t>&>( \
+		*reinterpret_cast<luce::LUCE_LightContainer<t>*>(lua_newuserdata(L, sizeof(luce::LUCE_LightContainer<t>)))); \
+	LUCE_SET_METATABLE(L, t); \
+	LUCE_INIT(p, &o)
 
 /**
  * @brief		Create a Lua type object create function.
@@ -138,9 +156,9 @@
  * @param t		The type of the object.
  */
 #define LUCE_NEW_FUNCTION(t) \
-	lua_State* LUCE_Adapter<t>::__lState = nullptr; \
-	const char* LUCE_Adapter<t>::__name = nullptr; \
-	int LUCE_Adapter<t>::__new(lua_State* L)
+	lua_State* luce::LUCE_Adapter<t>::__lState = nullptr; \
+	const char* luce::LUCE_Adapter<t>::__name = nullptr; \
+	int luce::LUCE_Adapter<t>::__new(lua_State* L)
 
 /**
  * @breif		Create a Lua CFunction.
@@ -220,7 +238,14 @@
 namespace luce {
 	namespace utils {
 		/**
-		 * @brief		The base class of all LUCE_UserData classes.
+		 * @brief		The base class of all LUCE_Container classes.
+		 */
+		class LUCE_API LUCE_ContainerBase {
+		public:
+			virtual ~LUCE_ContainerBase() = default;
+		};
+		/**
+		 * @brief		The base class of all LUCE_Adapter classes.
 		 */
 		class LUCE_API LUCE_AdapterBase {
 		public:
@@ -228,25 +253,91 @@ namespace luce {
 		};
 	}
 
+
 	/**
-	 * @brief		The base class of all LUCE adapter classes which you want to register as Lua userdata.			\n
+	 * @brief		The base class of all LUCE_Container classes of type T.
+	 *
+	 * @tparam T	The LUCE object class which you want to register as Lua userdata.
+	 */	 
+	template<class T>
+	class LUCE_API LUCE_Container : public utils::LUCE_ContainerBase {
+	public:
+		virtual ~LUCE_Container() override = default;
+
+		virtual T* get() const = 0;
+		operator T* () const {
+			return get();
+		};
+		T* operator->() const {
+			return get();
+		};
+	};
+	/**
+	 * @brief		The class contains the fulluserdata.
+	 *
+	 * @tparam T	The LUCE object class which you want to register as Lua userdata.
+	 *
+	 * @see			LUCE_AdapterBase
+	 */
+	template<class T>
+	class LUCE_API LUCE_FullContainer : public LUCE_Container<T> {
+		std::unique_ptr<T> __data = nullptr;
+
+	public:
+		template<class ...A>
+		LUCE_FullContainer(A&&... args) {
+			this->__data = std::make_unique<T>(std::forward<A>(args)...);
+		};
+
+		T* get() const override {
+			return this->__data.get();
+		};
+	};
+	/**
+	 * @brief		The class contains the lightuserdata.
+	 *
+	 * @tparam T	The LUCE object class which you want to register as Lua userdata.
+	 *
+	 * @see			LUCE_AdapterBase
+	 */
+	template<class T>
+	class LUCE_API LUCE_LightContainer : public LUCE_Container<T> {
+		T* __data = nullptr;
+
+	public:
+		LUCE_LightContainer() = delete;
+		explicit LUCE_LightContainer(T* ptr) {
+			this->__data = ptr;
+		};
+		~LUCE_LightContainer() {
+			this->__data = nullptr;
+		}
+
+		T* get() const override {
+			return this->__data;
+		};
+	};
+
+	/**
+	 * @brief		The LUCE adapter classes which you controls the Lua userdata.			\n
 	 *				Some important methods about Lua userdata are defined in this class.
 	 *
-	 * @tparam T	The LUCE adapter class which you want to register as Lua userdata.
+	 * @tparam T	The LUCE object class which you want to register as Lua userdata.
 	 *
 	 * @see			LUCE_AdapterBase
 	 */
 	template<class T>
 	class LUCE_API LUCE_Adapter : public utils::LUCE_AdapterBase {
 	public:
+		LUCE_Adapter() = delete;
 		/**
 		 * @brief		An lua_CFunction type method which will be called before userdata memory GC.		\n
 		 *				In this method, the destructor of the adapter class will be called.				\n
 		 *				This method will be registered in the metatable of the userdata.
 		 */
 		static int __gc(lua_State* L) {
-			auto pInstance = reinterpret_cast<T*>(lua_touserdata(L, 1));
-			pInstance->~T();
+			auto pInstance = reinterpret_cast<LUCE_Container<T>*>(lua_touserdata(L, 1));
+			pInstance->~LUCE_Container();
 			return 0;
 		};
 		/**
@@ -285,13 +376,13 @@ namespace luce {
 
 			/** Create object metatable */
 			luaL_newmetatable(L, s);
-			
+
 			luaL_setfuncs(L, LUCE_Adapter<T>::__funcList, 0);
 			lua_pushcfunction(L, LUCE_Adapter<T>::__gc);
 			lua_setfield(L, -2, "__gc");
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -2, "__index");
-			
+
 			/** Leave metatable */
 			lua_pop(L, 1);
 
