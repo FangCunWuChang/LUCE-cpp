@@ -26,7 +26,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), Graphics, pg, g);
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -48,7 +48,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), Graphics, pg, g);
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -70,7 +70,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -92,7 +92,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -114,7 +114,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -136,7 +136,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -158,7 +158,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -180,7 +180,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -202,7 +202,7 @@ namespace luce {
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
-			lua_call(LUCE_GET_STATE(), 2, 0);
+			lua_pcall(LUCE_GET_STATE(), 2, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -225,7 +225,7 @@ namespace luce {
 			lua_pushvalue(LUCE_GET_STATE(), -2);
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseEvent, pEvent, const_cast<juce::MouseEvent&>(event));
 			LUCE_PUSH_USERDATA(LUCE_GET_STATE(), MouseWheelDetails, pDetails, const_cast<juce::MouseWheelDetails&>(wheel));
-			lua_call(LUCE_GET_STATE(), 3, 0);
+			lua_pcall(LUCE_GET_STATE(), 3, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -246,7 +246,7 @@ namespace luce {
 			}
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
-			lua_call(LUCE_GET_STATE(), 1, 0);
+			lua_pcall(LUCE_GET_STATE(), 1, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -267,7 +267,7 @@ namespace luce {
 			}
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
-			lua_call(LUCE_GET_STATE(), 1, 0);
+			lua_pcall(LUCE_GET_STATE(), 1, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}

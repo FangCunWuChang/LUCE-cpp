@@ -17,7 +17,44 @@ namespace luce {
 		return 0;
 	}
 
-	LUCE_FUNCTION_LIST(Component, setVisible, setSize);
+	LUCE_METHOD(addChildComponent) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		auto& pChild = LUCE_CHECK_USERDATA(L, 2, Component);
+		if (lua_isinteger(L, 3)) {
+			pInstance->addChildComponent(pChild, luaL_checkinteger(L, 3));
+		}
+		pInstance->addChildComponent(pChild);
+		return 0;
+	}
+
+	LUCE_METHOD(setBounds) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		pInstance->setBounds(
+			luaL_checkinteger(L, 2), luaL_checkinteger(L, 3),
+			luaL_checkinteger(L, 4), luaL_checkinteger(L, 5));
+		return 0;
+	}
+
+	LUCE_METHOD(getWidth) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		lua_pushinteger(L, pInstance->getWidth());
+		return 1;
+	}
+
+	LUCE_METHOD(getHeight) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		lua_pushinteger(L, pInstance->getHeight());
+		return 1;
+	}
+
+	LUCE_FUNCTION_LIST(Component,
+		setVisible,
+		setSize,
+		addChildComponent,
+		setBounds,
+		getWidth,
+		getHeight
+	);
 
 	LUCE_NEW_FUNCTION(Component) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, Component, pInstance,

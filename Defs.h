@@ -364,6 +364,8 @@ namespace luce {
 			lua_setfield(L, -2, "new");
 			lua_pushcfunction(L, LUCE_Adapter<T>::__bind);
 			lua_setfield(L, -2, "bind");
+			lua_pushcfunction(L, LUCE_Adapter<T>::__cast);
+			lua_setfield(L, -2, "cast");
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -2, "__index");
 			lua_setmetatable(L, -2);
@@ -405,6 +407,37 @@ namespace luce {
 
 			/** Leave metatable */
 			lua_pop(L, 1);
+			return 0;
+		}
+		/**
+		 * @brief		Change a userdata to current type.
+		 */
+		static int __cast(lua_State* L) {
+			/** Check userdata */
+			if (!lua_isuserdata(L, 1)) {
+				luaL_argerror(L, 1, "Isn't an userdata!");
+			}
+			/** Check function */
+			if (!lua_isfunction(L, 2)) {
+				luaL_argerror(L, 2, "Isn't a function!");
+			}
+
+			/** Get current metatable */
+			lua_getmetatable(L, 1);
+
+			/** Get target metatable */
+			luaL_getmetatable(L, LUCE_Adapter<T>::__name);
+
+			/** Set target metatable for userdata */
+			lua_setmetatable(L, 1);
+
+			/** Call function */
+			lua_pushvalue(L, 2);
+			lua_pcall(L, 0, 0, 0);
+
+			/** Reset metatable */
+			lua_setmetatable(L, 1);
+
 			return 0;
 		}
 

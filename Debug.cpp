@@ -67,10 +67,40 @@ namespace luce {
 		int num = 0;
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
-			fprintf(stderr, "\t%s\t\t\t\t%s : %p\n",
-				lua_tostring(L, -2),
-				lua_typename(L, lua_type(L, -1)),
-				lua_topointer(L, -1));
+			int type = lua_type(L, -1);
+			switch (type) {
+			case LUA_TNONE:
+			case LUA_TNIL:
+				fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+					lua_tostring(L, -2),
+					lua_typename(L, type), "(null)");
+				break;
+			case LUA_TBOOLEAN:
+				fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+					lua_tostring(L, -2),
+					lua_typename(L, type), lua_toboolean(L, -1) ? "true" : "false");
+				break;
+			case LUA_TNUMBER:
+				fprintf(stderr, "\t%s\t\t\t\t%s : %lf\n",
+					lua_tostring(L, -2),
+					lua_typename(L, type), lua_tonumber(L, -1));
+				break;
+			case LUA_TSTRING:
+				fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+					lua_tostring(L, -2),
+					lua_typename(L, type), lua_tostring(L, -1));
+				break;
+			case LUA_TLIGHTUSERDATA:
+			case LUA_TTABLE:
+			case LUA_TFUNCTION:
+			case LUA_TUSERDATA:
+			case LUA_TTHREAD:
+				fprintf(stderr, "\t%s\t\t\t\t%s : %p\n",
+					lua_tostring(L, -2),
+					lua_typename(L, type), lua_topointer(L, -1));
+				break;
+			}
+
 			lua_pop(L, 1);
 			num++;
 		}

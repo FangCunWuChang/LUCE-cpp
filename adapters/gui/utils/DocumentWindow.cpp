@@ -24,7 +24,7 @@ namespace luce {
 			}
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
-			lua_call(LUCE_GET_STATE(), 1, 0);
+			lua_pcall(LUCE_GET_STATE(), 1, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -45,7 +45,7 @@ namespace luce {
 			}
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
-			lua_call(LUCE_GET_STATE(), 1, 0);
+			lua_pcall(LUCE_GET_STATE(), 1, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}
@@ -66,7 +66,7 @@ namespace luce {
 			}
 
 			lua_pushvalue(LUCE_GET_STATE(), -2);
-			lua_call(LUCE_GET_STATE(), 1, 0);
+			lua_pcall(LUCE_GET_STATE(), 1, 0, 0);
 
 			lua_pop(LUCE_GET_STATE(), 1);
 		}

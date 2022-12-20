@@ -3,7 +3,7 @@
 	maximiseButton = 2,
 	closeButton = 4,
 
-	allButtons = 7
+	allButtons = 7				-- A combination of all the buttons above.
 }
 
-return luce.DocumentWindow
+return luce.TitleBarButtons
