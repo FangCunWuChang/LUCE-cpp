@@ -40,15 +40,16 @@ namespace luce {
 		return 0;
 	}
 
-	LUCE_FUNCTION_LIST(DocumentWindow,
+	LUCE_METHOD_LIST(DocumentWindow,
 		setVisible,
 		setContentNonOwned,
 		centreWithSize,
 		setUsingNativeTitleBar,
 		setResizable
 	);
+	LUCE_STATIC_METHOD_LIST(DocumentWindow);
 
-	LUCE_NEW_FUNCTION(DocumentWindow) {
+	LUCE_NEW(DocumentWindow) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, DocumentWindow, pInstance,
 			juce::String(luaL_checkstring(L, 1)), *LUCE_CHECK_USERDATA(L, 2, Colour),
 			(int)luaL_checkinteger(L, 3), (bool)lua_toboolean(L, 4));

@@ -27,9 +27,10 @@ namespace luce {
 		return 1;
 	}
 
-	LUCE_FUNCTION_LIST(Colour, getRed, getGreen, getBlue, getAlpha);
+	LUCE_METHOD_LIST(Colour, getRed, getGreen, getBlue, getAlpha);
+	LUCE_STATIC_METHOD_LIST(Colour);
 
-	LUCE_NEW_FUNCTION(Colour) {
+	LUCE_NEW(Colour) {
 		if (lua_isnumber(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3)) {
 			if (lua_isnumber(L, 4)) {
 				LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, Colour, pInstance,

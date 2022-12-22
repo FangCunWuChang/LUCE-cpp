@@ -1,4 +1,4 @@
-﻿require "luce.TitleBarButtons"
+﻿require "luce.DocumentWindow"
 require "luce.Colours"
 require "luce.Justification"
 require "luce.Debug"
@@ -8,8 +8,10 @@ luce.initialise = function(commandLineParameters)
 	print("app init")
 
 	mainWindow = luce.DocumentWindow.new(
-		"LUCE-demo1", luce.Colours.pink,
-		luce.TitleBarButtons.allButtons, true)
+		"LUCE-demo1",
+		luce.Desktop.getInstance():getDefaultLookAndFeel():findColour(
+			luce.ResizableWindow.ColourIds.backgroundColourId),
+		luce.DocumentWindow.TitleBarButtons.allButtons, true)
 	mainComponent = luce.Component.new("LUCE-demo1")
 	label = luce.Label.new("test label", "Hello World!")
 

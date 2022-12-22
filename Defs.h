@@ -25,6 +25,20 @@
 #define LUCE_REG(L, t)		luce::LUCE_Adapter<t>::__open(L, LUCE_NAME(t))
 
 /**
+ * @brief		Register a C function to the luce table in the Lua state.
+ *
+ * @param L		The Lua state which you want to register the class into.
+ * @param f		The function which you want to register.
+ */
+#define LUCE_REGF(L, f) \
+	{ \
+		lua_getglobal(L, "luce"); \
+		lua_pushfunction(L, f); \
+		lua_setfield(L, -2, LUCE_NAME(f)); \
+		lua_pop(L, 1); \
+	}
+
+/**
  * @brief		Try.
  */
 #define LUCE_TRY try
@@ -68,7 +82,15 @@
  * @param t		The name of the adapter class.
  * @param ...	The method list.
  */
-#define LUCE_FUNCTION_LIST(t, ...)				luaL_Reg luce::LUCE_Adapter<t>::__funcList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
+#define LUCE_METHOD_LIST(t, ...)				luaL_Reg luce::LUCE_Adapter<t>::__methodList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
+/**
+ * @brief		Make a static method list of the object class.
+ * @attention	50 methods max.
+ *
+ * @param t		The name of the adapter class.
+ * @param ...	The method list.
+ */
+#define LUCE_STATIC_METHOD_LIST(t, ...)				luaL_Reg luce::LUCE_Adapter<t>::__staticMethodList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
 
 /**
  * @brief		Create a Lua userdata and push it on the top of the stack.
@@ -155,7 +177,7 @@
  * 
  * @param t		The type of the object.
  */
-#define LUCE_NEW_FUNCTION(t) \
+#define LUCE_NEW(t) \
 	lua_State* luce::LUCE_Adapter<t>::__lState = nullptr; \
 	const char* luce::LUCE_Adapter<t>::__name = nullptr; \
 	int luce::LUCE_Adapter<t>::__new(lua_State* L)
@@ -351,7 +373,7 @@ namespace luce {
 			LUCE_Adapter<T>::__lState = L;
 			LUCE_Adapter<T>::__name = s;
 
-			/** Get global adapters table */
+			/** Get luce table */
 			lua_getglobal(L, "luce");
 
 			/** Create factory userdata */
@@ -360,10 +382,13 @@ namespace luce {
 
 			/** Create factory metatable */
 			lua_newtable(L);
+			luaL_setfuncs(L, LUCE_Adapter<T>::__staticMethodList, 0);
 			lua_pushcfunction(L, LUCE_Adapter<T>::__new);
 			lua_setfield(L, -2, "new");
 			lua_pushcfunction(L, LUCE_Adapter<T>::__bind);
 			lua_setfield(L, -2, "bind");
+			lua_pushcfunction(L, LUCE_Adapter<T>::__set);
+			lua_setfield(L, -2, "set");
 			lua_pushcfunction(L, LUCE_Adapter<T>::__cast);
 			lua_setfield(L, -2, "cast");
 			lua_pushvalue(L, -1);
@@ -379,7 +404,7 @@ namespace luce {
 			/** Create object metatable */
 			luaL_newmetatable(L, s);
 
-			luaL_setfuncs(L, LUCE_Adapter<T>::__funcList, 0);
+			luaL_setfuncs(L, LUCE_Adapter<T>::__methodList, 0);
 			lua_pushcfunction(L, LUCE_Adapter<T>::__gc);
 			lua_setfield(L, -2, "__gc");
 			lua_pushvalue(L, -1);
@@ -395,7 +420,7 @@ namespace luce {
 		 */
 		static int __new(lua_State* L);
 		/**
-		 * @brief		Bind a function to object.
+		 * @brief		Bind a Lua value to object.
 		 */
 		static int __bind(lua_State* L) {
 			/** Get metatable */
@@ -407,6 +432,28 @@ namespace luce {
 
 			/** Leave metatable */
 			lua_pop(L, 1);
+			return 0;
+		}
+		/**
+		 * @brief		Set a Lua value to object factory.
+		 */
+		static int __set(lua_State* L) {
+			/** Get luce table */
+			lua_getglobal(L, "luce");
+
+			/** Get factory userdata */
+			lua_getfield(L, -1, LUCE_Adapter<T>::__name);
+
+			/** Get factory metatable */
+			lua_getmetatable(L, -1);
+
+			/** Add object to metatable */
+			lua_pushvalue(L, 1);
+			lua_pushvalue(L, 2);
+			lua_settable(L, -3);
+
+			/** Leave tables */
+			lua_pop(L, 3);
 			return 0;
 		}
 		/**
@@ -442,7 +489,8 @@ namespace luce {
 		}
 
 	private:
-		static luaL_Reg __funcList[];
+		static luaL_Reg __methodList[];
+		static luaL_Reg __staticMethodList[];
 
 		static lua_State* __lState;
 		static const char* __name;

@@ -12,9 +12,10 @@ namespace luce {
 		return 0;
 	}
 
-	LUCE_FUNCTION_LIST(String, test);
+	LUCE_METHOD_LIST(String, test);
+	LUCE_STATIC_METHOD_LIST(String);
 
-	LUCE_NEW_FUNCTION(String) {
+	LUCE_NEW(String) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, String, pInstance);
 		return 1;
 	}

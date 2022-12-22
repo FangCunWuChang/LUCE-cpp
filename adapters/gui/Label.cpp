@@ -9,11 +9,12 @@ namespace luce {
 		return 0;
 	}
 
-	LUCE_FUNCTION_LIST(Label,
+	LUCE_METHOD_LIST(Label,
 		setJustificationType
 	);
+	LUCE_STATIC_METHOD_LIST(Label);
 
-	LUCE_NEW_FUNCTION(Label) {
+	LUCE_NEW(Label) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, Label, pInstance,
 			juce::String(luaL_checkstring(L, 1)), juce::String(luaL_checkstring(L, 2)));
 

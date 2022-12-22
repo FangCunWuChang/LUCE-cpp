@@ -47,7 +47,7 @@ namespace luce {
 		return 1;
 	}
 
-	LUCE_FUNCTION_LIST(Component,
+	LUCE_METHOD_LIST(Component,
 		setVisible,
 		setSize,
 		addChildComponent,
@@ -55,8 +55,9 @@ namespace luce {
 		getWidth,
 		getHeight
 	);
+	LUCE_STATIC_METHOD_LIST(Component);
 
-	LUCE_NEW_FUNCTION(Component) {
+	LUCE_NEW(Component) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, Component, pInstance,
 			juce::String(luaL_checkstring(L, 1)));
 
