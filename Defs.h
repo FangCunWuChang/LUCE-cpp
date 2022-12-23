@@ -386,7 +386,7 @@ namespace luce {
 		LUCE_Adapter() = delete;
 		/**
 		 * @brief		An lua_CFunction type method which will be called before userdata memory GC.		\n
-		 *				In this method, the destructor of the adapter class will be called.				\n
+		 *				In this method, the destructor of the container class will be called.				\n
 		 *				This method will be registered in the metatable of the userdata.
 		 */
 		static int __gc(lua_State* L) {
@@ -394,6 +394,9 @@ namespace luce {
 			pInstance->~LUCE_Container();
 			return 0;
 		};
+		/**
+		 * @brief		Get the data table of the object.
+		 */
 		static int __data(lua_State* L) {
 			luaL_checkudata(L, 1, LUCE_Adapter<T>::__name);
 
