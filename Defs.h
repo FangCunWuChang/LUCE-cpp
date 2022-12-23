@@ -446,6 +446,7 @@ namespace luce {
 			/** Create object metatable */
 			luaL_newmetatable(L, s);
 
+			luaL_setfuncs(L, LUCE_Adapter<T>::__staticMethodList, 0);
 			luaL_setfuncs(L, LUCE_Adapter<T>::__methodList, 0);
 			lua_pushcfunction(L, LUCE_Adapter<T>::__data);
 			lua_setfield(L, -2, "data");
@@ -497,6 +498,8 @@ namespace luce {
 			if (lua_isstring(L, 1)) {
 				const char* name = lua_tostring(L, 1);
 				if (!(strcmp(name, "__index") &&
+					strcmp(name, "__gc") &&
+					strcmp(name, "data") &&
 					strcmp(name, "new") &&
 					strcmp(name, "bind") &&
 					strcmp(name, "set") &&
@@ -522,6 +525,16 @@ namespace luce {
 
 			/** Leave tables */
 			lua_pop(L, 3);
+
+			/** Get metatable */
+			luaL_getmetatable(L, LUCE_Adapter<T>::__name);
+
+			lua_pushvalue(L, 1);
+			lua_pushvalue(L, 2);
+			lua_settable(L, -3);
+
+			/** Leave metatable */
+			lua_pop(L, 1);
 			return 0;
 		}
 		/**
