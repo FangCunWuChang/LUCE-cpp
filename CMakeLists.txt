@@ -276,7 +276,7 @@ target_include_directories (libLua PUBLIC "lua")
 #LUCE
 #=============================================================================================================================
 file (GLOB LUCE_SRC "*.cpp" "*.h")
-file (GLOB_RECURSE LUCE_MODULE_SRC "adapters/*.cpp" "adapters/*.h")
+file (GLOB_RECURSE LUCE_MODULE_SRC "adapters/*.cpp" "adapters/*.h" "quickUI/*.cpp" "quickUI/*.h")
 add_library (libLUCE SHARED ${LUCE_SRC} ${LUCE_MODULE_SRC})
 
 if (MSVC)
@@ -299,7 +299,7 @@ endif (MSVC)
 
 
 #=============================================================================================================================
-#LUCE Demo
+#LUCE Demo 1
 #=============================================================================================================================
 file (GLOB_RECURSE LUCE_DEMO1_SRC "extras/demo1/*.cpp")
 add_executable (LUCE-demo1 ${LUCE_DEMO1_SRC})
@@ -319,4 +319,29 @@ add_custom_command (TARGET LUCE-demo1 POST_BUILD
 add_custom_command (TARGET LUCE-demo1 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:libLUCE> $<TARGET_FILE_DIR:LUCE-demo1>
+)
+
+
+
+#=============================================================================================================================
+#LUCE Demo 2
+#=============================================================================================================================
+file (GLOB_RECURSE LUCE_DEMO2_SRC "extras/demo2/*.cpp")
+add_executable (LUCE-demo2 ${LUCE_DEMO2_SRC})
+target_compile_definitions (LUCE-demo2 PRIVATE "LUCE_DLL=1")
+target_link_libraries (LUCE-demo2 PRIVATE libLUCE)
+
+set_target_properties (LUCE-demo2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LUCE_APP_DIR})
+
+add_custom_command (TARGET LUCE-demo2 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libJUCE> $<TARGET_FILE_DIR:LUCE-demo2>
+)
+add_custom_command (TARGET LUCE-demo2 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libLua> $<TARGET_FILE_DIR:LUCE-demo2>
+)
+add_custom_command (TARGET LUCE-demo2 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:libLUCE> $<TARGET_FILE_DIR:LUCE-demo2>
 )

@@ -17,6 +17,8 @@
 #include "adapters/gui/gui.h"
 #include "adapters/graphics/graphics.h"
 
+#include "quickUI/quickUI.h"
+
 namespace luce {
 	/**
 	 * @brief		Create a table named "luce" on global.
