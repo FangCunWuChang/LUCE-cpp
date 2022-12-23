@@ -173,6 +173,38 @@
 	LUCE_INIT(p, &o)
 
 /**
+ * @brief		Create a Lua data table for object.
+ *
+ * @param L		The Lua state.
+ * @param ud	The index of the object.
+ */
+#define LUCE_CREATE_DATA(L, ud) \
+		lua_getglobal(L, "luce"); \
+		lua_getfield(L, -1, "__datas"); \
+		 \
+		lua_pushvalue(L, (ud > 0) ? ud : ((ud) - 2)); \
+		lua_newtable(L); \
+		lua_settable(L, -3); \
+		 \
+		lua_pop(L, 2)
+
+/**
+ * @brief		Push the Lua data table for object on the stack.
+ *
+ * @param L		The Lua state.
+ * @param ud	The index of the object.
+ */
+#define LUCE_PUSH_DATA(L, ud) \
+		lua_getglobal(L, "luce"); \
+		lua_getfield(L, -1, "__datas"); \
+		 \
+		lua_pushvalue(L, ud); \
+		lua_gettable(L, -2); \
+		 \
+		lua_remove(L, -2); \
+		lua_remove(L, -2)
+
+/**
  * @brief		Create a Lua type object create function.
  * 
  * @param t		The type of the object.
@@ -250,7 +282,7 @@
 		lua_getglobal(L, "luce"); \
 		lua_getfield(L, -1, "__refs"); \
 		 \
-		lua_pushvalue(L, udx - 2); \
+		lua_pushvalue(L, (udx > 0) ? udx : (udx - 2)); \
 		int result = luaL_ref(L, -2); \
 		 \
 		lua_pop(L, 2); \
@@ -358,9 +390,16 @@ namespace luce {
 		 *				This method will be registered in the metatable of the userdata.
 		 */
 		static int __gc(lua_State* L) {
-			auto pInstance = reinterpret_cast<LUCE_Container<T>*>(lua_touserdata(L, 1));
+			auto pInstance = reinterpret_cast<LUCE_Container<T>*>(luaL_checkudata(L, 1, LUCE_Adapter<T>::__name));
 			pInstance->~LUCE_Container();
 			return 0;
+		};
+		static int __data(lua_State* L) {
+			luaL_checkudata(L, 1, LUCE_Adapter<T>::__name);
+
+			LUCE_PUSH_DATA(L, 1);
+
+			return 1;
 		};
 		/**
 		 * @brief		Register the LUCE adapter class to Lua state as full userdata.
@@ -405,6 +444,8 @@ namespace luce {
 			luaL_newmetatable(L, s);
 
 			luaL_setfuncs(L, LUCE_Adapter<T>::__methodList, 0);
+			lua_pushcfunction(L, LUCE_Adapter<T>::__data);
+			lua_setfield(L, -2, "data");
 			lua_pushcfunction(L, LUCE_Adapter<T>::__gc);
 			lua_setfield(L, -2, "__gc");
 			lua_pushvalue(L, -1);
@@ -423,6 +464,17 @@ namespace luce {
 		 * @brief		Bind a Lua value to object.
 		 */
 		static int __bind(lua_State* L) {
+			/** Check name */
+			if (lua_isstring(L, 1)) {
+				const char* name = lua_tostring(L, 1);
+				if (!(strcmp(name, "__gc") &&
+					strcmp(name, "__index") &&
+					strcmp(name, "data"))) {
+					luaL_argerror(L, 1, "Bad name!");
+					return 0;
+				}
+			}
+
 			/** Get metatable */
 			luaL_getmetatable(L, LUCE_Adapter<T>::__name);
 
@@ -438,6 +490,19 @@ namespace luce {
 		 * @brief		Set a Lua value to object factory.
 		 */
 		static int __set(lua_State* L) {
+			/** Check name */
+			if (lua_isstring(L, 1)) {
+				const char* name = lua_tostring(L, 1);
+				if (!(strcmp(name, "__index") &&
+					strcmp(name, "new") &&
+					strcmp(name, "bind") &&
+					strcmp(name, "set") &&
+					strcmp(name, "cast"))) {
+					luaL_argerror(L, 1, "Bad name!");
+					return 0;
+				}
+			}
+
 			/** Get luce table */
 			lua_getglobal(L, "luce");
 

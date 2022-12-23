@@ -20,7 +20,7 @@ namespace luce {
 	int LUCE_API LUCE_printObjectInformation(lua_State* L, int ud);
 
 	/**
-	 * @brief		Print the current object in ref list.
+	 * @brief		Print the current object in refs list.
 	 *
 	 * @param L		The Lua state.
 	 * @param ud	The index of the object.
@@ -28,9 +28,24 @@ namespace luce {
 	int LUCE_API LUCE_printObjectRefs(lua_State* L, int ud);
 
 	/**
-	 * @brief		Print the LUCE object ref list.
+	 * @brief		Print the LUCE object refs list.
 	 *
 	 * @param L		The Lua state.
 	 */
 	int LUCE_API LUCE_printAllObjectRefs(lua_State* L);
+
+	/**
+	 * @brief		Print the current object data table in datas list.
+	 *
+	 * @param L		The Lua state.
+	 * @param ud	The index of the object.
+	 */
+	int LUCE_API LUCE_printObjectDatas(lua_State* L, int ud);
+
+	/**
+	 * @brief		Print the LUCE object datas list.
+	 *
+	 * @param L		The Lua state.
+	 */
+	int LUCE_API LUCE_printAllObjectDatas(lua_State* L);
 }

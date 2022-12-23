@@ -4,9 +4,9 @@
 
 namespace luce {
 	namespace utils {
-		class Component : public juce::Component {
+		class QuickComponent : public juce::Component {
 		public:
-			Component(const juce::String& name);
+			QuickComponent(const juce::String& name);
 
 			void paint(juce::Graphics& g) override;
 			void paintOverChildren(juce::Graphics& g) override;

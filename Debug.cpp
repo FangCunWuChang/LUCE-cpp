@@ -61,7 +61,7 @@ namespace luce {
 		fprintf(stderr, "address: %p\n", lua_topointer(L, 1));
 
 		/** Meta table */
-		lua_getmetatable(L, 1);
+		lua_getmetatable(L, ud);
 		fprintf(stderr, "meta table: %p\n", lua_topointer(L, -1));
 
 		int num = 0;
@@ -108,8 +108,63 @@ namespace luce {
 		/** Leave metatable */
 		lua_pop(L, 1);
 
+		/** Data table */
+		lua_getglobal(L, "luce");
+		lua_getfield(L, -1, "__datas");
+		fprintf(stderr, "__datas table: %p\n", lua_topointer(L, -1));
+		lua_pushvalue(L, (ud > 0) ? ud : (ud - 2));
+		lua_gettable(L, -2);
+		fprintf(stderr, "data table: %p\n", lua_topointer(L, -1));
+
+		int dnum = 0;
+		if (lua_topointer(L, -1)) {
+			lua_pushnil(L);
+			while (lua_next(L, -2)) {
+				int type = lua_type(L, -1);
+				switch (type) {
+				case LUA_TNONE:
+				case LUA_TNIL:
+					fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+						lua_tostring(L, -2),
+						lua_typename(L, type), "(null)");
+					break;
+				case LUA_TBOOLEAN:
+					fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+						lua_tostring(L, -2),
+						lua_typename(L, type), lua_toboolean(L, -1) ? "true" : "false");
+					break;
+				case LUA_TNUMBER:
+					fprintf(stderr, "\t%s\t\t\t\t%s : %lf\n",
+						lua_tostring(L, -2),
+						lua_typename(L, type), lua_tonumber(L, -1));
+					break;
+				case LUA_TSTRING:
+					fprintf(stderr, "\t%s\t\t\t\t%s : %s\n",
+						lua_tostring(L, -2),
+						lua_typename(L, type), lua_tostring(L, -1));
+					break;
+				case LUA_TLIGHTUSERDATA:
+				case LUA_TTABLE:
+				case LUA_TFUNCTION:
+				case LUA_TUSERDATA:
+				case LUA_TTHREAD:
+					fprintf(stderr, "\t%s\t\t\t\t%s : %p\n",
+						lua_tostring(L, -2),
+						lua_typename(L, type), lua_topointer(L, -1));
+					break;
+				}
+
+				lua_pop(L, 1);
+				dnum++;
+			}
+		}
+
+		/** Leave data table */
+		lua_pop(L, 3);
+
 		fprintf(stderr, "\n");
 		fprintf(stderr, "Total %d objects in the meta table.\n", num);
+		fprintf(stderr, "Total %d objects in the data table.\n", dnum);
 		fprintf(stderr, "=====================================================\n");
 		fprintf(stderr, "\n");
 
@@ -123,7 +178,8 @@ namespace luce {
 		fprintf(stderr, "===================LUCE Object Refs===================\n");
 
 		/** Object address */
-		fprintf(stderr, "object address: %p\n", lua_topointer(L, 1));
+		auto ptr = lua_topointer(L, ud);
+		fprintf(stderr, "object address: %p\n", ptr);
 
 		/** __refs table */
 		lua_getglobal(L, "luce");
@@ -134,7 +190,7 @@ namespace luce {
 		int count = 0;
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
-			if (lua_topointer(L, -1) == lua_topointer(L, 1)) {
+			if (lua_topointer(L, -1) == ptr) {
 				fprintf(stderr, "\t[%d]\t\t%p\n",
 					(int)lua_tointeger(L, -2),
 					lua_topointer(L, -1));
@@ -180,6 +236,78 @@ namespace luce {
 
 		fprintf(stderr, "\n");
 		fprintf(stderr, "Total %d objects in the __refs table.\n", num);
+		fprintf(stderr, "======================================================\n");
+		fprintf(stderr, "\n");
+
+		return 0;
+	}
+
+	int LUCE_printObjectDatas(lua_State* L, int ud) {
+		luaL_checktype(L, ud, LUA_TUSERDATA);
+
+		fprintf(stderr, "\n");
+		fprintf(stderr, "===================LUCE Object Datas==================\n");
+
+		/** Object address */
+		auto ptr = lua_topointer(L, ud);
+		fprintf(stderr, "object address: %p\n", ptr);
+
+		/** __datas table */
+		lua_getglobal(L, "luce");
+		lua_getfield(L, -1, "__datas");
+		fprintf(stderr, "__datas table: %p\n", lua_topointer(L, -1));
+		lua_pushvalue(L, (ud > 0) ? ud : (ud - 2));
+		lua_gettable(L, -2);
+		fprintf(stderr, "data table: %p\n", lua_topointer(L, -1));
+
+		int num = 0;
+		if (lua_topointer(L, -1)) {
+			lua_pushnil(L);
+			while (lua_next(L, -2)) {
+				fprintf(stderr, "\t[%d]\t\t%p\n",
+					(int)lua_tointeger(L, -2),
+					lua_topointer(L, -1));
+				lua_pop(L, 1);
+				num++;
+			}
+		}
+
+		/** Leave luce table */
+		lua_pop(L, 3);
+
+		fprintf(stderr, "\n");
+		fprintf(stderr, "Total %d objects in the object data table.\n", num);
+		fprintf(stderr, "======================================================\n");
+		fprintf(stderr, "\n");
+
+		return 0;
+	}
+
+	int LUCE_printAllObjectDatas(lua_State* L) {
+		fprintf(stderr, "\n");
+		fprintf(stderr, "=================LUCE All Object Datas================\n");
+
+		/** __datas table */
+		lua_getglobal(L, "luce");
+		lua_getfield(L, -1, "__datas");
+		fprintf(stderr, "__datas table: %p\n", lua_topointer(L, -1));
+
+		int num = 0;
+
+		lua_pushnil(L);
+		while (lua_next(L, -2)) {
+			fprintf(stderr, "\t[%p]\t\t%p\n",
+				lua_topointer(L, -2),
+				lua_topointer(L, -1));
+			lua_pop(L, 1);
+			num++;
+		}
+
+		/** Leave luce table */
+		lua_pop(L, 2);
+
+		fprintf(stderr, "\n");
+		fprintf(stderr, "Total %d objects in the __datas table.\n", num);
 		fprintf(stderr, "======================================================\n");
 		fprintf(stderr, "\n");
 

@@ -309,15 +309,15 @@ target_link_libraries (LUCE-demo1 PRIVATE libLUCE)
 set_target_properties (LUCE-demo1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LUCE_APP_DIR})
 
 add_custom_command (TARGET LUCE-demo1 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libJUCE> $<TARGET_FILE_DIR:LUCE-demo1>
 )
 add_custom_command (TARGET LUCE-demo1 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libLua> $<TARGET_FILE_DIR:LUCE-demo1>
 )
 add_custom_command (TARGET LUCE-demo1 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libLUCE> $<TARGET_FILE_DIR:LUCE-demo1>
 )
 
@@ -334,14 +334,14 @@ target_link_libraries (LUCE-demo2 PRIVATE libLUCE)
 set_target_properties (LUCE-demo2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LUCE_APP_DIR})
 
 add_custom_command (TARGET LUCE-demo2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libJUCE> $<TARGET_FILE_DIR:LUCE-demo2>
 )
 add_custom_command (TARGET LUCE-demo2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libLua> $<TARGET_FILE_DIR:LUCE-demo2>
 )
 add_custom_command (TARGET LUCE-demo2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:libLUCE> $<TARGET_FILE_DIR:LUCE-demo2>
 )
