@@ -198,7 +198,7 @@
 		lua_getglobal(L, "luce"); \
 		lua_getfield(L, -1, "__datas"); \
 		 \
-		lua_pushvalue(L, ud); \
+		lua_pushvalue(L, ((ud) > 0) ? (ud) : ((ud) - 2)); \
 		lua_gettable(L, -2); \
 		 \
 		lua_remove(L, -2); \
@@ -401,6 +401,12 @@ namespace luce {
 			luaL_checkudata(L, 1, LUCE_Adapter<T>::__name);
 
 			LUCE_PUSH_DATA(L, 1);
+
+			if (lua_isnil(L, -1)) {
+				lua_pop(L, 1);
+				LUCE_CREATE_DATA(L, 1);
+				LUCE_PUSH_DATA(L, 1);
+			}
 
 			return 1;
 		};

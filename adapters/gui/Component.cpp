@@ -10,6 +10,12 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(repaint) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		pInstance->repaint();
+		return 0;
+	}
+
 	LUCE_METHOD(setSize) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
 		pInstance->setSize(
@@ -49,6 +55,7 @@ namespace luce {
 
 	LUCE_METHOD_LIST(Component,
 		setVisible,
+		repaint,
 		setSize,
 		addChildComponent,
 		setBounds,

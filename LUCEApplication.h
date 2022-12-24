@@ -47,7 +47,7 @@
 				} \
 				 \
 				lua_pushstring(L, commandLineParameters.toStdString().c_str()); \
-				lua_pcall(L, 1, 0, 0); \
+				lua_call(L, 1, 0); \
 				 \
 				lua_pop(L, 1); \
 			} \
@@ -63,7 +63,7 @@
 				return; \
 			} \
 			 \
-			lua_pcall(L, 0, 0, 0); \
+			lua_call(L, 0, 0); \
 			 \
 			lua_pop(L, 1); \
 		}; \
@@ -79,7 +79,7 @@
 			} \
 			 \
 			lua_pushstring(L, commandLine.toStdString().c_str()); \
-			lua_pcall(L, 1, 0, 0); \
+			lua_call(L, 1, 0); \
 			 \
 			lua_pop(L, 1); \
 		}; \
@@ -94,7 +94,7 @@
 				return; \
 			} \
 			 \
-			lua_pcall(L, 0, 0, 0); \
+			lua_call(L, 0, 0); \
 			 \
 			lua_pop(L, 1); \
 		}; \
@@ -109,7 +109,7 @@
 				return; \
 			} \
 			 \
-			lua_pcall(L, 0, 0, 0); \
+			lua_call(L, 0, 0); \
 			 \
 			lua_pop(L, 1); \
 		}; \
@@ -124,7 +124,7 @@
 				return; \
 			} \
 			 \
-			lua_pcall(L, 0, 0, 0); \
+			lua_call(L, 0, 0); \
 			 \
 			lua_pop(L, 1); \
 		}; \
@@ -140,7 +140,7 @@
 			} \
 			 \
 			lua_pushvalue(L, -2); \
-			lua_pcall(L, 1, 1, 0); \
+			lua_call(L, 1, 1); \
 			 \
 			auto result = lua_toboolean(L, -1); \
 			 \

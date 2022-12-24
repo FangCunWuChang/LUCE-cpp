@@ -21,6 +21,8 @@ namespace luce {
 			void resized() override;
 			void moved() override;
 
+			const juce::Rectangle<int> getScreenSize() const;
+
 			LUCE_REF_DATA;
 		};
 	}
