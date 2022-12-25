@@ -4,11 +4,27 @@ luce.QuickComponent.bind("init", function(self)
 	local data = self:data()
 
 	data.QuickComponent = {}
+
+	data.QuickComponent.enabled = true
+	data.QuickComponent.mouseIn = false
+	data.QuickComponent.mouseDown = false
+	data.QuickComponent.toggled = false
+	data.QuickComponent.toggleable = false
+
+	-- [1] normal		enabled = true, mouseIn = false, mouseDown = false, toggled = false
+	-- [2] hovered		enabled = true, mouseIn = true, mouseDown = false, toggled = false
+	-- [3] pressed		enabled = true, mouseDown = true, toggled = false
+	-- [4] disabled		enabled = false, toggled = false
+	-- [5] toggled		enabled = true, mouseIn = false, mouseDown = false, toggled = true
+	-- [6] hoveredT		enabled = true, mouseIn = true, mouseDown = false, toggled = true
+	-- [7] pressedT		enabled = true, mouseDown = true, toggled = true
+	-- [8] disabledT	enabled = false, toggled = true
+	data.QuickComponent.list = {}
 	data.QuickComponent.style = {}
 	data.QuickComponent.elements = {}
 
-	data.QuickComponent.areaFunc = function() return luce.RectangleInt.new() end
-	data.QuickComponent.screenFunc = function() return luce.RectangleInt.new() end
+	data.QuickComponent.areaFunc = function() return self:getArea() end
+	data.QuickComponent.screenFunc = function() return self:getScreen() end
 
 	data.QuickComponent.temp = {
 		size = {
@@ -35,6 +51,55 @@ luce.QuickComponent.bind("init", function(self)
 			background = 0
 		}
 	}
+
+	data.QuickComponent.stateChanged = function(self)
+		local getIDFunc = function()
+			local id = 0
+			if self.toggled then id = 5 else id = 1 end
+			if not self.enabled then
+				id = id + 3
+				return id
+			end
+			if self.mouseDown then
+				id = id + 2
+				return id
+			end
+			if self.mouseIn then
+				id = id + 1
+				return id
+			end
+			return id
+		end
+		
+		local baseMap = {
+			[1] = {},
+			[2] = { 1 },
+			[3] = { 1 },
+			[4] = { 1 },
+			[5] = { 1 },
+			[6] = { 2, 5, 1 },
+			[7] = { 3, 5, 1 },
+			[8] = { 4, 5, 1 }
+		}
+
+		local stateID = getIDFunc()
+		local styleSheet = self.list[stateID]
+		if styleSheet == nil then
+			local map = baseMap[stateID]
+			if map ~= nil then
+				for i, v in ipairs(map) do
+					if self.list[v] ~= nil then
+						styleSheet = self.list[v]
+						break
+					end
+				end
+			end
+		end
+		if styleSheet ~= nil then
+			self.style = require(styleSheet)() or {}
+			self:update()
+		end
+	end
 
 	data.QuickComponent.update = function(self)
 		-- The box model
@@ -133,19 +198,53 @@ luce.QuickComponent.bind("init", function(self)
 	return data.QuickComponent
 end)
 
-luce.QuickComponent.bind("setStyle", function(self, styleName)
+luce.QuickComponent.bind("setStyle", function(self, ...)
 	local data = self:data()
 
 	if data.QuickComponent == nil then
 		self:init()
 	end
 
-	data.QuickComponent.style = require(styleName)
-	data.QuickComponent.areaFunc = function() return self:getArea() end
-	data.QuickComponent.screenFunc = function() return self:getScreen() end
-	data.QuickComponent:update()
+	data.QuickComponent.list = { ... }
+	data.QuickComponent:stateChanged()
 
 	self:repaint()
+end)
+
+luce.QuickComponent.bind("setEnabled", function(self, enabled)
+	local data = self:data()
+
+	if data.QuickComponent == nil then
+		self:init()
+	end
+
+	data.QuickComponent.enabled = enabled
+	data.QuickComponent:stateChanged()
+
+	self:repaint()
+end)
+
+luce.QuickComponent.bind("setToggled", function(self, toggled)
+	local data = self:data()
+
+	if data.QuickComponent == nil then
+		self:init()
+	end
+
+	data.QuickComponent.toggled = toggled
+	data.QuickComponent:stateChanged()
+
+	self:repaint()
+end)
+
+luce.QuickComponent.bind("setToggleable", function(self, toggleable)
+	local data = self:data()
+
+	if data.QuickComponent == nil then
+		self:init()
+	end
+
+	data.QuickComponent.toggleable = toggleable
 end)
 
 return luce.QuickComponent

@@ -13,7 +13,8 @@ luce.initialise = function(commandLineParameters)
 			luce.ResizableWindow.ColourIds.backgroundColourId),
 		luce.DocumentWindow.TitleBarButtons.allButtons, true)
 	mainComponent = luce.QuickComponent.new("LUCE-demo2")
-	mainComponent:setStyle("ui.demo2")
+	mainComponent:setStyle("ui.demo2", nil, nil, "ui.demo2-off")
+	mainComponent:setEnabled(false)
 	
 	mainWindow:setUsingNativeTitleBar(true)
 	mainWindow:setResizable(true, false)
