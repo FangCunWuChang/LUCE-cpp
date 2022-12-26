@@ -276,7 +276,14 @@ target_include_directories (libLua PUBLIC "lua")
 #LUCE
 #=============================================================================================================================
 file (GLOB LUCE_SRC "*.cpp" "*.h")
-file (GLOB_RECURSE LUCE_MODULE_SRC "adapters/*.cpp" "adapters/*.h" "quickUI/*.cpp" "quickUI/*.h")
+file (GLOB_RECURSE LUCE_MODULE_SRC 
+    "adapters/*.cpp"
+    "adapters/*.h"
+    "quickUI/*.cpp"
+    "quickUI/*.h"
+    "flowUI/*.cpp"
+    "flowUI/*.h"
+)
 add_library (libLUCE SHARED ${LUCE_SRC} ${LUCE_MODULE_SRC})
 
 if (MSVC)

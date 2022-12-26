@@ -18,6 +18,7 @@
 #include "adapters/graphics/graphics.h"
 
 #include "quickUI/quickUI.h"
+#include "flowUI/flowUI.h"
 
 namespace luce {
 	/**
