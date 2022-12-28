@@ -4,8 +4,17 @@
 
 namespace luce {
 	namespace utils {
+		FlowGridableUnit::FlowGridableUnit(FlowWindow* window, bool isContainer) 
+			: window(window), isContainer(isContainer) {
+
+		}
+
+		bool FlowGridableUnit::thisIsContainer() const {
+			return this->isContainer;
+		}
+
 		FlowContainer::FlowContainer(FlowWindow* window, bool isVertical)
-			: window(window), isVertical(isVertical) {
+			: FlowGridableUnit(window, true), isVertical(isVertical) {
 			this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 		}
 
@@ -13,6 +22,7 @@ namespace luce {
 			if (!comp) { return; }
 			if (!this->components.contains(comp)) {
 				this->components.add(comp);
+				this->addChildComponent(comp);
 				if (show) {
 					this->current = this->components.size() - 1;
 				}
@@ -20,11 +30,44 @@ namespace luce {
 			this->updateComponents();
 		}
 
+		void FlowContainer::remove(FlowComponent* comp) {
+			comp->setVisible(false);
+			this->components.removeAllInstancesOf(comp);
+			this->removeChildComponent(comp);
+			this->updateComponents();
+		}
+
+		bool FlowContainer::isEmpty() const {
+			return this->components.size() == 0;
+		}
+
 		void FlowContainer::setCurrent(int current) {
 			if (current >= 0 && current < this->components.size()) {
 				this->current = current;
 				this->updateComponents();
 			}
+		}
+
+		void FlowContainer::moveTo(FlowContainer* container) {
+			for (auto i : this->components) {
+				this->removeChildComponent(i);
+				container->addChildComponent(i);
+			}
+			container->current = container->components.size() + this->current;
+			container->components.addArray(this->components);
+			this->components.clear();
+			this->current = -1;
+			this->updateComponents();
+			container->updateComponents();
+		}
+
+		FlowContainer* FlowContainer::findComponent(FlowComponent* comp) const {
+			for (auto i : this->components) {
+				if (i == comp) {
+					return const_cast<FlowContainer*>(this);
+				}
+			}
+			return nullptr;
 		}
 
 		void FlowContainer::resized() {
@@ -125,6 +168,8 @@ namespace luce {
 
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
+				this->mousePosTemp = event.getPosition();
+
 				float totalSize = 0;
 				for (int i = 0; i < this->tabSizeTemp.size(); i++) {
 					auto tabSize = std::get<1>(this->tabSizeTemp.getReference(i));
@@ -157,11 +202,10 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto startPoint = event.getPosition() - event.getOffsetFromDragStart();
-
 					this->window->getManager()->moveEnd(
 						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-startPoint);
+						-this->mousePosTemp);
+					this->mousePosTemp = juce::Point<int>(0, 0);
 
 					/** Get Screen Size */
 					auto screenSize = this->window->getScreenSize();
@@ -232,11 +276,9 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto startPoint = event.getPosition() - event.getOffsetFromDragStart();
-
 					this->window->getManager()->moveProgressing(
 						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-startPoint, this);
+						-this->mousePosTemp, this);
 
 					this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 				}
@@ -247,11 +289,10 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto startPoint = event.getPosition() - event.getOffsetFromDragStart();
-
 					this->window->getManager()->moveEnd(
 						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-startPoint);
+						-this->mousePosTemp);
+					this->mousePosTemp = juce::Point<int>(0, 0);
 				}
 			}
 		}

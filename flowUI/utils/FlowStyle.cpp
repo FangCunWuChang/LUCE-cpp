@@ -4,51 +4,51 @@ namespace luce {
 	namespace utils {
 		JUCE_IMPLEMENT_SINGLETON(FlowStyle)
 
-		void FlowStyle::setTitleHeight(double titleHeight) {
+		void FlowStyle::setTitleHeight(float titleHeight) {
 			FlowStyle::getInstance()->titleHeight = titleHeight;
 		}
 
-		void FlowStyle::setTitleWidth(double titleWidth) {
+		void FlowStyle::setTitleWidth(float titleWidth) {
 			FlowStyle::getInstance()->titleWidth = titleWidth;
 		}
 
-		void FlowStyle::setTitleBorderHeight(double titleBorderHeight) {
+		void FlowStyle::setTitleBorderHeight(float titleBorderHeight) {
 			FlowStyle::getInstance()->titleBorderHeight = titleBorderHeight;
 		}
 
-		void FlowStyle::setTitleBorderWidth(double titleBorderWidth) {
+		void FlowStyle::setTitleBorderWidth(float titleBorderWidth) {
 			FlowStyle::getInstance()->titleBorderWidth = titleBorderWidth;
 		}
 
-		void FlowStyle::setTitleSplitWidth(double titleSplitWidth) {
+		void FlowStyle::setTitleSplitWidth(float titleSplitWidth) {
 			FlowStyle::getInstance()->titleSplitWidth = titleSplitWidth;
 		}
 
-		void FlowStyle::setTitleSplitHeight(double titleSplitHeight) {
+		void FlowStyle::setTitleSplitHeight(float titleSplitHeight) {
 			FlowStyle::getInstance()->titleSplitHeight = titleSplitHeight;
 		}
 
-		void FlowStyle::setTitleSplitVLength(double titleSplitVLength) {
+		void FlowStyle::setTitleSplitVLength(float titleSplitVLength) {
 			FlowStyle::getInstance()->titleSplitVLength = titleSplitVLength;
 		}
 
-		void FlowStyle::setTitleSplitHLength(double titleSplitHLength) {
+		void FlowStyle::setTitleSplitHLength(float titleSplitHLength) {
 			FlowStyle::getInstance()->titleSplitHLength = titleSplitHLength;
 		}
 
-		void FlowStyle::setTitleTextHeight(double titleTextHeight) {
+		void FlowStyle::setTitleTextHeight(float titleTextHeight) {
 			FlowStyle::getInstance()->titleTextHeight = titleTextHeight;
 		}
 
-		void FlowStyle::setTitleTextWidth(double titleTextWidth) {
+		void FlowStyle::setTitleTextWidth(float titleTextWidth) {
 			FlowStyle::getInstance()->titleTextWidth = titleTextWidth;
 		}
 
-		void FlowStyle::setTitleTextPaddingWidth(double titleTextPaddingWidth) {
+		void FlowStyle::setTitleTextPaddingWidth(float titleTextPaddingWidth) {
 			FlowStyle::getInstance()->titleTextPaddingWidth = titleTextPaddingWidth;
 		}
 
-		void FlowStyle::setTitleTextPaddingHeight(double titleTextPaddingHeight) {
+		void FlowStyle::setTitleTextPaddingHeight(float titleTextPaddingHeight) {
 			FlowStyle::getInstance()->titleTextPaddingHeight = titleTextPaddingHeight;
 		}
 
@@ -76,51 +76,51 @@ namespace luce {
 			FlowStyle::getInstance()->titleTextHighlightColor = textHighlightColor;
 		}
 
-		double FlowStyle::getTitleHeight() {
+		float FlowStyle::getTitleHeight() {
 			return FlowStyle::getInstance()->titleHeight;
 		}
 
-		double FlowStyle::getTitleWidth() {
+		float FlowStyle::getTitleWidth() {
 			return FlowStyle::getInstance()->titleWidth;
 		}
 
-		double FlowStyle::getTitleBorderHeight() {
+		float FlowStyle::getTitleBorderHeight() {
 			return FlowStyle::getInstance()->titleBorderHeight;
 		}
 
-		double FlowStyle::getTitleBorderWidth() {
+		float FlowStyle::getTitleBorderWidth() {
 			return FlowStyle::getInstance()->titleBorderWidth;
 		}
 
-		double FlowStyle::getTitleSplitWidth() {
+		float FlowStyle::getTitleSplitWidth() {
 			return FlowStyle::getInstance()->titleSplitWidth;
 		}
 
-		double FlowStyle::getTitleSplitHeight() {
+		float FlowStyle::getTitleSplitHeight() {
 			return FlowStyle::getInstance()->titleSplitHeight;
 		}
 
-		double FlowStyle::getTitleSplitVLength() {
+		float FlowStyle::getTitleSplitVLength() {
 			return FlowStyle::getInstance()->titleSplitVLength;
 		}
 
-		double FlowStyle::getTitleSplitHLength() {
+		float FlowStyle::getTitleSplitHLength() {
 			return FlowStyle::getInstance()->titleSplitHLength;
 		}
 
-		double FlowStyle::getTitleTextHeight() {
+		float FlowStyle::getTitleTextHeight() {
 			return FlowStyle::getInstance()->titleTextHeight;
 		}
 
-		double FlowStyle::getTitleTextWidth() {
+		float FlowStyle::getTitleTextWidth() {
 			return FlowStyle::getInstance()->titleTextWidth;
 		}
 
-		double FlowStyle::getTitleTextPaddingWidth() {
+		float FlowStyle::getTitleTextPaddingWidth() {
 			return FlowStyle::getInstance()->titleTextPaddingWidth;
 		}
 
-		double FlowStyle::getTitleTextPaddingHeight() {
+		float FlowStyle::getTitleTextPaddingHeight() {
 			return FlowStyle::getInstance()->titleTextPaddingHeight;
 		}
 
@@ -146,6 +146,78 @@ namespace luce {
 
 		const juce::Colour FlowStyle::getTitleTextHighlightColor() {
 			return FlowStyle::getInstance()->titleTextHighlightColor;
+		}
+
+		void FlowStyle::setResizerHeight(float resizerHeight) {
+			FlowStyle::getInstance()->resizerHeight = resizerHeight;
+		}
+
+		void FlowStyle::setResizerWidth(float resizerWidth) {
+			FlowStyle::getInstance()->resizerWidth = resizerWidth;
+		}
+
+		void FlowStyle::setUnitMinimumHeight(float unitMinimumHeight) {
+			FlowStyle::getInstance()->unitMinimumHeight = unitMinimumHeight;
+		}
+
+		void FlowStyle::setUnitMinimumWidth(float unitMinimumWidth) {
+			FlowStyle::getInstance()->unitMinimumWidth = unitMinimumWidth;
+		}
+
+		void FlowStyle::setUnitMaximumHeight(float unitMaximumHeight) {
+			FlowStyle::getInstance()->unitMaximumHeight = unitMaximumHeight;
+		}
+
+		void FlowStyle::setUnitMaximumWidth(float unitMaximumWidth) {
+			FlowStyle::getInstance()->unitMaximumWidth = unitMaximumWidth;
+		}
+
+		void FlowStyle::setResizerColor(juce::Colour resizerColor) {
+			FlowStyle::getInstance()->resizerColor = resizerColor;
+		}
+
+		float FlowStyle::getResizerHeight() {
+			return FlowStyle::getInstance()->resizerHeight;
+		}
+
+		float FlowStyle::getResizerWidth() {
+			return FlowStyle::getInstance()->resizerWidth;
+		}
+
+		float FlowStyle::getUnitMinimumHeight() {
+			return FlowStyle::getInstance()->unitMinimumHeight;
+		}
+
+		float FlowStyle::getUnitMinimumWidth() {
+			return FlowStyle::getInstance()->unitMinimumWidth;
+		}
+
+		float FlowStyle::getUnitMaximumHeight() {
+			return FlowStyle::getInstance()->unitMaximumHeight;
+		}
+
+		float FlowStyle::getUnitMaximumWidth() {
+			return FlowStyle::getInstance()->unitMaximumWidth;
+		}
+
+		const juce::Colour FlowStyle::getResizerColor() {
+			return FlowStyle::getInstance()->resizerColor;
+		}
+
+		void FlowStyle::setContainerDefaultHeight(float containerDefaultHeight) {
+			FlowStyle::getInstance()->containerDefaultHeight = containerDefaultHeight;
+		}
+
+		void FlowStyle::setContainerDefaultWidth(float containerDefaultWidth) {
+			FlowStyle::getInstance()->containerDefaultWidth = containerDefaultWidth;
+		}
+
+		float FlowStyle::getContainerDefaultHeight() {
+			return FlowStyle::getInstance()->containerDefaultHeight;
+		}
+
+		float FlowStyle::getContainerDefaultWidth() {
+			return FlowStyle::getInstance()->containerDefaultWidth;
 		}
 	}
 }

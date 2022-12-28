@@ -6,14 +6,36 @@
 namespace luce {
 	namespace utils {
 		class FlowWindow;
+		class FlowContainer;
 
-		class FlowContainer : public juce::Component {
+		class FlowGridableUnit : public juce::Component {
+		public:
+			FlowGridableUnit() = delete;
+			FlowGridableUnit(FlowWindow* window, bool isContainer = true);
+			virtual ~FlowGridableUnit() = default;
+
+			bool thisIsContainer() const;
+			virtual FlowContainer* findComponent(FlowComponent* comp) const = 0;
+
+		protected:
+			FlowWindow* window = nullptr;
+			bool isContainer = true;
+
+		private:
+			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowGridableUnit)
+		};
+
+		class FlowContainer : public FlowGridableUnit {
 		public:
 			FlowContainer() = delete;
 			FlowContainer(FlowWindow* window, bool isVertical = true);
 
 			void add(FlowComponent* comp, bool show = true);
+			void remove(FlowComponent* comp);
+			bool isEmpty() const;
 			void setCurrent(int current);
+			void moveTo(FlowContainer* container);
+			FlowContainer* findComponent(FlowComponent* comp) const override;
 
 		private:
 			void resized() override;
@@ -26,13 +48,13 @@ namespace luce {
 			void mouseExit(const juce::MouseEvent& event) override;
 
 		private:
-			FlowWindow* window = nullptr;
 			bool isVertical = true;
 			juce::Array<FlowComponent*> components;
 			int current = -1;
 			/** name, size, index */
 			using TabSizeTempElement = std::tuple<juce::String, float, int>;
 			juce::Array<TabSizeTempElement> tabSizeTemp;
+			juce::Point<int> mousePosTemp;
 
 			void updateComponents(bool repaint = true);
 
