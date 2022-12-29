@@ -219,5 +219,181 @@ namespace luce {
 		float FlowStyle::getContainerDefaultWidth() {
 			return FlowStyle::getInstance()->containerDefaultWidth;
 		}
+
+		void FlowStyle::setButtonWidth(float buttonWidth) {
+			FlowStyle::getInstance()->buttonWidth = buttonWidth;
+		}
+
+		void FlowStyle::setButtonHeight(float buttonHeight) {
+			FlowStyle::getInstance()->buttonHeight = buttonHeight;
+		}
+
+		void FlowStyle::setButtonIconWidth(float buttonIconWidth) {
+			FlowStyle::getInstance()->buttonIconWidth = buttonIconWidth;
+		}
+
+		void FlowStyle::setButtonIconHeight(float buttonIconHeight) {
+			FlowStyle::getInstance()->buttonIconHeight = buttonIconHeight;
+		}
+
+		void FlowStyle::setButtonSplitWidth(float buttonSplitWidth) {
+			FlowStyle::getInstance()->buttonSplitWidth = buttonSplitWidth;
+		}
+
+		void FlowStyle::setButtonSplitHeight(float buttonSplitHeight) {
+			FlowStyle::getInstance()->buttonSplitHeight = buttonSplitHeight;
+		}
+
+		void FlowStyle::setButtonPaddingWidth(float buttonPaddingWidth) {
+			FlowStyle::getInstance()->buttonPaddingWidth = buttonPaddingWidth;
+		}
+
+		void FlowStyle::setButtonPaddingHeight(float buttonPaddingHeight) {
+			FlowStyle::getInstance()->buttonPaddingHeight = buttonPaddingHeight;
+		}
+
+		void FlowStyle::setButtonCornerSize(float buttonCornerSize) {
+			FlowStyle::getInstance()->buttonCornerSize = buttonCornerSize;
+		}
+
+		void FlowStyle::setButtonBorderSize(float buttonBorderSize) {
+			FlowStyle::getInstance()->buttonBorderSize = buttonBorderSize;
+		}
+
+		void FlowStyle::setButtonIconColor(juce::Colour buttonIconColor) {
+			FlowStyle::getInstance()->buttonIconColor = buttonIconColor;
+		}
+
+		void FlowStyle::setButtonIconBackgroundColor(juce::Colour buttonIconBackgroundColor) {
+			FlowStyle::getInstance()->buttonIconBackgroundColor = buttonIconBackgroundColor;
+		}
+
+		void FlowStyle::setAdsorbColor(juce::Colour adsorbColor) {
+			FlowStyle::getInstance()->adsorbAreaColor = adsorbColor;
+		}
+
+		float FlowStyle::getButtonWidth() {
+			return FlowStyle::getInstance()->buttonWidth;
+		}
+
+		float FlowStyle::getButtonHeight() {
+			return FlowStyle::getInstance()->buttonHeight;
+		}
+
+		float FlowStyle::getButtonIconWidth() {
+			return FlowStyle::getInstance()->buttonIconWidth;
+		}
+
+		float FlowStyle::getButtonIconHeight() {
+			return FlowStyle::getInstance()->buttonIconHeight;
+		}
+
+		float FlowStyle::getButtonSplitWidth() {
+			return FlowStyle::getInstance()->buttonSplitWidth;
+		}
+
+		float FlowStyle::getButtonSplitHeight() {
+			return FlowStyle::getInstance()->buttonSplitHeight;
+		}
+
+		float FlowStyle::getButtonPaddingWidth() {
+			return FlowStyle::getInstance()->buttonPaddingWidth;
+		}
+
+		float FlowStyle::getButtonPaddingHeight() {
+			return FlowStyle::getInstance()->buttonPaddingHeight;
+		}
+
+		float FlowStyle::getButtonCornerSize() {
+			return FlowStyle::getInstance()->buttonCornerSize;
+		}
+
+		float FlowStyle::getButtonBorderSize() {
+			return FlowStyle::getInstance()->buttonBorderSize;
+		}
+
+		const juce::Colour FlowStyle::getButtonIconColor() {
+			return FlowStyle::getInstance()->buttonIconColor;
+		}
+
+		const juce::Colour FlowStyle::getButtonIconBackgroundColor() {
+			return FlowStyle::getInstance()->buttonIconBackgroundColor;
+		}
+
+		const juce::Colour FlowStyle::getAdsorbColor() {
+			return FlowStyle::getInstance()->adsorbAreaColor;
+		}
+
+		void FlowStyle::setButtonLeftIcon(const juce::String& buttonLeftIcon) {
+			FlowStyle::getInstance()->buttonLeftIcon = buttonLeftIcon;
+		}
+
+		void FlowStyle::setButtonRightIcon(const juce::String& buttonRightIcon) {
+			FlowStyle::getInstance()->buttonRightIcon = buttonRightIcon;
+		}
+
+		void FlowStyle::setButtonTopIcon(const juce::String& buttonTopIcon) {
+			FlowStyle::getInstance()->buttonTopIcon = buttonTopIcon;
+		}
+
+		void FlowStyle::setButtonBottomIcon(const juce::String& buttonBottomIcon) {
+			FlowStyle::getInstance()->buttonBottomIcon = buttonBottomIcon;
+		}
+
+		void FlowStyle::setButtonAdsorbCenterIcon(const juce::String& buttonAdsorbCenterIcon) {
+			FlowStyle::getInstance()->buttonAdsorbCenterIcon = buttonAdsorbCenterIcon;
+		}
+
+		void FlowStyle::setButtonAdsorbLeftIcon(const juce::String& buttonAdsorbLeftIcon) {
+			FlowStyle::getInstance()->buttonAdsorbLeftIcon = buttonAdsorbLeftIcon;
+		}
+
+		void FlowStyle::setButtonAdsorbRightIcon(const juce::String& buttonAdsorbRightIcon) {
+			FlowStyle::getInstance()->buttonAdsorbRightIcon = buttonAdsorbRightIcon;
+		}
+
+		void FlowStyle::setButtonAdsorbTopIcon(const juce::String& buttonAdsorbTopIcon) {
+			FlowStyle::getInstance()->buttonAdsorbTopIcon = buttonAdsorbTopIcon;
+		}
+
+		void FlowStyle::setButtonAdsorbBottomIcon(const juce::String& buttonAdsorbBottomIcon) {
+			FlowStyle::getInstance()->buttonAdsorbBottomIcon = buttonAdsorbBottomIcon;
+		}
+
+		const juce::String FlowStyle::getButtonLeftIcon() {
+			return FlowStyle::getInstance()->buttonLeftIcon;
+		}
+
+		const juce::String FlowStyle::getButtonRightIcon() {
+			return FlowStyle::getInstance()->buttonRightIcon;
+		}
+
+		const juce::String FlowStyle::getButtonTopIcon() {
+			return FlowStyle::getInstance()->buttonTopIcon;
+		}
+
+		const juce::String FlowStyle::getButtonBottomIcon() {
+			return FlowStyle::getInstance()->buttonBottomIcon;
+		}
+
+		const juce::String FlowStyle::getButtonAdsorbCenterIcon() {
+			return FlowStyle::getInstance()->buttonAdsorbCenterIcon;
+		}
+
+		const juce::String FlowStyle::getButtonAdsorbLeftIcon() {
+			return FlowStyle::getInstance()->buttonAdsorbLeftIcon;
+		}
+
+		const juce::String FlowStyle::getButtonAdsorbRightIcon() {
+			return FlowStyle::getInstance()->buttonAdsorbRightIcon;
+		}
+
+		const juce::String FlowStyle::getButtonAdsorbTopIcon() {
+			return FlowStyle::getInstance()->buttonAdsorbTopIcon;
+		}
+
+		const juce::String FlowStyle::getButtonAdsorbBottomIcon() {
+			return FlowStyle::getInstance()->buttonAdsorbBottomIcon;
+		}
 	}
 }

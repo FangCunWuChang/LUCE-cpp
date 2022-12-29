@@ -72,6 +72,59 @@ namespace luce {
 			static float getContainerDefaultHeight();
 			static float getContainerDefaultWidth();
 
+
+
+			static void setButtonWidth(float buttonWidth);
+			static void setButtonHeight(float buttonHeight);
+			static void setButtonIconWidth(float buttonIconWidth);
+			static void setButtonIconHeight(float buttonIconHeight);
+			static void setButtonSplitWidth(float buttonSplitWidth);
+			static void setButtonSplitHeight(float buttonSplitHeight);
+			static void setButtonPaddingWidth(float buttonPaddingWidth);
+			static void setButtonPaddingHeight(float buttonPaddingHeight);
+			static void setButtonCornerSize(float buttonCornerSize);
+			static void setButtonBorderSize(float buttonBorderSize);
+			static void setButtonIconColor(juce::Colour buttonIconColor);
+			static void setButtonIconBackgroundColor(juce::Colour buttonIconBackgroundColor);
+			static void setAdsorbColor(juce::Colour adsorbColor);
+
+			static float getButtonWidth();
+			static float getButtonHeight();
+			static float getButtonIconWidth();
+			static float getButtonIconHeight();
+			static float getButtonSplitWidth();
+			static float getButtonSplitHeight();
+			static float getButtonPaddingWidth();
+			static float getButtonPaddingHeight();
+			static float getButtonCornerSize();
+			static float getButtonBorderSize();
+			static const juce::Colour getButtonIconColor();
+			static const juce::Colour getButtonIconBackgroundColor();
+			static const juce::Colour getAdsorbColor();
+
+
+
+			static void setButtonLeftIcon(const juce::String& buttonLeftIcon);
+			static void setButtonRightIcon(const juce::String& buttonRightIcon);
+			static void setButtonTopIcon(const juce::String& buttonTopIcon);
+			static void setButtonBottomIcon(const juce::String& buttonBottomIcon);
+			static void setButtonAdsorbCenterIcon(const juce::String& buttonAdsorbCenterIcon);
+			static void setButtonAdsorbLeftIcon(const juce::String& buttonAdsorbLeftIcon);
+			static void setButtonAdsorbRightIcon(const juce::String& buttonAdsorbRightIcon);
+			static void setButtonAdsorbTopIcon(const juce::String& buttonAdsorbTopIcon);
+			static void setButtonAdsorbBottomIcon(const juce::String& buttonAdsorbBottomIcon);
+
+			static const juce::String getButtonLeftIcon();
+			static const juce::String getButtonRightIcon();
+			static const juce::String getButtonTopIcon();
+			static const juce::String getButtonBottomIcon();
+			static const juce::String getButtonAdsorbCenterIcon();
+			static const juce::String getButtonAdsorbLeftIcon();
+			static const juce::String getButtonAdsorbRightIcon();
+			static const juce::String getButtonAdsorbTopIcon();
+			static const juce::String getButtonAdsorbBottomIcon();
+
+
 		private:
 			float titleHeight = 0.05;						/**< Container title bar height (vertical mode) */
 			float titleWidth = 0.05;						/**< Container title bar width (horizontal mode) */
@@ -104,8 +157,36 @@ namespace luce {
 
 
 
-			float containerDefaultHeight = 0.5;			/**< Default height of flow container */
-			float containerDefaultWidth = 0.5;			/**< Default width of flow container */
+			float containerDefaultHeight = 0.5;				/**< Default height of flow container */
+			float containerDefaultWidth = 0.5;				/**< Default width of flow container */
+
+
+
+			float buttonWidth = 0.025;						/**< Width of adsorb button */
+			float buttonHeight = 0.025;						/**< Height of adsorb button */
+			float buttonIconWidth = 0.02;					/**< Width of adsorb button icon */
+			float buttonIconHeight = 0.02;					/**< Height of adsorb button icon */
+			float buttonSplitWidth = 0.005;					/**< Width of adsorb button split */
+			float buttonSplitHeight = 0.005;				/**< Height of adsorb button split */
+			float buttonPaddingWidth = 0.01;				/**< Horizontal distance of the adsorb button from border */
+			float buttonPaddingHeight = 0.01;				/**< Vertical distance of the adsorb button from border */
+			float buttonCornerSize = 0.01;					/**< Corner width of adsorb button */
+			float buttonBorderSize = 0.0025;				/**< Border line width of adsorb button */
+			juce::Colour buttonIconColor;					/**< Adsorb button icon color */
+			juce::Colour buttonIconBackgroundColor;			/**< Adsorb button icon background color */
+			juce::Colour adsorbAreaColor;					/**< Container adsorb area color */
+
+
+
+			juce::String buttonLeftIcon;					/**< Outside left adsorb button icon */
+			juce::String buttonRightIcon;					/**< Outside right adsorb button icon */
+			juce::String buttonTopIcon;						/**< Outside top adsorb button icon */
+			juce::String buttonBottomIcon;					/**< Outside bottom adsorb button icon */
+			juce::String buttonAdsorbCenterIcon;			/**< Center adsorb button icon */
+			juce::String buttonAdsorbLeftIcon;				/**< Left adsorb button icon */
+			juce::String buttonAdsorbRightIcon;				/**< Right adsorb button icon */
+			juce::String buttonAdsorbTopIcon;				/**< Top adsorb button icon */
+			juce::String buttonAdsorbBottomIcon;			/**< Bottom adsorb button icon */
 
 			JUCE_DECLARE_SINGLETON(FlowStyle, false)
 		};
