@@ -8,6 +8,7 @@ namespace luce {
 		FlowManager::FlowManager(FlowWindow* window)
 			: window(window) {
 			this->grid = std::make_unique<FlowGrid>(window);
+			this->addAndMakeVisible(this->grid.get());
 		}
 
 		void FlowManager::openComponent(FlowComponent* comp, bool vertical) {
@@ -66,17 +67,22 @@ namespace luce {
 			this->movingContainer = container;
 			this->currentPoint = currentPoint;
 
+			if (this->currentPoint.getX() < 0) { this->currentPoint.setX(0); }
+			if (this->currentPoint.getY() < 0) { this->currentPoint.setY(0); }
+			if (this->currentPoint.getX() > this->getWidth()) { this->currentPoint.setX(this->getWidth()); }
+			if (this->currentPoint.getY() > this->getHeight()) { this->currentPoint.setY(this->getHeight()); }
+
 			if (this->grid->findContainer(container)) {
 				this->grid->releaseContainer(container);
 				this->addAndMakeVisible(container);
 				this->freeContainers.add(container);
 			}
 			
-			container->setTopLeftPosition(currentPoint + topLeftDistance);
+			container->setTopLeftPosition(this->currentPoint + topLeftDistance);
 			container->toFront(true);
 
-			if (!this->baseRect.contains(currentPoint)) {
-				this->baseRect = this->grid->findRect(currentPoint - this->grid->getPosition());
+			if (!this->baseRect.contains(this->currentPoint)) {
+				this->baseRect = this->grid->findAdsorbRect(this->currentPoint - this->grid->getPosition());
 			}
 
 			this->repaint();
@@ -85,8 +91,193 @@ namespace luce {
 		void FlowManager::moveEnd(
 			const juce::Point<int> endPoint,
 			const juce::Point<int> topLeftDistance) {
-			/** TODO Check Adsorb */
-			/** TODO Reset Temp */
+			/** Check Adsorb */
+			this->currentPoint = endPoint;
+
+			if (this->currentPoint.getX() < 0) { this->currentPoint.setX(0); }
+			if (this->currentPoint.getY() < 0) { this->currentPoint.setY(0); }
+			if (this->currentPoint.getX() > this->getWidth()) { this->currentPoint.setX(this->getWidth()); }
+			if (this->currentPoint.getY() > this->getHeight()) { this->currentPoint.setY(this->getHeight()); }
+
+			if (!this->baseRect.contains(this->currentPoint)) {
+				this->baseRect = this->grid->findAdsorbRect(this->currentPoint - this->grid->getPosition());
+			}
+
+			/** Get Screen Size */
+			auto screenSize = this->window->getScreenSize();
+
+			/** Sizes */
+			float buttonWidth = FlowStyle::getButtonWidth() * screenSize.getWidth();
+			float buttonHeight = FlowStyle::getButtonHeight() * screenSize.getHeight();
+			float buttonIconWidth = FlowStyle::getButtonIconWidth() * screenSize.getWidth();
+			float buttonIconHeight = FlowStyle::getButtonIconHeight() * screenSize.getHeight();
+			float buttonSplitWidth = FlowStyle::getButtonSplitWidth() * screenSize.getWidth();
+			float buttonSplitHeight = FlowStyle::getButtonSplitHeight() * screenSize.getHeight();
+			float buttonPaddingWidth = FlowStyle::getButtonPaddingWidth() * screenSize.getWidth();
+			float buttonPaddingHeight = FlowStyle::getButtonPaddingHeight() * screenSize.getHeight();
+			float buttonCornerSize = FlowStyle::getButtonCornerSize() * screenSize.getWidth();
+			float buttonBorderSize = FlowStyle::getButtonBorderSize() * screenSize.getWidth();
+
+			/** Button Rects */
+			juce::Rectangle<float> rectLeft(
+				buttonPaddingWidth, this->getHeight() / 2 - buttonWidth / 2,
+				buttonHeight, buttonWidth
+			);
+			juce::Rectangle<float> rectRight(
+				this->getWidth() - buttonPaddingWidth - buttonHeight, this->getHeight() / 2 - buttonWidth / 2,
+				buttonHeight, buttonWidth
+			);
+			juce::Rectangle<float> rectTop(
+				this->getWidth() / 2 - buttonWidth / 2, buttonPaddingHeight,
+				buttonWidth, buttonHeight
+			);
+			juce::Rectangle<float> rectBottom(
+				this->getWidth() / 2 - buttonWidth / 2, this->getHeight() - buttonPaddingHeight - buttonHeight,
+				buttonWidth, buttonHeight
+			);
+
+			juce::Point<float> baseCenter = this->baseRect.getCentre().toFloat();
+			juce::Rectangle<float> rectAdsorbCenter(
+				baseCenter.getX() - buttonWidth / 2, baseCenter.getY() - buttonWidth / 2,
+				buttonWidth, buttonWidth
+			);
+			juce::Rectangle<float> rectAdsorbLeft(
+				baseCenter.getX() - buttonWidth / 2 - buttonSplitWidth - buttonHeight, baseCenter.getY() - buttonWidth / 2,
+				buttonHeight, buttonWidth
+			);
+			juce::Rectangle<float> rectAdsorbRight(
+				baseCenter.getX() + buttonWidth / 2 + buttonSplitWidth, baseCenter.getY() - buttonWidth / 2,
+				buttonHeight, buttonWidth
+			);
+			juce::Rectangle<float> rectAdsorbTop(
+				baseCenter.getX() - buttonWidth / 2, baseCenter.getY() - buttonWidth / 2 - buttonSplitHeight - buttonHeight,
+				buttonWidth, buttonHeight
+			);
+			juce::Rectangle<float> rectAdsorbBottom(
+				baseCenter.getX() - buttonWidth / 2, baseCenter.getY() + buttonWidth / 2 + buttonSplitHeight,
+				buttonWidth, buttonHeight
+			);
+
+			/** Adsorb */
+			auto adsorbContainer = this->grid->findAdsorbContainer(this->currentPoint);
+			
+			if (rectLeft.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
+					this->freeContainers.add(this->movingContainer);
+					this->addChildComponent(this->movingContainer);
+				}
+			}
+			else if (rectRight.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
+					this->freeContainers.add(this->movingContainer);
+					this->addChildComponent(this->movingContainer);
+				}
+			}
+			else if (rectTop.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
+					this->freeContainers.add(this->movingContainer);
+					this->addChildComponent(this->movingContainer);
+				}
+			}
+			else if (rectBottom.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
+					this->freeContainers.add(this->movingContainer);
+					this->addChildComponent(this->movingContainer);
+				}
+			}
+			else if (rectAdsorbCenter.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (adsorbContainer) {
+					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Center)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+				else {
+					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Center)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+			}
+			else if (rectAdsorbLeft.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (adsorbContainer) {
+					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Left)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+				else {
+					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+			}
+			else if (rectAdsorbRight.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (adsorbContainer) {
+					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Right)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+				else {
+					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+			}
+			else if (rectAdsorbTop.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (adsorbContainer) {
+					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Top)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+				else {
+					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+			}
+			else if (rectAdsorbBottom.contains(this->currentPoint.toFloat())) {
+				this->freeContainers.removeObject(this->movingContainer, false);
+				this->removeChildComponent(this->movingContainer);
+				if (adsorbContainer) {
+					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Bottom)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+				else {
+					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
+						this->freeContainers.add(this->movingContainer);
+						this->addChildComponent(this->movingContainer);
+					}
+				}
+			}
+
+			/** Reset Temp */
+			this->movingContainer = nullptr;
+
+			this->repaint();
 		}
 
 		void FlowManager::paintOverChildren(juce::Graphics& g) {
@@ -147,7 +338,7 @@ namespace luce {
 					buttonWidth, buttonHeight
 				);
 
-				/** Paint Adsorb */
+				/** Paint Adsorb Buton */
 				g.setColour(FlowStyle::getButtonIconBackgroundColor());
 				g.fillRoundedRectangle(rectLeft, buttonCornerSize);
 				g.fillRoundedRectangle(rectRight, buttonCornerSize);
@@ -265,6 +456,19 @@ namespace luce {
 
 				g.setColour(FlowStyle::getAdsorbColor());
 				g.fillRect(adsorbRect);
+			}
+		}
+
+		void FlowManager::resized() {
+			this->grid->setBounds(this->getLocalBounds());
+
+			for (auto i : this->freeContainers) {
+				if (!this->getLocalBounds().contains(i->getBounds())) {
+					if (i->getRight() > this->getWidth()) { i->setTopLeftPosition(this->getWidth() - i->getWidth(), i->getY()); }
+					if (i->getBottom() > this->getHeight()) { i->setTopLeftPosition(i->getX(), this->getHeight() - i->getHeight()); }
+					if (i->getX() < 0) { i->setTopLeftPosition(0, i->getY()); }
+					if (i->getY() < 0) { i->setTopLeftPosition(i->getX(), 0); }
+				}
 			}
 		}
 	}

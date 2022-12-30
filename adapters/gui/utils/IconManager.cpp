@@ -2,8 +2,6 @@
 
 namespace luce {
 	namespace utils {
-		JUCE_IMPLEMENT_SINGLETON(IconManager);
-
 		std::unique_ptr<juce::Drawable> IconManager::getSVG(const juce::String& path) {
 			auto instance = IconManager::getInstance();
 			juce::GenericScopedLock<juce::CriticalSection> locker(instance->lock);
@@ -20,14 +18,20 @@ namespace luce {
 
 			/** Parse File */
 			auto ptrXml = juce::XmlDocument::parse(str);
-			if (!ptrXml) { return nullptr; }
+			if (!ptrXml) { return std::move(std::make_unique<juce::DrawablePath>()); }
 			auto svgData = juce::Drawable::createFromSVG(*ptrXml);
-			if (!svgData) { return nullptr; }
+			if (!svgData) { return std::move(std::make_unique<juce::DrawablePath>()); }
 
 			/** Save Temp */
 			auto ptrData = svgData.release();
 			instance->temp.insert(std::make_pair(path, std::shared_ptr<juce::Drawable>(ptrData)));
 			return std::move(ptrData->createCopy());
 		}
+
+		IconManager* IconManager::getInstance() {
+			return IconManager::instance;
+		}
+
+		IconManager* IconManager::instance = new IconManager();
 	}
 }

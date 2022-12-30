@@ -29,6 +29,12 @@ namespace luce {
 			this->resizerLookAndFeel = std::unique_ptr<juce::LookAndFeel>(new StretchableBarLAF);
 		}
 
+		FlowGrid::~FlowGrid() {
+			for (auto i : this->resizers) {
+				i->setLookAndFeel(nullptr);
+			}
+		}
+
 		bool FlowGrid::addContainer(
 			FlowContainer* container,
 			FlowContainer* base,
@@ -309,22 +315,30 @@ namespace luce {
 			return false;
 		}
 
-		juce::Rectangle<int> FlowGrid::findRect(juce::Point<int> point) const {
-			for (auto i : this->units) {
-				if (i->getBounds().contains(point)) {
-					if (i->thisIsContainer()) {
-						auto bounds = i->getScreenBounds();
-						bounds.setPosition(bounds.getTopLeft() - this->window->getManager()->getScreenPosition());
-						return bounds;
-					}
-					else {
-						return dynamic_cast<FlowGrid*>(i)->findRect(point - i->getPosition());
-					}
-				}
+		juce::Rectangle<int> FlowGrid::findAdsorbRect(juce::Point<int> point) const {
+			auto ptrContainer = this->findAdsorbContainer(point);
+			if (ptrContainer) {
+				auto bounds = ptrContainer->getScreenBounds();
+				bounds.setPosition(bounds.getTopLeft() - this->window->getManager()->getScreenPosition());
+				return bounds;
 			}
 			auto bounds = this->getScreenBounds();
 			bounds.setPosition(bounds.getTopLeft() - this->window->getManager()->getScreenPosition());
 			return bounds;
+		}
+
+		FlowContainer* FlowGrid::findAdsorbContainer(juce::Point<int> point) const {
+			for (auto i : this->units) {
+				if (i->getBounds().contains(point)) {
+					if (i->thisIsContainer()) {
+						return dynamic_cast<FlowContainer*>(i);
+					}
+					else {
+						return dynamic_cast<FlowGrid*>(i)->findAdsorbContainer(point - i->getPosition());
+					}
+				}
+			}
+			return nullptr;
 		}
 
 		bool FlowGrid::addUniqueUnit(FlowContainer* container) {
@@ -433,7 +447,6 @@ namespace luce {
 
 			/** Size Rule */
 			for (int i = 0; i < compList.size(); i++) {
-				compList.getUnchecked(i)->setVisible(true);
 				this->manager->setItemLayout(i,
 					(i % 2 == 0) ? unitMinSize : resizerSize,
 					(i % 2 == 0) ? unitMaxSize : resizerSize,
@@ -444,6 +457,11 @@ namespace luce {
 			/** Apply Size */
 			this->manager->layOutComponents(compList.getRawDataPointer(), compList.size(),
 				0, 0, this->getWidth(), this->getHeight(), this->isVertical, true);
+
+			/** Show */
+			for (auto i : compList) {
+				i->setVisible(true);
+			}
 		}
 	}
 }

@@ -67,8 +67,8 @@ namespace luce {
 		if (lua_isnumber(L, 1) && lua_isnumber(L, 2) &&
 			lua_isnumber(L, 3) && lua_isnumber(L, 4)) {
 			LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, RectangleFloat, pInstance,
-				lua_tonumber(L, 1), lua_tonumber(L, 2),
-				lua_tonumber(L, 3), lua_tonumber(L, 4));
+				(float)lua_tonumber(L, 1), (float)lua_tonumber(L, 2),
+				(float)lua_tonumber(L, 3), (float)lua_tonumber(L, 4));
 		}
 		else {
 			LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, RectangleFloat, pInstance);

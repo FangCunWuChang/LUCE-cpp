@@ -201,6 +201,8 @@
 
 #if LUCE_DLL_BUILD
 #define LUCE_API LUCE_Export
-#else
+#elif LUCE_DLL
 #define LUCE_API LUCE_Import
+#else
+#define LUCE_API 
 #endif // LUCE_DLL_BUILD

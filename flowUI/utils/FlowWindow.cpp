@@ -90,5 +90,22 @@ namespace luce {
 			/** Return */
 			return result;
 		}
+
+		void FlowWindow::openComponent(FlowComponent* comp, bool vertical) {
+			this->getManager()->openComponent(comp, vertical);
+		}
+
+		void FlowWindow::closeComponent(FlowComponent* comp) {
+			this->getManager()->closeComponent(comp);
+		}
+
+		bool FlowWindow::hasComponent(FlowComponent* comp) const {
+			return this->getManager()->findComponent(comp);
+		}
+
+		void FlowWindow::closeButtonPressed() {
+			/** TODO */
+			juce::JUCEApplication::quit();
+		}
 	}
 }

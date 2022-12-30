@@ -12,6 +12,13 @@ namespace luce {
 			FlowManager* getManager() const;
 			const juce::Rectangle<int> getScreenSize() const;
 
+			void openComponent(FlowComponent* comp, bool vertical = true);
+			void closeComponent(FlowComponent* comp);
+			bool hasComponent(FlowComponent* comp) const;
+
+		protected:
+			void closeButtonPressed() override;
+
 		private:
 			mutable const juce::Displays::Display* ptrCurrentDisplay = nullptr;
 			mutable juce::Rectangle<int> sizeTemp;

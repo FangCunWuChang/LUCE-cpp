@@ -9,6 +9,7 @@ namespace luce {
 		public:
 			FlowGrid() = delete;
 			FlowGrid(FlowWindow* window);
+			~FlowGrid();
 
 			enum class ContainerAddPlace {
 				Center,
@@ -31,7 +32,8 @@ namespace luce {
 			FlowContainer* findComponent(FlowComponent* comp) const override;
 			bool findContainer(FlowContainer* container) const;
 
-			juce::Rectangle<int> findRect(juce::Point<int> point) const;
+			juce::Rectangle<int> findAdsorbRect(juce::Point<int> point) const;
+			FlowContainer* findAdsorbContainer(juce::Point<int> point) const;
 
 		private:
 			bool addUniqueUnit(FlowContainer* container);

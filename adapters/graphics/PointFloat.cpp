@@ -38,7 +38,7 @@ namespace luce {
 	LUCE_NEW(PointFloat) {
 		if (lua_isnumber(L, 1) && lua_isnumber(L, 2)) {
 			LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, PointFloat, pInstance,
-				lua_tonumber(L, 1), lua_tonumber(L, 2));
+				(float)lua_tonumber(L, 1), (float)lua_tonumber(L, 2));
 		}
 		else {
 			LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, PointFloat, pInstance);

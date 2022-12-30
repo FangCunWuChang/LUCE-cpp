@@ -2,8 +2,6 @@
 
 namespace luce {
 	namespace utils {
-		JUCE_IMPLEMENT_SINGLETON(FlowStyle)
-
 		void FlowStyle::setTitleHeight(float titleHeight) {
 			FlowStyle::getInstance()->titleHeight = titleHeight;
 		}
@@ -395,5 +393,11 @@ namespace luce {
 		const juce::String FlowStyle::getButtonAdsorbBottomIcon() {
 			return FlowStyle::getInstance()->buttonAdsorbBottomIcon;
 		}
+
+		FlowStyle* FlowStyle::getInstance() {
+			return FlowStyle::instance;
+		}
+
+		FlowStyle* FlowStyle::instance = new FlowStyle();
 	}
 }

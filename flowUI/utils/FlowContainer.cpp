@@ -6,7 +6,6 @@ namespace luce {
 	namespace utils {
 		FlowGridableUnit::FlowGridableUnit(FlowWindow* window, bool isContainer) 
 			: window(window), isContainer(isContainer) {
-
 		}
 
 		bool FlowGridableUnit::thisIsContainer() const {
@@ -78,6 +77,9 @@ namespace luce {
 			/** Get Screen Size */
 			auto screenSize = this->window->getScreenSize();
 
+			/** Background */
+			g.fillAll(FlowStyle::getTitleBackgroundColor().withAlpha(.5f));
+
 			/** Title Bar */
 			{
 				/** Background */
@@ -130,14 +132,12 @@ namespace luce {
 
 						/** Text */
 						if (this->isVertical) {
-							juce::Rectangle<float> textArea = tabArea
-								.withTrimmedLeft(paddingSize).withTrimmedRight(paddingSize);
+							juce::Rectangle<float> textArea = tabArea;
 							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextHighlightColor());
 							g.drawFittedText(std::get<0>(temp), textArea.toNearestInt(), juce::Justification::centred, 1, 1);
 						}
 						else {
-							juce::Rectangle<float> textArea = tabArea
-								.withTrimmedTop(paddingSize).withTrimmedBottom(paddingSize);
+							juce::Rectangle<float> textArea = tabArea;
 							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextHighlightColor());
 
 							g.addTransform(juce::AffineTransform(
@@ -168,6 +168,7 @@ namespace luce {
 
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
+				this->toFront(true);
 				this->mousePosTemp = event.getPosition();
 
 				float totalSize = 0;
@@ -346,7 +347,8 @@ namespace luce {
 				}
 
 				/** Size Reach Limit */
-				if (totalSize > titleLongSideSize) {
+				//if (totalSize > titleLongSideSize) {
+				if (false) {
 					/** Sort by Size */
 					struct SortBySizeType {
 					public:

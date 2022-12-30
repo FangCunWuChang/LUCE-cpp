@@ -4,7 +4,7 @@
 
 namespace luce {
 	namespace utils {
-		class LUCE_API IconManager final {
+		class LUCE_API IconManager final : public juce::DeletedAtShutdown {
 		public:
 			IconManager() = default;
 
@@ -14,7 +14,9 @@ namespace luce {
 			std::map<juce::String, std::shared_ptr<juce::Drawable>> temp;
 			juce::CriticalSection lock;
 
-			JUCE_DECLARE_SINGLETON(IconManager, false)
+		private:
+			static IconManager* getInstance();
+			static IconManager* instance;
 		};
 	}
 }

@@ -30,6 +30,8 @@ namespace luce {
 
 			void paintOverChildren(juce::Graphics& g) override;
 
+			void resized() override;
+
 		private:
 			FlowWindow* window = nullptr;
 			std::unique_ptr<FlowGrid> grid = nullptr;
