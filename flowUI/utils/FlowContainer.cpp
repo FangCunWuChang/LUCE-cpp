@@ -69,6 +69,14 @@ namespace luce {
 			return nullptr;
 		}
 
+		void FlowContainer::setSizeTemp(const juce::Point<int> sizeTemp) {
+			this->freeSizeTemp = sizeTemp;
+		}
+
+		const juce::Point<int> FlowContainer::getSizeTemp() const {
+			return this->freeSizeTemp; 
+		}
+
 		void FlowContainer::resized() {
 			this->updateComponents(false);
 		}
@@ -133,13 +141,14 @@ namespace luce {
 						/** Text */
 						if (this->isVertical) {
 							juce::Rectangle<float> textArea = tabArea;
-							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextHighlightColor());
+							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextColor());
 							g.drawFittedText(std::get<0>(temp), textArea.toNearestInt(), juce::Justification::centred, 1, 1);
 						}
 						else {
 							juce::Rectangle<float> textArea = tabArea;
-							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextHighlightColor());
+							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextColor());
 
+							g.saveState();
 							g.addTransform(juce::AffineTransform(
 								0, 1, textArea.getX(),
 								-1, 0, textArea.getY() + textArea.getHeight()
@@ -147,10 +156,7 @@ namespace luce {
 							g.drawFittedText(std::get<0>(temp),
 								textArea.withZeroOrigin().transformedBy(juce::AffineTransform(0, 1, 0, 1, 0, 0)).toNearestInt(),
 								juce::Justification::centred, 1, 1);
-							g.addTransform(juce::AffineTransform(
-								1, 0, 0,
-								0, 1, 0
-							));
+							g.restoreState();
 						}
 					}
 				}
@@ -203,10 +209,17 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					this->window->getManager()->moveEnd(
-						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-this->mousePosTemp);
-					this->mousePosTemp = juce::Point<int>(0, 0);
+					auto messageManager = juce::MessageManager::getInstance();
+					if (messageManager) {
+						messageManager->callAsync(
+							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+							distance = -this->mousePosTemp,
+							manager = this->window->getManager()] {
+								manager->moveEnd(point, distance);
+							}
+						);
+					}
+					this->mousePosTemp = juce::Point<int>();
 
 					/** Get Screen Size */
 					auto screenSize = this->window->getScreenSize();
@@ -277,9 +290,17 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					this->window->getManager()->moveProgressing(
-						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-this->mousePosTemp, this);
+					auto messageManager = juce::MessageManager::getInstance();
+					if (messageManager) {
+						messageManager->callAsync(
+							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+							distance = -this->mousePosTemp,
+							this,
+							manager = this->window->getManager()] {
+								manager->moveProgressing(point, distance, this);
+							}
+						);
+					}
 
 					this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 				}
@@ -290,10 +311,17 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					this->window->getManager()->moveEnd(
-						event.getEventRelativeTo(this->window->getManager()).getPosition(),
-						-this->mousePosTemp);
-					this->mousePosTemp = juce::Point<int>(0, 0);
+					auto messageManager = juce::MessageManager::getInstance();
+					if (messageManager) {
+						messageManager->callAsync(
+							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+							distance = -this->mousePosTemp,
+							manager = this->window->getManager()] {
+								manager->moveEnd(point, distance);
+							}
+						);
+					}
+					this->mousePosTemp = juce::Point<int>();
 				}
 			}
 		}

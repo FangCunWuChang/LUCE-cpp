@@ -198,6 +198,7 @@ namespace luce {
 				}
 
 				/** Refresh */
+				newGrid->updateComponents();
 				this->updateComponents();
 				return true;
 			}
@@ -322,9 +323,7 @@ namespace luce {
 				bounds.setPosition(bounds.getTopLeft() - this->window->getManager()->getScreenPosition());
 				return bounds;
 			}
-			auto bounds = this->getScreenBounds();
-			bounds.setPosition(bounds.getTopLeft() - this->window->getManager()->getScreenPosition());
-			return bounds;
+			return juce::Rectangle<int>(0, 0, 0, 0);
 		}
 
 		FlowContainer* FlowGrid::findAdsorbContainer(juce::Point<int> point) const {
@@ -407,19 +406,29 @@ namespace luce {
 		}
 
 		void FlowGrid::resized() {
-			this->updateComponents();
+			if (this->boundsTemp != this->getLocalBounds()) {
+				this->boundsTemp = this->getLocalBounds();
+				this->updateComponents();
+			}
 		}
 
 		void FlowGrid::updateComponents() {
 			/** Component List */
 			juce::Array<juce::Component*> compList;
 			compList.addArray(this->units);
+
+			/** Resizers */
+			for (auto i : this->resizers) {
+				this->removeChildComponent(i);
+			}
 			this->resizers.clear();
 			for (int i = 0; i < this->units.size() - 1; i++) {
 				auto resizer = new juce::StretchableLayoutResizerBar(
 					this->manager.get(), 2 * i + 1, !this->isVertical);
+
 				resizer->setLookAndFeel(this->resizerLookAndFeel.get());
 				this->resizers.add(resizer);
+				this->addChildComponent(resizer);
 				compList.insert(i * 2 + 1, this->resizers.getUnchecked(i));
 			}
 
@@ -446,6 +455,7 @@ namespace luce {
 			}
 
 			/** Size Rule */
+			this->manager->clearAllItems();
 			for (int i = 0; i < compList.size(); i++) {
 				this->manager->setItemLayout(i,
 					(i % 2 == 0) ? unitMinSize : resizerSize,

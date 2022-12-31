@@ -24,14 +24,9 @@ namespace luce {
 				FlowStyle::getContainerDefaultHeight() * screenSize.getHeight()
 			);
 
-			if (this->grid->isEmpty()) {
-				this->grid->addContainerOutside(container, FlowGrid::ContainerAddPlace::Bottom);
-			}
-			else {
-				this->addAndMakeVisible(container);
-				this->freeContainers.add(container);
-				container->toFront(true);
-			}
+			this->addAndMakeVisible(container);
+			this->freeContainers.add(container);
+			container->toFront(true);
 		}
 
 		void FlowManager::closeComponent(FlowComponent* comp) {
@@ -76,13 +71,23 @@ namespace luce {
 				this->grid->releaseContainer(container);
 				this->addAndMakeVisible(container);
 				this->freeContainers.add(container);
+
+				auto containerSize = container->getSizeTemp();
+				if (container->getX() > this->getWidth()) {
+					containerSize.setX(this->getWidth());
+				}
+				if (container->getY() > this->getHeight()) {
+					containerSize.setY(this->getHeight());
+				}
+				container->setSize(containerSize.getX(), containerSize.getY());
 			}
 			
 			container->setTopLeftPosition(this->currentPoint + topLeftDistance);
+			
 			container->toFront(true);
 
 			if (!this->baseRect.contains(this->currentPoint)) {
-				this->baseRect = this->grid->findAdsorbRect(this->currentPoint - this->grid->getPosition());
+				this->baseRect = this->grid->findAdsorbRect(this->currentPoint);
 			}
 
 			this->repaint();
@@ -100,7 +105,7 @@ namespace luce {
 			if (this->currentPoint.getY() > this->getHeight()) { this->currentPoint.setY(this->getHeight()); }
 
 			if (!this->baseRect.contains(this->currentPoint)) {
-				this->baseRect = this->grid->findAdsorbRect(this->currentPoint - this->grid->getPosition());
+				this->baseRect = this->grid->findAdsorbRect(this->currentPoint);
 			}
 
 			/** Get Screen Size */
@@ -162,6 +167,8 @@ namespace luce {
 			auto adsorbContainer = this->grid->findAdsorbContainer(this->currentPoint);
 			
 			if (rectLeft.contains(this->currentPoint.toFloat())) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
@@ -170,6 +177,8 @@ namespace luce {
 				}
 			}
 			else if (rectRight.contains(this->currentPoint.toFloat())) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
@@ -178,6 +187,8 @@ namespace luce {
 				}
 			}
 			else if (rectTop.contains(this->currentPoint.toFloat())) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
@@ -186,6 +197,8 @@ namespace luce {
 				}
 			}
 			else if (rectBottom.contains(this->currentPoint.toFloat())) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
@@ -193,7 +206,10 @@ namespace luce {
 					this->addChildComponent(this->movingContainer);
 				}
 			}
-			else if (rectAdsorbCenter.contains(this->currentPoint.toFloat())) {
+			else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
+				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (adsorbContainer) {
@@ -209,7 +225,10 @@ namespace luce {
 					}
 				}
 			}
-			else if (rectAdsorbLeft.contains(this->currentPoint.toFloat())) {
+			else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
+				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (adsorbContainer) {
@@ -225,7 +244,10 @@ namespace luce {
 					}
 				}
 			}
-			else if (rectAdsorbRight.contains(this->currentPoint.toFloat())) {
+			else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
+				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (adsorbContainer) {
@@ -241,7 +263,10 @@ namespace luce {
 					}
 				}
 			}
-			else if (rectAdsorbTop.contains(this->currentPoint.toFloat())) {
+			else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
+				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (adsorbContainer) {
@@ -257,7 +282,10 @@ namespace luce {
 					}
 				}
 			}
-			else if (rectAdsorbBottom.contains(this->currentPoint.toFloat())) {
+			else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
+				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+				this->movingContainer->setSizeTemp(
+					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 				this->freeContainers.removeObject(this->movingContainer, false);
 				this->removeChildComponent(this->movingContainer);
 				if (adsorbContainer) {
@@ -276,6 +304,8 @@ namespace luce {
 
 			/** Reset Temp */
 			this->movingContainer = nullptr;
+			this->currentPoint = juce::Point<int>();
+			this->baseRect = juce::Rectangle<int>();
 
 			this->repaint();
 		}
@@ -344,22 +374,26 @@ namespace luce {
 				g.fillRoundedRectangle(rectRight, buttonCornerSize);
 				g.fillRoundedRectangle(rectTop, buttonCornerSize);
 				g.fillRoundedRectangle(rectBottom, buttonCornerSize);
-				g.fillRoundedRectangle(rectAdsorbCenter, buttonCornerSize);
-				g.fillRoundedRectangle(rectAdsorbLeft, buttonCornerSize);
-				g.fillRoundedRectangle(rectAdsorbRight, buttonCornerSize);
-				g.fillRoundedRectangle(rectAdsorbTop, buttonCornerSize);
-				g.fillRoundedRectangle(rectAdsorbBottom, buttonCornerSize);
+				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					g.fillRoundedRectangle(rectAdsorbCenter, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbLeft, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbRight, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbTop, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbBottom, buttonCornerSize);
+				}
 
 				g.setColour(FlowStyle::getButtonIconColor());
 				g.drawRoundedRectangle(rectLeft, buttonCornerSize, buttonBorderSize);
 				g.drawRoundedRectangle(rectRight, buttonCornerSize, buttonBorderSize);
 				g.drawRoundedRectangle(rectTop, buttonCornerSize, buttonBorderSize);
 				g.drawRoundedRectangle(rectBottom, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectAdsorbCenter, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectAdsorbLeft, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectAdsorbRight, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectAdsorbTop, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectAdsorbBottom, buttonCornerSize, buttonBorderSize);
+				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					g.drawRoundedRectangle(rectAdsorbCenter, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbLeft, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbRight, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbTop, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbBottom, buttonCornerSize, buttonBorderSize);
+				}
 
 				/** Button Icon */
 				auto iconLeft = IconManager::getSVG(FlowStyle::getButtonLeftIcon());
@@ -417,11 +451,13 @@ namespace luce {
 				iconRight->drawWithin(g, rectIconRight, juce::RectanglePlacement::centred, 1.0);
 				iconTop->drawWithin(g, rectIconTop, juce::RectanglePlacement::centred, 1.0);
 				iconBottom->drawWithin(g, rectIconBottom, juce::RectanglePlacement::centred, 1.0);
-				iconAdsorbCenter->drawWithin(g, rectIconAdsorbCenter, juce::RectanglePlacement::centred, 1.0);
-				iconAdsorbLeft->drawWithin(g, rectIconAdsorbLeft, juce::RectanglePlacement::centred, 1.0);
-				iconAdsorbRight->drawWithin(g, rectIconAdsorbRight, juce::RectanglePlacement::centred, 1.0);
-				iconAdsorbTop->drawWithin(g, rectIconAdsorbTop, juce::RectanglePlacement::centred, 1.0);
-				iconAdsorbBottom->drawWithin(g, rectIconAdsorbBottom, juce::RectanglePlacement::centred, 1.0);
+				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					iconAdsorbCenter->drawWithin(g, rectIconAdsorbCenter, juce::RectanglePlacement::centred, 1.0);
+					iconAdsorbLeft->drawWithin(g, rectIconAdsorbLeft, juce::RectanglePlacement::centred, 1.0);
+					iconAdsorbRight->drawWithin(g, rectIconAdsorbRight, juce::RectanglePlacement::centred, 1.0);
+					iconAdsorbTop->drawWithin(g, rectIconAdsorbTop, juce::RectanglePlacement::centred, 1.0);
+					iconAdsorbBottom->drawWithin(g, rectIconAdsorbBottom, juce::RectanglePlacement::centred, 1.0);
+				}
 
 				/** Adsorb Area */
 				juce::Rectangle<float> adsorbRect;
@@ -438,19 +474,24 @@ namespace luce {
 				else if (rectBottom.contains(this->currentPoint.toFloat())) {
 					adsorbRect = compBounds.withTrimmedTop(compBounds.getHeight() / 2);
 				}
-				else if (rectAdsorbCenter.contains(this->currentPoint.toFloat())) {
+				else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
 					adsorbRect = baseBounds;
 				}
-				else if (rectAdsorbLeft.contains(this->currentPoint.toFloat())) {
+				else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
 					adsorbRect = baseBounds.withTrimmedRight(baseBounds.getWidth() / 2);
 				}
-				else if (rectAdsorbRight.contains(this->currentPoint.toFloat())) {
+				else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
 					adsorbRect = baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2);
 				}
-				else if (rectAdsorbTop.contains(this->currentPoint.toFloat())) {
+				else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
 					adsorbRect = baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2);
 				}
-				else if (rectAdsorbBottom.contains(this->currentPoint.toFloat())) {
+				else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
 					adsorbRect = baseBounds.withTrimmedTop(baseBounds.getHeight() / 2);
 				}
 

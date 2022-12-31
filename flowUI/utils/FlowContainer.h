@@ -37,6 +37,9 @@ namespace luce {
 			void moveTo(FlowContainer* container);
 			FlowContainer* findComponent(FlowComponent* comp) const override;
 
+			void setSizeTemp(const juce::Point<int> sizeTemp);
+			const juce::Point<int> getSizeTemp() const;
+
 		private:
 			void resized() override;
 			void paint(juce::Graphics& g) override;
@@ -55,6 +58,8 @@ namespace luce {
 			using TabSizeTempElement = std::tuple<juce::String, float, int>;
 			juce::Array<TabSizeTempElement> tabSizeTemp;
 			juce::Point<int> mousePosTemp;
+
+			juce::Point<int> freeSizeTemp;
 
 			void updateComponents(bool repaint = true);
 

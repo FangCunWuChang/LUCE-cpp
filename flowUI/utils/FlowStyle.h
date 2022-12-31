@@ -153,10 +153,10 @@ namespace luce {
 
 
 
-			float resizerHeight = 0.01;						/**< Grid resizer bar height (vertical mode) */
-			float resizerWidth = 0.01;						/**< Grid resizer bar width (horizontal mode) */
-			float unitMinimumHeight = 0.1;					/**< Grid unit minimum height (vertical mode) */
-			float unitMinimumWidth = 0.1;					/**< Grid unit minimum width (horizontal mode) */
+			float resizerHeight = 0.005;						/**< Grid resizer bar height (vertical mode) */
+			float resizerWidth = 0.0035;						/**< Grid resizer bar width (horizontal mode) */
+			float unitMinimumHeight = 0.05;					/**< Grid unit minimum height (vertical mode) */
+			float unitMinimumWidth = 0.05;					/**< Grid unit minimum width (horizontal mode) */
 			float unitMaximumHeight = 1.0;					/**< Grid unit maximum height (vertical mode) */
 			float unitMaximumWidth = 1.0;					/**< Grid unit maximum width (horizontal mode) */
 			juce::Colour resizerColor
