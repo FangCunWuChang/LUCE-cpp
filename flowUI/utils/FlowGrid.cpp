@@ -68,6 +68,7 @@ namespace luce {
 					/** Grid Layer Increase */
 					bool subIsVertical = (place == ContainerAddPlace::Top || place == ContainerAddPlace::Bottom);
 					auto newGrid = new FlowGrid(this->window);
+					this->units.removeAndReturn(baseIndex);
 					this->units.insert(baseIndex, newGrid);
 					
 					/** Grid Size */
@@ -166,33 +167,44 @@ namespace luce {
 
 			if (layerIncrease) {
 				/** Grid Layer Increase */
+				auto verticalStateTemp = this->isVertical;
 				this->isVertical = (place == ContainerAddPlace::Top || place == ContainerAddPlace::Bottom);
+				/** New Layer */
 				auto newGrid = new FlowGrid(this->window);
+				newGrid->isVertical = verticalStateTemp;
+				/** Move Units In Current Layer To The New Layer */
 				while (this->units.size() > 0) {
 					auto subUnit = this->units.removeAndReturn(0);
 					this->removeChildComponent(subUnit);
 					newGrid->units.add(subUnit);
 					newGrid->addChildComponent(subUnit);
 				}
+				/** Add Relative Of New Layer */
 				this->units.add(newGrid);
 				this->addChildComponent(newGrid);
 
 				/** Grid Size */
 				auto bounds = this->getLocalBounds();
+				/** Add Relative Of THe New Container */
 				this->addChildComponent(container);
+				/** Set The Size Of The New Layer And The Container */
 				if (place == ContainerAddPlace::Left) {
+					this->units.insert(0, container);
 					newGrid->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
 					container->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
 				}
 				else if (place == ContainerAddPlace::Right) {
+					this->units.add(container);
 					newGrid->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
 					container->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
 				}
 				else if (place == ContainerAddPlace::Top) {
+					this->units.insert(0, container);
 					newGrid->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
 					container->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
 				}
 				else {
+					this->units.add(container);
 					newGrid->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
 					container->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
 				}
@@ -207,31 +219,29 @@ namespace luce {
 				this->isVertical = (place == ContainerAddPlace::Top || place == ContainerAddPlace::Bottom);
 
 				if (place == ContainerAddPlace::Left || place == ContainerAddPlace::Top) {
+					/** Add Relative Of The Container */
 					this->units.insert(0, container);
 					this->addChildComponent(container);
 
-					auto unitBounds = this->units.getUnchecked(1)->getBounds();
+					/** Set Container Size */
 					if (place == ContainerAddPlace::Left) {
-						this->units.getUnchecked(1)->setBounds(unitBounds.withTrimmedLeft(unitBounds.getWidth() / 2));
-						container->setBounds(unitBounds.withTrimmedRight(unitBounds.getWidth() / 2));
+						container->setBounds(this->getLocalBounds());
 					}
 					else {
-						this->units.getUnchecked(1)->setBounds(unitBounds.withTrimmedTop(unitBounds.getHeight() / 2));
-						container->setBounds(unitBounds.withTrimmedBottom(unitBounds.getHeight() / 2));
+						container->setBounds(this->getLocalBounds());
 					}
 				}
 				else {
+					/** Add Relative Of The Container */
 					this->units.add(container);
 					this->addChildComponent(container);
 
-					auto unitBounds = this->units.getUnchecked(this->units.size() - 2)->getBounds();
+					/** Set Container Size */
 					if (place == ContainerAddPlace::Right) {
-						this->units.getUnchecked(1)->setBounds(unitBounds.withTrimmedRight(unitBounds.getWidth() / 2));
-						container->setBounds(unitBounds.withTrimmedLeft(unitBounds.getWidth() / 2));
+						container->setBounds(this->getLocalBounds());
 					}
 					else {
-						this->units.getUnchecked(1)->setBounds(unitBounds.withTrimmedBottom(unitBounds.getHeight() / 2));
-						container->setBounds(unitBounds.withTrimmedTop(unitBounds.getHeight() / 2));
+						container->setBounds(this->getLocalBounds());
 					}
 				}
 
@@ -262,10 +272,8 @@ namespace luce {
 				this->removeChildComponent(container);
 
 				if (this->units.size() == 1) {
-					auto parent = dynamic_cast<FlowGrid*>(this->getParentComponent());
-					if (parent) {
-						parent->decreaseLayer(this);
-					}
+					/** Decrease Layer */
+					this->decreaseLayer();
 				}
 				else {
 					/** Refresh */
@@ -367,42 +375,66 @@ namespace luce {
 			this->removeChildComponent(this->units.getUnchecked(0));
 			this->units.removeAndReturn(0);
 
-			this->updateComponents();
+			/** GC Layer */
+			auto parentLayer = dynamic_cast<FlowGrid*>(this->getParentComponent());
+			if (parentLayer) {
+				parentLayer->gcLayer(this);
+			}
+			else {
+				this->updateComponents();
+			}
+			
 			return true;
 		}
 
-		void FlowGrid::decreaseLayer(FlowGrid* layer) {
-			/** Unit Is In This Grid */
-			int unitIndex = -1;
-			for (int i = 0; i < this->units.size(); i++) {
-				if (this->units.getUnchecked(i) == layer) {
-					unitIndex = i;
-					break;
-				}
-			}
-
-			if (unitIndex >= 0 && unitIndex < this->units.size()) {
-				/** Must Decrease Layer With Unique Unit ! */
-				if (layer->units.size() != 1) {
-					jassertfalse;
-					return;
-				}
-
-				/** Get Size And Release */
-				auto bounds = layer->getBounds();
-				this->removeChildComponent(layer);
-				auto child = layer->units.removeAndReturn(0);
-				this->addChildComponent(child);
-				child->setBounds(bounds);
-
-				this->units.removeAndReturn(unitIndex);
-				this->units.insert(unitIndex, child);
-				delete layer;
-
-				/** Refresh */
+		void FlowGrid::decreaseLayer() {
+			/** This Layer Containers Only One Unit */
+			if (this->units.size() != 1) {
+				jassertfalse;
 				this->updateComponents();
 				return;
 			}
+			
+			auto subLayer = dynamic_cast<FlowGrid*>(this->units.getUnchecked(0));
+			if (subLayer) {
+				/** Remove Relative Of SubLayer */
+				this->removeChildComponent(subLayer);
+				this->units.removeAndReturn(0);
+
+				/** Move All Units In The SubLayer To Current Layer */
+				this->isVertical = subLayer->isVertical;
+				while (subLayer->units.size() > 0) {
+					auto unit = subLayer->units.removeAndReturn(0);
+					subLayer->removeChildComponent(unit);
+					this->units.add(unit);
+					this->addChildComponent(unit);
+				}
+
+				/** Delete SubLayer */
+				delete subLayer;
+				subLayer = nullptr;
+			}
+
+			/** Refresh */
+			this->updateComponents();
+			return;
+		}
+
+		void FlowGrid::gcLayer(FlowGrid* layer) {
+			/** Layer Is Empty */
+			if (layer->units.size() > 0) {
+				jassertfalse;
+				return;
+			}
+
+			/** Remove Unit */
+			this->removeChildComponent(layer);
+			this->units.removeObject(layer, true);
+			layer = nullptr;
+
+			/** Refresh */
+			this->updateComponents();
+			return;
 		}
 
 		void FlowGrid::resized() {

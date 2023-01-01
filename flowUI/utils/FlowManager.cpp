@@ -40,6 +40,7 @@ namespace luce {
 					this->freeContainers.removeObject(container, false);
 				}
 				delete container;
+				container = nullptr;
 			}
 		}
 

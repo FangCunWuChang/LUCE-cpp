@@ -39,7 +39,8 @@ namespace luce {
 			bool addUniqueUnit(FlowContainer* container);
 			bool releaseUniqueUnit(FlowContainer* container);
 
-			void decreaseLayer(FlowGrid* layer);
+			void decreaseLayer();
+			void gcLayer(FlowGrid* layer);
 
 		private:
 			void resized() override;
