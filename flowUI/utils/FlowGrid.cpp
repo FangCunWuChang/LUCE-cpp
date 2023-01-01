@@ -438,10 +438,13 @@ namespace luce {
 		}
 
 		void FlowGrid::resized() {
-			if (this->boundsTemp != this->getLocalBounds()) {
-				this->boundsTemp = this->getLocalBounds();
-				this->updateComponents();
+			juce::Array<juce::Component*> compList;
+			compList.addArray(this->units);
+			for (int i = 0; i < this->resizers.size(); i++) {
+				compList.insert(i * 2 + 1, this->resizers.getUnchecked(i));
 			}
+			this->manager->layOutComponents(compList.getRawDataPointer(), compList.size(),
+				0, 0, this->getWidth(), this->getHeight(), this->isVertical, true);
 		}
 
 		void FlowGrid::updateComponents() {

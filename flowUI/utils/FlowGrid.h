@@ -51,7 +51,6 @@ namespace luce {
 			std::unique_ptr<juce::StretchableLayoutManager> manager = nullptr;
 			std::unique_ptr<juce::LookAndFeel> resizerLookAndFeel = nullptr;
 			bool isVertical = false;
-			juce::Rectangle<int> boundsTemp;
 
 			void updateComponents();
 
