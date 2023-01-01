@@ -137,6 +137,7 @@ namespace luce {
 					if (!this->units.getUnchecked(i)->thisIsContainer()) {
 						auto ptrGrid = dynamic_cast<FlowGrid*>(this->units.getUnchecked(i));
 						if (ptrGrid->addContainer(container, base, place)) {
+							this->updateComponents();
 							return true;
 						}
 					}
@@ -287,6 +288,7 @@ namespace luce {
 					if (!this->units.getUnchecked(i)->thisIsContainer()) {
 						auto ptrGrid = dynamic_cast<FlowGrid*>(this->units.getUnchecked(i));
 						if (ptrGrid->releaseContainer(container)) {
+							this->updateComponents();
 							return true;
 						}
 					}
@@ -322,6 +324,39 @@ namespace luce {
 				}
 			}
 			return false;
+		}
+
+		const juce::Point<float> FlowGrid::getMinSize() const {
+			auto screenSize = this->window->getScreenSize();
+			auto unitMinWidth = FlowStyle::getUnitMinimumWidth() * screenSize.getWidth();
+			auto unitMinHeight = FlowStyle::getUnitMinimumHeight() * screenSize.getHeight();
+			auto resizerSize = this->isVertical
+				? (FlowStyle::getResizerHeight() * screenSize.getHeight())
+				: (FlowStyle::getResizerWidth() * screenSize.getWidth());
+
+			if (this->units.size() == 0) {
+				return juce::Point<float>(unitMinWidth, unitMinHeight);
+			}
+
+			float minWidth = 0, minHeight = 0;
+			for (auto i : this->units) {
+				auto unitMinSize = i->getMinSize();
+				if (this->isVertical) {
+					minWidth = juce::jmax(minWidth, unitMinSize.getX());
+					minHeight += unitMinSize.getY();
+				}
+				else {
+					minWidth += unitMinSize.getX();
+					minHeight = juce::jmax(minHeight, unitMinSize.getY());
+				}
+			}
+			if (this->isVertical) {
+				minHeight += this->resizers.size() * resizerSize;
+			}
+			else {
+				minWidth += this->resizers.size() * resizerSize;
+			}
+			return juce::Point<float>(minWidth, minHeight);
 		}
 
 		juce::Rectangle<int> FlowGrid::findAdsorbRect(juce::Point<int> point) const {
@@ -492,6 +527,13 @@ namespace luce {
 			/** Size Rule */
 			this->manager->clearAllItems();
 			for (int i = 0; i < compList.size(); i++) {
+				auto unit = dynamic_cast<FlowGridableUnit*>(compList.getUnchecked(i));
+				juce::Point<float> minSize;
+				if (unit) {
+					minSize = unit->getMinSize();
+				}
+				auto unitMinSize = this->isVertical ? minSize.getY() : minSize.getX();
+
 				this->manager->setItemLayout(i,
 					(i % 2 == 0) ? unitMinSize : resizerSize,
 					(i % 2 == 0) ? unitMaxSize : resizerSize,

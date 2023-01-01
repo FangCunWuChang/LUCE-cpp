@@ -17,6 +17,8 @@ namespace luce {
 			bool thisIsContainer() const;
 			virtual FlowContainer* findComponent(FlowComponent* comp) const = 0;
 
+			virtual const juce::Point<float> getMinSize() const = 0;
+ 
 		protected:
 			FlowWindow* window = nullptr;
 			bool isContainer = true;
@@ -36,6 +38,7 @@ namespace luce {
 			void setCurrent(int current);
 			void moveTo(FlowContainer* container);
 			FlowContainer* findComponent(FlowComponent* comp) const override;
+			const juce::Point<float> getMinSize() const override;
 
 			void setSizeTemp(const juce::Point<int> sizeTemp);
 			const juce::Point<int> getSizeTemp() const;

@@ -31,6 +31,7 @@ namespace luce {
 			bool isEmpty() const;
 			FlowContainer* findComponent(FlowComponent* comp) const override;
 			bool findContainer(FlowContainer* container) const;
+			const juce::Point<float> getMinSize() const override;
 
 			juce::Rectangle<int> findAdsorbRect(juce::Point<int> point) const;
 			FlowContainer* findAdsorbContainer(juce::Point<int> point) const;

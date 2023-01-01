@@ -126,22 +126,22 @@ namespace luce {
 
 
 		private:
-			float titleHeight = 0.03;						/**< Container title bar height (vertical mode) */
-			float titleWidth = 0.015;						/**< Container title bar width (horizontal mode) */
+			float titleHeight = 0.024;						/**< Container title bar height (vertical mode) */
+			float titleWidth = 0.012;						/**< Container title bar width (horizontal mode) */
 			float titleBorderHeight = 0.004;				/**< Container title bar top border height (vertical mode) */
 			float titleBorderWidth = 0.0024;					/**< Container title bar left border width (horizontal mode) */
 			float titleSplitWidth = 0.002;					/**< Container title bar tab split line width (vertical mode) */
 			float titleSplitHeight = 0.002;				/**< Container title bar tab split line height (horizontal mode) */
-			float titleSplitVLength = 0.025;					/**< Container title bar tab split line length (vertical mode) */
-			float titleSplitHLength = 0.014;					/**< Container title bar tab split line length (horizontal mode) */
-			float titleTextHeight = 0.02;					/**< Container title bar tab title text height (vertical mode) */
-			float titleTextWidth = 0.010;					/**< Container title bar tab title text width (horizontal mode) */
+			float titleSplitVLength = 0.02;					/**< Container title bar tab split line length (vertical mode) */
+			float titleSplitHLength = 0.0112;					/**< Container title bar tab split line length (horizontal mode) */
+			float titleTextHeight = 0.016;					/**< Container title bar tab title text height (vertical mode) */
+			float titleTextWidth = 0.008;					/**< Container title bar tab title text width (horizontal mode) */
 			float titleTextPaddingWidth = 0.008;				/**< Container title bar tab title text padding width (vertical mode) */
 			float titleTextPaddingHeight = 0.012;			/**< Container title bar tab title text padding height (horizontal mode) */
 			juce::Colour titleBackgroundColor
-				= juce::Colours::grey;						/**< Container title bar tab fill color (not active) */
+				= juce::Colours::darkgrey;						/**< Container title bar tab fill color (not active) */
 			juce::Colour titleHighlightColor
-				= juce::Colours::lightgrey;					/**< Container title bar tab fill color (active) */
+				= juce::Colours::grey;					/**< Container title bar tab fill color (active) */
 			juce::Colour titleBorderColor
 				= juce::Colours::rebeccapurple;				/**< Container title bar border color */
 			juce::Colour titleSplitColor
@@ -153,7 +153,7 @@ namespace luce {
 
 
 
-			float resizerHeight = 0.005;						/**< Grid resizer bar height (vertical mode) */
+			float resizerHeight = 0.006;						/**< Grid resizer bar height (vertical mode) */
 			float resizerWidth = 0.0035;						/**< Grid resizer bar width (horizontal mode) */
 			float unitMinimumHeight = 0.05;					/**< Grid unit minimum height (vertical mode) */
 			float unitMinimumWidth = 0.05;					/**< Grid unit minimum width (horizontal mode) */

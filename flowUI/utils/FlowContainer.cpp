@@ -69,6 +69,14 @@ namespace luce {
 			return nullptr;
 		}
 
+		const juce::Point<float> FlowContainer::getMinSize() const {
+			auto screenSize = this->window->getScreenSize();
+			return juce::Point<float>(
+				FlowStyle::getUnitMinimumWidth() * screenSize.getWidth(),
+				FlowStyle::getUnitMinimumHeight() * screenSize.getHeight()
+			);
+		}
+
 		void FlowContainer::setSizeTemp(const juce::Point<int> sizeTemp) {
 			this->freeSizeTemp = sizeTemp;
 		}
@@ -140,12 +148,16 @@ namespace luce {
 
 						/** Text */
 						if (this->isVertical) {
-							juce::Rectangle<float> textArea = tabArea;
+							juce::Rectangle<float> textArea = tabArea
+								.withTrimmedLeft(paddingSize).withTrimmedRight(paddingSize);
+							if (textArea.getWidth() < 0) { textArea.setWidth(0); }
 							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextColor());
-							g.drawFittedText(std::get<0>(temp), textArea.toNearestInt(), juce::Justification::centred, 1, 1);
+							g.drawFittedText(std::get<0>(temp), textArea.toNearestInt(), juce::Justification::centred, 1, .9f);
 						}
 						else {
-							juce::Rectangle<float> textArea = tabArea;
+							juce::Rectangle<float> textArea = tabArea
+								.withTrimmedTop(paddingSize).withTrimmedBottom(paddingSize);
+							if (textArea.getHeight() < 0) { textArea.setHeight(0); }
 							g.setColour((i == this->current) ? FlowStyle::getTitleTextHighlightColor() : FlowStyle::getTitleTextColor());
 
 							g.saveState();
@@ -155,7 +167,7 @@ namespace luce {
 							));
 							g.drawFittedText(std::get<0>(temp),
 								textArea.withZeroOrigin().transformedBy(juce::AffineTransform(0, 1, 0, 1, 0, 0)).toNearestInt(),
-								juce::Justification::centred, 1, 1);
+								juce::Justification::centred, 1, .9f);
 							g.restoreState();
 						}
 					}
@@ -220,37 +232,37 @@ namespace luce {
 						);
 					}
 					this->mousePosTemp = juce::Point<int>();
-
-					/** Get Screen Size */
-					auto screenSize = this->window->getScreenSize();
-
-					/** Title Size */
-					float titleSize = (this->isVertical ? FlowStyle::getTitleHeight() : FlowStyle::getTitleWidth())
-						* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
-
-					/** Mouse Cursor */
-					{
-						float totalSize = 0;
-						for (int i = 0; i < this->tabSizeTemp.size(); i++) {
-							auto tabSize = std::get<1>(this->tabSizeTemp.getReference(i));
-							juce::Rectangle<float> tabArea(
-								this->isVertical ? totalSize : 0,
-								this->isVertical ? 0 : totalSize,
-								this->isVertical ? tabSize : titleSize,
-								this->isVertical ? titleSize : tabSize
-							);
-
-							if (tabArea.contains(event.getPosition().toFloat())) {
-								this->setMouseCursor(juce::MouseCursor::PointingHandCursor);
-								return;
-							}
-
-							totalSize += tabSize;
-						}
-					}
-
-					this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 				}
+
+				/** Get Screen Size */
+				auto screenSize = this->window->getScreenSize();
+
+				/** Title Size */
+				float titleSize = (this->isVertical ? FlowStyle::getTitleHeight() : FlowStyle::getTitleWidth())
+					* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
+				
+				/** Mouse Cursor */
+				{
+					float totalSize = 0;
+					for (int i = 0; i < this->tabSizeTemp.size(); i++) {
+						auto tabSize = std::get<1>(this->tabSizeTemp.getReference(i));
+						juce::Rectangle<float> tabArea(
+							this->isVertical ? totalSize : 0,
+							this->isVertical ? 0 : totalSize,
+							this->isVertical ? tabSize : titleSize,
+							this->isVertical ? titleSize : tabSize
+						);
+
+						if (tabArea.contains(event.getPosition().toFloat())) {
+							this->setMouseCursor(juce::MouseCursor::PointingHandCursor);
+							return;
+						}
+
+						totalSize += tabSize;
+					}
+				}
+
+				this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 			}
 		}
 
@@ -375,8 +387,7 @@ namespace luce {
 				}
 
 				/** Size Reach Limit */
-				//if (totalSize > titleLongSideSize) {
-				if (false) {
+				if (totalSize > titleLongSideSize) {
 					/** Sort by Size */
 					struct SortBySizeType {
 					public:

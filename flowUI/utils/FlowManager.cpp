@@ -19,13 +19,13 @@ namespace luce {
 
 			/** Size */
 			auto screenSize = this->window->getScreenSize();
+
+			this->addAndMakeVisible(container);
+			this->freeContainers.add(container);
 			container->centreWithSize(
 				FlowStyle::getContainerDefaultWidth() * screenSize.getWidth(),
 				FlowStyle::getContainerDefaultHeight() * screenSize.getHeight()
 			);
-
-			this->addAndMakeVisible(container);
-			this->freeContainers.add(container);
 			container->toFront(true);
 		}
 
@@ -167,139 +167,154 @@ namespace luce {
 			/** Adsorb */
 			auto adsorbContainer = this->grid->findAdsorbContainer(this->currentPoint);
 			
-			if (rectLeft.contains(this->currentPoint.toFloat())) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
-					this->freeContainers.add(this->movingContainer);
-					this->addChildComponent(this->movingContainer);
-				}
-			}
-			else if (rectRight.contains(this->currentPoint.toFloat())) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
-					this->freeContainers.add(this->movingContainer);
-					this->addChildComponent(this->movingContainer);
-				}
-			}
-			else if (rectTop.contains(this->currentPoint.toFloat())) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
-					this->freeContainers.add(this->movingContainer);
-					this->addChildComponent(this->movingContainer);
-				}
-			}
-			else if (rectBottom.contains(this->currentPoint.toFloat())) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
-					this->freeContainers.add(this->movingContainer);
-					this->addChildComponent(this->movingContainer);
-				}
-			}
-			else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
-				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (adsorbContainer) {
-					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Center)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-				else {
-					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Center)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-			}
-			else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
-				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (adsorbContainer) {
-					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Left)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-				else {
+			if (this->movingContainer) {
+				if (rectLeft.contains(this->currentPoint.toFloat())) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
 						this->freeContainers.add(this->movingContainer);
 						this->addChildComponent(this->movingContainer);
 					}
 				}
-			}
-			else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
-				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (adsorbContainer) {
-					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Right)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-				else {
+				else if (rectRight.contains(this->currentPoint.toFloat())) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
 						this->freeContainers.add(this->movingContainer);
 						this->addChildComponent(this->movingContainer);
 					}
 				}
-			}
-			else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
-				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (adsorbContainer) {
-					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Top)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-				else {
+				else if (rectTop.contains(this->currentPoint.toFloat())) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
 						this->freeContainers.add(this->movingContainer);
 						this->addChildComponent(this->movingContainer);
 					}
 				}
-			}
-			else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
-				this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-				this->movingContainer->setSizeTemp(
-					juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
-				this->freeContainers.removeObject(this->movingContainer, false);
-				this->removeChildComponent(this->movingContainer);
-				if (adsorbContainer) {
-					if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Bottom)) {
-						this->freeContainers.add(this->movingContainer);
-						this->addChildComponent(this->movingContainer);
-					}
-				}
-				else {
+				else if (rectBottom.contains(this->currentPoint.toFloat())) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
 						this->freeContainers.add(this->movingContainer);
 						this->addChildComponent(this->movingContainer);
 					}
+				}
+				else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
+					if (adsorbContainer) {
+						if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Center)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+					else {
+						if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Center)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+				}
+				else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
+					if (adsorbContainer) {
+						if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Left)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+					else {
+						if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+				}
+				else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
+					if (adsorbContainer) {
+						if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Right)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+					else {
+						if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+				}
+				else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
+					if (adsorbContainer) {
+						if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Top)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+					else {
+						if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+				}
+				else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
+					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					this->movingContainer->setSizeTemp(
+						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
+					this->freeContainers.removeObject(this->movingContainer, false);
+					this->removeChildComponent(this->movingContainer);
+					if (adsorbContainer) {
+						if (!this->grid->addContainer(this->movingContainer, adsorbContainer, FlowGrid::ContainerAddPlace::Bottom)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+					else {
+						if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
+							this->freeContainers.add(this->movingContainer);
+							this->addChildComponent(this->movingContainer);
+						}
+					}
+				}
+				else {
+					/** No Adsorb */
+					this->movingContainer->setTopLeftPosition(this->currentPoint + topLeftDistance);
+					auto containerBounds = this->movingContainer->getBounds();
+					if (containerBounds.getX() + containerBounds.getWidth() <= 0 ||
+						containerBounds.getX() >= this->getWidth() ||
+						containerBounds.getY() + containerBounds.getHeight() <= 0 ||
+						containerBounds.getY() >= this->getHeight()) {
+						this->movingContainer->centreWithSize(
+							containerBounds.getWidth(), containerBounds.getHeight());
+					}
+					this->movingContainer->toFront(true);
 				}
 			}
 
