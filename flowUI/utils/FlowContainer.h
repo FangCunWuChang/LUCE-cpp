@@ -2,6 +2,7 @@
 
 #include "../../Defs.h"
 #include "FlowComponent.h"
+#include "FlowContainerResizer.h"
 
 namespace luce {
 	namespace utils {
@@ -20,8 +21,8 @@ namespace luce {
 			virtual const juce::Point<float> getMinSize() const = 0;
  
 		protected:
-			FlowWindow* window = nullptr;
-			bool isContainer = true;
+			FlowWindow* const window = nullptr;
+			const bool isContainer = true;
 
 		private:
 			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowGridableUnit)
@@ -43,9 +44,12 @@ namespace luce {
 			void setSizeTemp(const juce::Point<int> sizeTemp);
 			const juce::Point<int> getSizeTemp() const;
 
+			void setResizerShown(bool resizerShown);
+
 		private:
 			void resized() override;
 			void paint(juce::Graphics& g) override;
+			void paintOverChildren(juce::Graphics& g) override;
 
 			void mouseDown(const juce::MouseEvent& event) override;
 			void mouseUp(const juce::MouseEvent& event) override;
@@ -53,8 +57,10 @@ namespace luce {
 			void mouseDrag(const juce::MouseEvent& event) override;
 			void mouseExit(const juce::MouseEvent& event) override;
 
+			void parentHierarchyChanged() override;
+
 		private:
-			bool isVertical = true;
+			const bool isVertical = true;
 			juce::Array<FlowComponent*> components;
 			int current = -1;
 			/** name, size, index */
@@ -63,6 +69,9 @@ namespace luce {
 			juce::Point<int> mousePosTemp;
 
 			juce::Point<int> freeSizeTemp;
+
+			std::unique_ptr<FlowContainerResizer> leftResizer, rightResizer, topResizer, bottomResizer,
+				topLeftResizer, topRightResizer, bottomLeftResizer, bottomRightResizer;
 
 			void updateComponents(bool repaint = true);
 

@@ -162,14 +162,6 @@ namespace luce {
 			FlowStyle::getInstance()->unitMinimumWidth = unitMinimumWidth;
 		}
 
-		void FlowStyle::setUnitMaximumHeight(float unitMaximumHeight) {
-			FlowStyle::getInstance()->unitMaximumHeight = unitMaximumHeight;
-		}
-
-		void FlowStyle::setUnitMaximumWidth(float unitMaximumWidth) {
-			FlowStyle::getInstance()->unitMaximumWidth = unitMaximumWidth;
-		}
-
 		void FlowStyle::setResizerColor(juce::Colour resizerColor) {
 			FlowStyle::getInstance()->resizerColor = resizerColor;
 		}
@@ -190,16 +182,16 @@ namespace luce {
 			return FlowStyle::getInstance()->unitMinimumWidth;
 		}
 
-		float FlowStyle::getUnitMaximumHeight() {
-			return FlowStyle::getInstance()->unitMaximumHeight;
-		}
-
-		float FlowStyle::getUnitMaximumWidth() {
-			return FlowStyle::getInstance()->unitMaximumWidth;
-		}
-
 		const juce::Colour FlowStyle::getResizerColor() {
 			return FlowStyle::getInstance()->resizerColor;
+		}
+
+		void FlowStyle::setContainerResizerHeight(float containerResizerHeight) {
+			FlowStyle::getInstance()->containerResizerHeight = containerResizerHeight;
+		}
+
+		void FlowStyle::setContainerResizerWidth(float containerResizerWidth) {
+			FlowStyle::getInstance()->containerResizerWidth = containerResizerWidth;
 		}
 
 		void FlowStyle::setContainerDefaultHeight(float containerDefaultHeight) {
@@ -210,12 +202,36 @@ namespace luce {
 			FlowStyle::getInstance()->containerDefaultWidth = containerDefaultWidth;
 		}
 
+		void FlowStyle::setContainerBorderSize(float containerBorderSize) {
+			FlowStyle::getInstance()->containerBorderSize = containerBorderSize;
+		}
+
+		void FlowStyle::setContainerBorderColor(juce::Colour containerBorderColor) {
+			FlowStyle::getInstance()->containerBorderColor = containerBorderColor;
+		}
+
+		float FlowStyle::getContainerResizerHeight() {
+			return FlowStyle::getInstance()->containerResizerHeight;
+		}
+
+		float FlowStyle::getContainerResizerWidth() {
+			return FlowStyle::getInstance()->containerResizerWidth;
+		}
+
 		float FlowStyle::getContainerDefaultHeight() {
 			return FlowStyle::getInstance()->containerDefaultHeight;
 		}
 
 		float FlowStyle::getContainerDefaultWidth() {
 			return FlowStyle::getInstance()->containerDefaultWidth;
+		}
+
+		float FlowStyle::getContainerBorderSize() {
+			return FlowStyle::getInstance()->containerBorderSize;
+		}
+
+		juce::Colour FlowStyle::getContainerBorderColor() {
+			return FlowStyle::getInstance()->containerBorderColor;
 		}
 
 		void FlowStyle::setButtonWidth(float buttonWidth) {

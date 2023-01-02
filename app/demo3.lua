@@ -1,10 +1,15 @@
 ﻿require "luce.Debug"
+require "luce.Colours"
 
 luce.initialise = function(commandLineParameters)
 	print("command:", commandLineParameters)
 	print("app init")
 
 	mainWindow = luce.FlowWindow.new()
+
+	luce.FlowComponent.bind("paint", function(self, g)
+		g:fillAll(luce.Colours.dimgrey)
+	end)
 
 	comp1 = luce.FlowComponent.new("comp1")
 	comp2 = luce.FlowComponent.new("comp2")

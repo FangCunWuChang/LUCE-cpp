@@ -33,7 +33,7 @@ namespace luce {
 			void resized() override;
 
 		private:
-			FlowWindow* window = nullptr;
+			FlowWindow* const window = nullptr;
 			std::unique_ptr<FlowGrid> grid = nullptr;
 			juce::OwnedArray<FlowContainer> freeContainers;
 

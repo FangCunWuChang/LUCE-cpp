@@ -384,33 +384,6 @@ namespace luce {
 					buttonWidth, buttonHeight
 				);
 
-				/** Paint Adsorb Buton */
-				g.setColour(FlowStyle::getButtonIconBackgroundColor());
-				g.fillRoundedRectangle(rectLeft, buttonCornerSize);
-				g.fillRoundedRectangle(rectRight, buttonCornerSize);
-				g.fillRoundedRectangle(rectTop, buttonCornerSize);
-				g.fillRoundedRectangle(rectBottom, buttonCornerSize);
-				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					g.fillRoundedRectangle(rectAdsorbCenter, buttonCornerSize);
-					g.fillRoundedRectangle(rectAdsorbLeft, buttonCornerSize);
-					g.fillRoundedRectangle(rectAdsorbRight, buttonCornerSize);
-					g.fillRoundedRectangle(rectAdsorbTop, buttonCornerSize);
-					g.fillRoundedRectangle(rectAdsorbBottom, buttonCornerSize);
-				}
-
-				g.setColour(FlowStyle::getButtonIconColor());
-				g.drawRoundedRectangle(rectLeft, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectRight, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectTop, buttonCornerSize, buttonBorderSize);
-				g.drawRoundedRectangle(rectBottom, buttonCornerSize, buttonBorderSize);
-				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					g.drawRoundedRectangle(rectAdsorbCenter, buttonCornerSize, buttonBorderSize);
-					g.drawRoundedRectangle(rectAdsorbLeft, buttonCornerSize, buttonBorderSize);
-					g.drawRoundedRectangle(rectAdsorbRight, buttonCornerSize, buttonBorderSize);
-					g.drawRoundedRectangle(rectAdsorbTop, buttonCornerSize, buttonBorderSize);
-					g.drawRoundedRectangle(rectAdsorbBottom, buttonCornerSize, buttonBorderSize);
-				}
-
 				/** Button Icon */
 				auto iconLeft = IconManager::getSVG(FlowStyle::getButtonLeftIcon());
 				auto iconRight = IconManager::getSVG(FlowStyle::getButtonRightIcon());
@@ -463,17 +436,43 @@ namespace luce {
 					.withTrimmedLeft(buttonWhiteSpaceWidth).withTrimmedRight(buttonWhiteSpaceWidth)
 					.withTrimmedTop(buttonWhiteSpaceHeight).withTrimmedBottom(buttonWhiteSpaceHeight);
 
-				iconLeft->drawWithin(g, rectIconLeft, juce::RectanglePlacement::centred, 1.0);
-				iconRight->drawWithin(g, rectIconRight, juce::RectanglePlacement::centred, 1.0);
-				iconTop->drawWithin(g, rectIconTop, juce::RectanglePlacement::centred, 1.0);
-				iconBottom->drawWithin(g, rectIconBottom, juce::RectanglePlacement::centred, 1.0);
+				/** Paint Adsorb Buton */
 				if (this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
+					g.setColour(FlowStyle::getButtonIconBackgroundColor());
+					g.fillRoundedRectangle(rectAdsorbCenter, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbLeft, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbRight, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbTop, buttonCornerSize);
+					g.fillRoundedRectangle(rectAdsorbBottom, buttonCornerSize);
+					g.setColour(FlowStyle::getButtonIconColor());
+					g.drawRoundedRectangle(rectAdsorbCenter, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbLeft, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbRight, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbTop, buttonCornerSize, buttonBorderSize);
+					g.drawRoundedRectangle(rectAdsorbBottom, buttonCornerSize, buttonBorderSize);
+
 					iconAdsorbCenter->drawWithin(g, rectIconAdsorbCenter, juce::RectanglePlacement::centred, 1.0);
 					iconAdsorbLeft->drawWithin(g, rectIconAdsorbLeft, juce::RectanglePlacement::centred, 1.0);
 					iconAdsorbRight->drawWithin(g, rectIconAdsorbRight, juce::RectanglePlacement::centred, 1.0);
 					iconAdsorbTop->drawWithin(g, rectIconAdsorbTop, juce::RectanglePlacement::centred, 1.0);
 					iconAdsorbBottom->drawWithin(g, rectIconAdsorbBottom, juce::RectanglePlacement::centred, 1.0);
 				}
+
+				g.setColour(FlowStyle::getButtonIconBackgroundColor());
+				g.fillRoundedRectangle(rectLeft, buttonCornerSize);
+				g.fillRoundedRectangle(rectRight, buttonCornerSize);
+				g.fillRoundedRectangle(rectTop, buttonCornerSize);
+				g.fillRoundedRectangle(rectBottom, buttonCornerSize);
+				g.setColour(FlowStyle::getButtonIconColor());
+				g.drawRoundedRectangle(rectLeft, buttonCornerSize, buttonBorderSize);
+				g.drawRoundedRectangle(rectRight, buttonCornerSize, buttonBorderSize);
+				g.drawRoundedRectangle(rectTop, buttonCornerSize, buttonBorderSize);
+				g.drawRoundedRectangle(rectBottom, buttonCornerSize, buttonBorderSize);
+
+				iconLeft->drawWithin(g, rectIconLeft, juce::RectanglePlacement::centred, 1.0);
+				iconRight->drawWithin(g, rectIconRight, juce::RectanglePlacement::centred, 1.0);
+				iconTop->drawWithin(g, rectIconTop, juce::RectanglePlacement::centred, 1.0);
+				iconBottom->drawWithin(g, rectIconBottom, juce::RectanglePlacement::centred, 1.0);
 
 				/** Adsorb Area */
 				juce::Rectangle<float> adsorbRect;

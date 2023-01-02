@@ -510,9 +510,6 @@ namespace luce {
 			float unitMinSize = this->isVertical
 				? (FlowStyle::getUnitMinimumHeight() * screenSize.getHeight())
 				: (FlowStyle::getUnitMinimumWidth() * screenSize.getWidth());
-			float unitMaxSize = this->isVertical
-				? (FlowStyle::getUnitMaximumHeight() * screenSize.getHeight())
-				: (FlowStyle::getUnitMaximumWidth() * screenSize.getWidth());
 
 			/** Size Percent */
 			float totalSize = 0;
@@ -536,7 +533,7 @@ namespace luce {
 
 				this->manager->setItemLayout(i,
 					(i % 2 == 0) ? unitMinSize : resizerSize,
-					(i % 2 == 0) ? unitMaxSize : resizerSize,
+					(i % 2 == 0) ? -1.0 : resizerSize,
 					(i % 2 == 0) ? -sizeList[(int)(i / 2.)] : resizerSize
 				);
 			}

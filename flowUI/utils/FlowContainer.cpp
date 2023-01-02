@@ -15,6 +15,32 @@ namespace luce {
 		FlowContainer::FlowContainer(FlowWindow* window, bool isVertical)
 			: FlowGridableUnit(window, true), isVertical(isVertical) {
 			this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
+
+			this->leftResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::Left, window, this);
+			this->rightResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::Right, window, this);
+			this->topResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::Top, window, this);
+			this->bottomResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::Bottom, window, this);
+			this->topLeftResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::TopLeft, window, this);
+			this->topRightResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::TopRight, window, this);
+			this->bottomLeftResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::BottomLeft, window, this);
+			this->bottomRightResizer
+				= std::make_unique<FlowContainerResizer>(FlowContainerResizer::ResizerPlace::BottomRight, window, this);
+
+			this->addAndMakeVisible(this->leftResizer.get());
+			this->addAndMakeVisible(this->rightResizer.get());
+			this->addAndMakeVisible(this->topResizer.get());
+			this->addAndMakeVisible(this->bottomResizer.get());
+			this->addAndMakeVisible(this->topLeftResizer.get());
+			this->addAndMakeVisible(this->topRightResizer.get());
+			this->addAndMakeVisible(this->bottomLeftResizer.get());
+			this->addAndMakeVisible(this->bottomRightResizer.get());
 		}
 
 		void FlowContainer::add(FlowComponent* comp, bool show) {
@@ -85,6 +111,17 @@ namespace luce {
 			return this->freeSizeTemp; 
 		}
 
+		void FlowContainer::setResizerShown(bool resizerShown) {
+			this->leftResizer->setVisible(resizerShown);
+			this->rightResizer->setVisible(resizerShown);
+			this->topResizer->setVisible(resizerShown);
+			this->bottomResizer->setVisible(resizerShown);
+			this->topLeftResizer->setVisible(resizerShown);
+			this->topRightResizer->setVisible(resizerShown);
+			this->bottomLeftResizer->setVisible(resizerShown);
+			this->bottomRightResizer->setVisible(resizerShown);
+		}
+
 		void FlowContainer::resized() {
 			this->updateComponents(false);
 		}
@@ -92,9 +129,6 @@ namespace luce {
 		void FlowContainer::paint(juce::Graphics& g) {
 			/** Get Screen Size */
 			auto screenSize = this->window->getScreenSize();
-
-			/** Background */
-			g.fillAll(FlowStyle::getTitleBackgroundColor().withAlpha(.5f));
 
 			/** Title Bar */
 			{
@@ -117,7 +151,13 @@ namespace luce {
 						* (this->isVertical ? screenSize.getWidth() : screenSize.getHeight());
 					float fontSize = (this->isVertical ? FlowStyle::getTitleTextHeight() : FlowStyle::getTitleTextWidth())
 						* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
-					
+					auto splitSize = this->isVertical
+						? FlowStyle::getTitleSplitWidth() * screenSize.getWidth()
+						: FlowStyle::getTitleSplitHeight() * screenSize.getHeight();
+					auto splitLength = this->isVertical
+						? FlowStyle::getTitleSplitVLength() * screenSize.getHeight()
+						: FlowStyle::getTitleSplitHLength() * screenSize.getWidth();
+
 					/** Font */
 					juce::Font font(fontSize);
 					g.setFont(font);
@@ -133,10 +173,11 @@ namespace luce {
 							this->isVertical ? (FlowStyle::getTitleHeight() * screenSize.getHeight()) : std::get<1>(temp)
 						);
 						tabTotalSize += std::get<1>(temp);
-
-						g.setColour((i == this->current) ? FlowStyle::getTitleHighlightColor() : FlowStyle::getTitleBackgroundColor());
-						g.fillRect(tabArea);
-
+						if (i == this->current) {
+							g.setColour(FlowStyle::getTitleHighlightColor());
+							g.fillRect(tabArea);
+						}
+						
 						/** Border */
 						if (i == this->current) {
 							juce::Rectangle<float> borderArea = (this->isVertical)
@@ -170,10 +211,32 @@ namespace luce {
 								juce::Justification::centred, 1, .9f);
 							g.restoreState();
 						}
+
+						/** Split Line */
+						if (i != this->current && (i + 1) != this->current) {
+							juce::Rectangle<float> splitRect(
+								this->isVertical ? tabTotalSize - splitSize / 2 : (FlowStyle::getTitleWidth() * screenSize.getWidth()) / 2 - splitLength / 2,
+								this->isVertical ? (FlowStyle::getTitleHeight() * screenSize.getHeight()) / 2 - splitLength / 2 : tabTotalSize - splitSize / 2,
+								this->isVertical ? splitSize : splitLength,
+								this->isVertical ? splitLength : splitSize
+							);
+							g.setColour(FlowStyle::getTitleSplitColor());
+							g.fillRect(splitRect);
+						}
 					}
 				}
 
 			}
+		}
+
+		void FlowContainer::paintOverChildren(juce::Graphics& g) {
+			/** Get Screen Size */
+			auto screenSize = this->window->getScreenSize();
+			auto borderSize = FlowStyle::getContainerBorderSize() * screenSize.getWidth();
+
+			/** Draw Border */
+			g.setColour(FlowStyle::getContainerBorderColor());
+			g.drawRect(this->getLocalBounds(), borderSize);
 		}
 
 		void FlowContainer::mouseDown(const juce::MouseEvent& event) {
@@ -338,6 +401,10 @@ namespace luce {
 			}
 		}
 
+		void FlowContainer::parentHierarchyChanged() {
+			this->setResizerShown(dynamic_cast<FlowManager*>(this->getParentComponent()));
+		}
+
 		void FlowContainer::updateComponents(bool repaint) {
 			/** Component Size */
 			{
@@ -357,11 +424,11 @@ namespace luce {
 				}
 			}
 			
+			/** Get Screen Size */
+			auto screenSize = this->window->getScreenSize();
+
 			/** Title Size */
 			{
-				/** Get Screen Size */
-				auto screenSize = this->window->getScreenSize();
-
 				/** Get Size */
 				float paddingSize =
 					(this->isVertical ? FlowStyle::getTitleTextPaddingWidth() : FlowStyle::getTitleTextPaddingHeight())
@@ -442,6 +509,56 @@ namespace luce {
 					} sortByIndexComparator;
 					this->tabSizeTemp.sort(sortByIndexComparator, false);
 				}
+			}
+
+			/** Resizer Size */
+			{
+				auto resizerWidth = FlowStyle::getResizerWidth() * screenSize.getWidth();
+				auto resizerHeight = FlowStyle::getResizerHeight() * screenSize.getHeight();
+
+				auto bounds = this->getLocalBounds();
+				auto leftBounds = bounds
+					.withTrimmedRight(bounds.getWidth() - resizerWidth)
+					.withTrimmedTop(resizerHeight).withTrimmedBottom(resizerHeight);
+				auto rightBounds = bounds
+					.withTrimmedLeft(bounds.getWidth() - resizerWidth)
+					.withTrimmedTop(resizerHeight).withTrimmedBottom(resizerHeight);
+				auto topBounds = bounds
+					.withTrimmedBottom(bounds.getHeight() - resizerHeight)
+					.withTrimmedLeft(resizerWidth).withTrimmedRight(resizerWidth);
+				auto bottomBounds = bounds
+					.withTrimmedTop(bounds.getHeight() - resizerHeight)
+					.withTrimmedLeft(resizerWidth).withTrimmedRight(resizerWidth);
+				auto topLeftBounds = bounds
+					.withTrimmedBottom(bounds.getHeight() - resizerHeight)
+					.withTrimmedRight(bounds.getWidth() - resizerWidth);
+				auto topRightBounds = bounds
+					.withTrimmedBottom(bounds.getHeight() - resizerHeight)
+					.withTrimmedLeft(bounds.getWidth() - resizerWidth);
+				auto bottomLeftBounds = bounds
+					.withTrimmedTop(bounds.getHeight() - resizerHeight)
+					.withTrimmedRight(bounds.getWidth() - resizerWidth);
+				auto bottomRightBounds = bounds
+					.withTrimmedTop(bounds.getHeight() - resizerHeight)
+					.withTrimmedLeft(bounds.getWidth() - resizerWidth);
+
+				this->leftResizer->setBounds(leftBounds);
+				this->rightResizer->setBounds(rightBounds);
+				this->topResizer->setBounds(topBounds);
+				this->bottomResizer->setBounds(bottomBounds);
+				this->topLeftResizer->setBounds(topLeftBounds);
+				this->topRightResizer->setBounds(topRightBounds);
+				this->bottomLeftResizer->setBounds(bottomLeftBounds);
+				this->bottomRightResizer->setBounds(bottomRightBounds);
+
+				this->leftResizer->toFront(false);
+				this->rightResizer->toFront(false);
+				this->topResizer->toFront(false);
+				this->bottomResizer->toFront(false);
+				this->topLeftResizer->toFront(false);
+				this->topRightResizer->toFront(false);
+				this->bottomLeftResizer->toFront(false);
+				this->bottomRightResizer->toFront(false);
 			}
 
 			if (repaint) {

@@ -52,25 +52,29 @@ namespace luce {
 			static void setResizerWidth(float resizerWidth);
 			static void setUnitMinimumHeight(float unitMinimumHeight);
 			static void setUnitMinimumWidth(float unitMinimumWidth);
-			static void setUnitMaximumHeight(float unitMaximumHeight);
-			static void setUnitMaximumWidth(float unitMaximumWidth);
 			static void setResizerColor(juce::Colour resizerColor);
 
 			static float getResizerHeight();
 			static float getResizerWidth();
 			static float getUnitMinimumHeight();
 			static float getUnitMinimumWidth();
-			static float getUnitMaximumHeight();
-			static float getUnitMaximumWidth();
 			static const juce::Colour getResizerColor();
 
 
 
+			static void setContainerResizerHeight(float containerResizerHeight);
+			static void setContainerResizerWidth(float containerResizerWidth);
 			static void setContainerDefaultHeight(float containerDefaultHeight);
 			static void setContainerDefaultWidth(float containerDefaultWidth);
+			static void setContainerBorderSize(float containerBorderSize);
+			static void setContainerBorderColor(juce::Colour containerBorderColor);
 
+			static float getContainerResizerHeight();
+			static float getContainerResizerWidth();
 			static float getContainerDefaultHeight();
 			static float getContainerDefaultWidth();
+			static float getContainerBorderSize();
+			static juce::Colour getContainerBorderColor();
 
 
 
@@ -129,23 +133,23 @@ namespace luce {
 			float titleHeight = 0.024;						/**< Container title bar height (vertical mode) */
 			float titleWidth = 0.012;						/**< Container title bar width (horizontal mode) */
 			float titleBorderHeight = 0.004;				/**< Container title bar top border height (vertical mode) */
-			float titleBorderWidth = 0.0024;					/**< Container title bar left border width (horizontal mode) */
-			float titleSplitWidth = 0.002;					/**< Container title bar tab split line width (vertical mode) */
-			float titleSplitHeight = 0.002;				/**< Container title bar tab split line height (horizontal mode) */
-			float titleSplitVLength = 0.02;					/**< Container title bar tab split line length (vertical mode) */
-			float titleSplitHLength = 0.0112;					/**< Container title bar tab split line length (horizontal mode) */
+			float titleBorderWidth = 0.0024;				/**< Container title bar left border width (horizontal mode) */
+			float titleSplitWidth = 0.0005;					/**< Container title bar tab split line width (vertical mode) */
+			float titleSplitHeight = 0.00065;				/**< Container title bar tab split line height (horizontal mode) */
+			float titleSplitVLength = 0.0125;				/**< Container title bar tab split line length (vertical mode) */
+			float titleSplitHLength = 0.00625;				/**< Container title bar tab split line length (horizontal mode) */
 			float titleTextHeight = 0.016;					/**< Container title bar tab title text height (vertical mode) */
 			float titleTextWidth = 0.008;					/**< Container title bar tab title text width (horizontal mode) */
-			float titleTextPaddingWidth = 0.008;				/**< Container title bar tab title text padding width (vertical mode) */
+			float titleTextPaddingWidth = 0.008;			/**< Container title bar tab title text padding width (vertical mode) */
 			float titleTextPaddingHeight = 0.012;			/**< Container title bar tab title text padding height (horizontal mode) */
 			juce::Colour titleBackgroundColor
-				= juce::Colours::darkgrey;						/**< Container title bar tab fill color (not active) */
+				= juce::Colours::darkgrey;					/**< Container title bar tab fill color (not active) */
 			juce::Colour titleHighlightColor
-				= juce::Colours::grey;					/**< Container title bar tab fill color (active) */
+				= juce::Colours::grey;						/**< Container title bar tab fill color (active) */
 			juce::Colour titleBorderColor
 				= juce::Colours::rebeccapurple;				/**< Container title bar border color */
 			juce::Colour titleSplitColor
-				= juce::Colours::white;						/**< Container title bar tab split line color */
+				= juce::Colours::lightgrey;					/**< Container title bar tab split line color */
 			juce::Colour titleTextColor
 				= juce::Colours::white;						/**< Container title bar tab title text color (not active) */
 			juce::Colour titleTextHighlightColor
@@ -153,19 +157,22 @@ namespace luce {
 
 
 
-			float resizerHeight = 0.006;						/**< Grid resizer bar height (vertical mode) */
-			float resizerWidth = 0.0035;						/**< Grid resizer bar width (horizontal mode) */
+			float resizerHeight = 0.0036;					/**< Grid resizer bar height (vertical mode) */
+			float resizerWidth = 0.0021;					/**< Grid resizer bar width (horizontal mode) */
 			float unitMinimumHeight = 0.05;					/**< Grid unit minimum height (vertical mode) */
 			float unitMinimumWidth = 0.05;					/**< Grid unit minimum width (horizontal mode) */
-			float unitMaximumHeight = 1.0;					/**< Grid unit maximum height (vertical mode) */
-			float unitMaximumWidth = 1.0;					/**< Grid unit maximum width (horizontal mode) */
 			juce::Colour resizerColor
 				= juce::Colours::black;						/**< Grid resizer bar color */
 
 
 
+			float containerResizerHeight = 0.006;			/**< Height of the resizer of the free container */
+			float containerResizerWidth = 0.0035;			/**< Width of the resizer of the free container */
 			float containerDefaultHeight = 0.5;				/**< Default height of flow container */
 			float containerDefaultWidth = 0.5;				/**< Default width of flow container */
+			float containerBorderSize = 0.0008;				/**< Border line width of container */
+			juce::Colour containerBorderColor
+				= juce::Colours::darkgrey;					/**< Container border line color */
 
 
 
@@ -178,11 +185,11 @@ namespace luce {
 			float buttonPaddingWidth = 0.008;				/**< Horizontal distance of the adsorb button from border */
 			float buttonPaddingHeight = 0.008;				/**< Vertical distance of the adsorb button from border */
 			float buttonCornerSize = 0.004;					/**< Corner width of adsorb button */
-			float buttonBorderSize = 0.0008;					/**< Border line width of adsorb button */
+			float buttonBorderSize = 0.0008;				/**< Border line width of adsorb button */
 			juce::Colour buttonIconColor
 				= juce::Colours::white;						/**< Adsorb button icon color */
 			juce::Colour buttonIconBackgroundColor
-				= juce::Colours::transparentWhite;			/**< Adsorb button icon background color */
+				= juce::Colours::dimgrey;					/**< Adsorb button icon background color */
 			juce::Colour adsorbAreaColor
 				= juce::Colours::blue.withAlpha(.5f);		/**< Container adsorb area color */
 

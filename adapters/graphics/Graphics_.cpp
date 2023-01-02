@@ -19,6 +19,13 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(fillAll) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Graphics);
+		auto& pColour = LUCE_CHECK_USERDATA(L, 2, Colour);
+		pInstance->fillAll(*pColour);
+		return 0;
+	}
+
 	LUCE_METHOD(fillRoundedRectangle) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Graphics);
 		auto& pRect = LUCE_CHECK_USERDATA(L, 2, RectangleFloat);
@@ -53,6 +60,7 @@ namespace luce {
 	LUCE_METHOD_LIST(Graphics,
 		setColour,
 		fillRect,
+		fillAll,
 		fillRoundedRectangle,
 		drawRect,
 		drawRoundedRectangle
