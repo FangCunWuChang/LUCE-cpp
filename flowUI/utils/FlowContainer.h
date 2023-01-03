@@ -74,6 +74,7 @@ namespace luce {
 				topLeftResizer, topRightResizer, bottomLeftResizer, bottomRightResizer;
 
 			void updateComponents(bool repaint = true);
+			void showMenu(int tabIndex);
 
 			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowContainer)
 		};

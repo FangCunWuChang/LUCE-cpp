@@ -1,6 +1,7 @@
 ﻿#include "FlowContainer.h"
 #include "FlowWindow.h"
 #include "FlowStyle.h"
+#include "FlowMenu.h"
 
 namespace luce {
 	namespace utils {
@@ -59,6 +60,11 @@ namespace luce {
 			comp->setVisible(false);
 			this->components.removeAllInstancesOf(comp);
 			this->removeChildComponent(comp);
+
+			if (this->current >= this->components.size()) {
+				this->current = this->components.size() - 1;
+			}
+
 			this->updateComponents();
 		}
 
@@ -247,10 +253,12 @@ namespace luce {
 			float titleSize = (this->isVertical ? FlowStyle::getTitleHeight() : FlowStyle::getTitleWidth())
 				* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
 
-			/** Left Button */
-			if (event.mods.isLeftButtonDown()) {
+			/** Left / Right Button */
+			if (event.mods.isLeftButtonDown() || event.mods.isRightButtonDown()) {
 				this->toFront(true);
-				this->mousePosTemp = event.getPosition();
+				if (event.mods.isLeftButtonDown()) {
+					this->mousePosTemp = event.getPosition();
+				}
 
 				float totalSize = 0;
 				for (int i = 0; i < this->tabSizeTemp.size(); i++) {
@@ -276,11 +284,20 @@ namespace luce {
 					totalSize += tabSize;
 				}
 
-				this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
+				if (event.mods.isLeftButtonDown()) {
+					this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
+				}
 			}
 		}
 
 		void FlowContainer::mouseUp(const juce::MouseEvent& event) {
+			/** Get Screen Size */
+			auto screenSize = this->window->getScreenSize();
+
+			/** Title Size */
+			float titleSize = (this->isVertical ? FlowStyle::getTitleHeight() : FlowStyle::getTitleWidth())
+				* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
+
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
@@ -297,13 +314,6 @@ namespace luce {
 					this->mousePosTemp = juce::Point<int>();
 				}
 
-				/** Get Screen Size */
-				auto screenSize = this->window->getScreenSize();
-
-				/** Title Size */
-				float titleSize = (this->isVertical ? FlowStyle::getTitleHeight() : FlowStyle::getTitleWidth())
-					* (this->isVertical ? screenSize.getHeight() : screenSize.getWidth());
-				
 				/** Mouse Cursor */
 				{
 					float totalSize = 0;
@@ -326,6 +336,39 @@ namespace luce {
 				}
 
 				this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
+			}
+			/** Right Menu */
+			else if (event.mods.isRightButtonDown()) {
+				/** Find Tab */
+				int tabIndex = -1;
+				{
+					float totalSize = 0;
+					for (int i = 0; i < this->tabSizeTemp.size(); i++) {
+						auto tabSize = std::get<1>(this->tabSizeTemp.getReference(i));
+						juce::Rectangle<float> tabArea(
+							this->isVertical ? totalSize : 0,
+							this->isVertical ? 0 : totalSize,
+							this->isVertical ? tabSize : titleSize,
+							this->isVertical ? titleSize : tabSize
+						);
+
+						if (tabArea.contains(event.getPosition().toFloat())) {
+							tabIndex = i;
+							break;
+						}
+
+						totalSize += tabSize;
+					}
+				}
+
+				auto messageManager = juce::MessageManager::getInstance();
+				if (messageManager) {
+					messageManager->callAsync(
+						[this, tabIndex] {
+							this->showMenu(tabIndex);
+						}
+					);
+				}
 			}
 		}
 
@@ -563,6 +606,37 @@ namespace luce {
 
 			if (repaint) {
 				this->repaint();
+			}
+		}
+
+		void FlowContainer::showMenu(int tabIndex) {
+			bool isTab = tabIndex >= 0 && tabIndex < this->components.size();
+			bool isFree = dynamic_cast<FlowManager*>(this->getParentComponent());
+			bool isMulti = this->components.size() > 1;
+
+			auto messageManager = juce::MessageManager::getInstance();
+			if (!messageManager) { return; }
+
+			auto menu = FlowMenu::createContainerMenu(isTab, isFree, isMulti);
+
+			int result = menu.show();
+			switch (result) {
+			case 1:
+				messageManager->callAsync(
+					[manager = this->window->getManager(),
+					comp = this->components[tabIndex]] {
+						manager->releaseComponent(comp);
+					}
+				);
+				break;
+			case 2:
+				messageManager->callAsync(
+					[manager = this->window->getManager(),
+					this] {
+						manager->releaseContainer(this);
+					}
+				);
+				break;
 			}
 		}
 	}

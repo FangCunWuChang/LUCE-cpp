@@ -12,8 +12,13 @@ namespace luce {
 			FlowManager() = delete;
 			FlowManager(FlowWindow* window);
 
+			void addContainer(FlowContainer* container);
+			bool removeContainer(FlowContainer* container);
+
 			void openComponent(FlowComponent* comp, bool vertical = true);
 			void closeComponent(FlowComponent* comp);
+			void releaseComponent(FlowComponent* comp);
+			void releaseContainer(FlowContainer* container);
 
 			FlowContainer* findComponent(FlowComponent* comp) const;
 

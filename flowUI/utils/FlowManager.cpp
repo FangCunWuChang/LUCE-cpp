@@ -11,11 +11,8 @@ namespace luce {
 			this->addAndMakeVisible(this->grid.get());
 		}
 
-		void FlowManager::openComponent(FlowComponent* comp, bool vertical) {
-			if (this->findComponent(comp)) { return; }
-
-			auto container = new FlowContainer(this->window, vertical);
-			container->add(comp);
+		void FlowManager::addContainer(FlowContainer* container) {
+			if (!container) { return; }
 
 			/** Size */
 			auto screenSize = this->window->getScreenSize();
@@ -29,18 +26,60 @@ namespace luce {
 			container->toFront(true);
 		}
 
+		bool FlowManager::removeContainer(FlowContainer* container) {
+			if (!container) { return false; }
+
+			if (this->grid->releaseContainer(container)) {
+				return true;
+			}
+			else {
+				if (this->freeContainers.contains(container)) {
+					this->removeChildComponent(container);
+					this->freeContainers.removeObject(container, false);
+					return true;
+				}
+				return false;
+			}
+		}
+
+		void FlowManager::openComponent(FlowComponent* comp, bool vertical) {
+			if (this->findComponent(comp)) { return; }
+
+			auto container = new FlowContainer(this->window, vertical);
+			container->add(comp);
+
+			this->addContainer(container);
+		}
+
 		void FlowManager::closeComponent(FlowComponent* comp) {
 			auto container = this->findComponent(comp);
 			if (!container) { return; }
 			container->remove(comp);
 
 			if (container->isEmpty()) {
-				if (!this->grid->releaseContainer(container)) {
-					this->removeChildComponent(container);
-					this->freeContainers.removeObject(container, false);
-				}
+				this->removeContainer(container);
 				delete container;
 				container = nullptr;
+			}
+		}
+
+		void FlowManager::releaseComponent(FlowComponent* comp) {
+			this->closeComponent(comp);
+			this->openComponent(comp);
+		}
+
+		void FlowManager::releaseContainer(FlowContainer* container) {
+			if (this->removeContainer(container)) {
+				this->addContainer(container);
+
+				auto containerSize = container->getSizeTemp();
+				if (container->getX() > this->getWidth()) {
+					containerSize.setX(this->getWidth());
+				}
+				if (container->getY() > this->getHeight()) {
+					containerSize.setY(this->getHeight());
+				}
+				container->centreWithSize(containerSize.getX(), containerSize.getY());
 			}
 		}
 
