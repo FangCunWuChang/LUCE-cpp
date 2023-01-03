@@ -128,6 +128,11 @@ namespace luce {
 			this->bottomRightResizer->setVisible(resizerShown);
 		}
 
+		void FlowContainer::setVertical(bool isVertical) {
+			this->isVertical = isVertical;
+			this->updateComponents();
+		}
+
 		void FlowContainer::resized() {
 			this->updateComponents(false);
 		}
@@ -613,11 +618,12 @@ namespace luce {
 			bool isTab = tabIndex >= 0 && tabIndex < this->components.size();
 			bool isFree = dynamic_cast<FlowManager*>(this->getParentComponent());
 			bool isMulti = this->components.size() > 1;
+			bool isVertical = this->isVertical;
 
 			auto messageManager = juce::MessageManager::getInstance();
 			if (!messageManager) { return; }
 
-			auto menu = FlowMenu::createContainerMenu(isTab, isFree, isMulti);
+			auto menu = FlowMenu::createContainerMenu(isTab, isFree, isMulti, isVertical);
 
 			int result = menu.show();
 			switch (result) {
@@ -634,6 +640,13 @@ namespace luce {
 					[manager = this->window->getManager(),
 					this] {
 						manager->releaseContainer(this);
+					}
+				);
+				break;
+			case 3:
+				messageManager->callAsync(
+					[this, vertical = !isVertical] {
+						this->setVertical(vertical);
 					}
 				);
 				break;

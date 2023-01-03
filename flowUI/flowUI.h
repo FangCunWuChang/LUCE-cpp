@@ -3,6 +3,7 @@
 #include "../Defs.h"
 #include "utils/FlowWindow.h"
 #include "utils/FlowComponent.h"
+#include "utils/FlowStyle.h"
 
 namespace luce {
 	/**

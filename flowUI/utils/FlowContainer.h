@@ -45,6 +45,7 @@ namespace luce {
 			const juce::Point<int> getSizeTemp() const;
 
 			void setResizerShown(bool resizerShown);
+			void setVertical(bool isVertical);
 
 		private:
 			void resized() override;
@@ -60,7 +61,7 @@ namespace luce {
 			void parentHierarchyChanged() override;
 
 		private:
-			const bool isVertical = true;
+			bool isVertical = true;
 			juce::Array<FlowComponent*> components;
 			int current = -1;
 			/** name, size, index */

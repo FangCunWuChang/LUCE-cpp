@@ -68,7 +68,7 @@
 
 /**
  * @brief		Make a luaL_Reg value list if method list exists.
- * @attention	50 methods max.
+ * @attention	200 methods max.
  * 
  * @param ...	The method list.
  * 
@@ -77,7 +77,7 @@
 #define LUCE_MAKE_REG_LIST(...)					__VA_OPT__(LUCE_MAKE_REG_LIST_INTERNAL(__VA_ARGS__))
 /**
  * @brief		Make a method list of the object class.
- * @attention	50 methods max.
+ * @attention	200 methods max.
  *
  * @param t		The name of the adapter class.
  * @param ...	The method list.
@@ -85,7 +85,7 @@
 #define LUCE_METHOD_LIST(t, ...)				luaL_Reg luce::LUCE_Adapter<t>::__methodList[] = {LUCE_MAKE_REG_LIST(__VA_ARGS__) LUCE_NULL_LUA_REG()}
 /**
  * @brief		Make a static method list of the object class.
- * @attention	50 methods max.
+ * @attention	200 methods max.
  *
  * @param t		The name of the adapter class.
  * @param ...	The method list.

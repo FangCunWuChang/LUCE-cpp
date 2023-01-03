@@ -13,7 +13,7 @@ namespace luce {
 			}
 
 			/** Load File */
-			juce::File file(path);
+			juce::File file = juce::File::getCurrentWorkingDirectory().getChildFile(path);
 			auto str = file.loadFileAsString();
 
 			/** Parse File */

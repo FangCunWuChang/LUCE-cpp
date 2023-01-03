@@ -178,11 +178,11 @@ namespace luce {
 
 			float buttonWidth = 0.032;						/**< Width of adsorb button */
 			float buttonHeight = 0.06;						/**< Height of adsorb button */
-			float buttonIconWidth = 0.024;					/**< Width of adsorb button icon */
-			float buttonIconHeight = 0.045;					/**< Height of adsorb button icon */
+			float buttonIconWidth = 0.0192;					/**< Width of adsorb button icon */
+			float buttonIconHeight = 0.036;					/**< Height of adsorb button icon */
 			float buttonSplitWidth = 0.004;					/**< Width of adsorb button split */
-			float buttonSplitHeight = 0.004;				/**< Height of adsorb button split */
-			float buttonPaddingWidth = 0.008;				/**< Horizontal distance of the adsorb button from border */
+			float buttonSplitHeight = 0.0075;				/**< Height of adsorb button split */
+			float buttonPaddingWidth = 0.005;				/**< Horizontal distance of the adsorb button from border */
 			float buttonPaddingHeight = 0.008;				/**< Vertical distance of the adsorb button from border */
 			float buttonCornerSize = 0.004;					/**< Corner width of adsorb button */
 			float buttonBorderSize = 0.0008;				/**< Border line width of adsorb button */
