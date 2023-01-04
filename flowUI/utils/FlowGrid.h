@@ -36,6 +36,8 @@ namespace luce {
 			juce::Rectangle<int> findAdsorbRect(juce::Point<int> point) const;
 			FlowContainer* findAdsorbContainer(juce::Point<int> point) const;
 
+			const juce::Array<FlowContainer*> getAllContainers() const;
+
 		private:
 			bool addUniqueUnit(FlowContainer* container);
 			bool releaseUniqueUnit(FlowContainer* container);

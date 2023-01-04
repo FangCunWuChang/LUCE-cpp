@@ -40,13 +40,7 @@ namespace luce {
 			FlowContainer* base,
 			FlowGrid::ContainerAddPlace place) {
 			/** Base Is In This Grid */
-			int baseIndex = -1;
-			for (int i = 0; i < this->units.size(); i++) {
-				if (this->units.getUnchecked(i) == base) {
-					baseIndex = i;
-					break;
-				}
-			}
+			int baseIndex = this->units.indexOf(base);
 
 			if (baseIndex >= 0 && baseIndex < this->units.size()) {
 				/** In Center */
@@ -254,13 +248,7 @@ namespace luce {
 
 		bool FlowGrid::releaseContainer(FlowContainer* container) {
 			/** Unit Is In This Grid */
-			int unitIndex = -1;
-			for (int i = 0; i < this->units.size(); i++) {
-				if (this->units.getUnchecked(i) == container) {
-					unitIndex = i;
-					break;
-				}
-			}
+			int unitIndex = this->units.indexOf(container);
 
 			if (unitIndex >= 0 && unitIndex < this->units.size()) {
 				/** Remove Unique Child Should Use releaseUniqueUnit Method ! */
@@ -381,6 +369,19 @@ namespace luce {
 				}
 			}
 			return nullptr;
+		}
+
+		const juce::Array<FlowContainer*> FlowGrid::getAllContainers() const {
+			juce::Array<FlowContainer*> result;
+			for (auto i : this->units) {
+				if (auto ptr = dynamic_cast<FlowGrid*>(i)) {
+					result.addArray(ptr->getAllContainers());
+				}
+				else {
+					result.add(dynamic_cast<FlowContainer*>(i));
+				}
+			}
+			return result;
 		}
 
 		bool FlowGrid::addUniqueUnit(FlowContainer* container) {

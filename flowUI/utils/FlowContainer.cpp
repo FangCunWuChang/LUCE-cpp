@@ -2,6 +2,7 @@
 #include "FlowWindow.h"
 #include "FlowStyle.h"
 #include "FlowMenu.h"
+#include "FlowWindowHub.h"
 
 namespace luce {
 	namespace utils {
@@ -130,6 +131,19 @@ namespace luce {
 
 		void FlowContainer::setVertical(bool isVertical) {
 			this->isVertical = isVertical;
+			this->updateComponents();
+		}
+
+		void FlowContainer::setWindow(FlowWindow* window) {
+			this->window = window;
+			this->leftResizer->setWindow(window);
+			this->rightResizer->setWindow(window);
+			this->topResizer->setWindow(window);
+			this->bottomResizer->setWindow(window);
+			this->topLeftResizer->setWindow(window);
+			this->topRightResizer->setWindow(window);
+			this->bottomLeftResizer->setWindow(window);
+			this->bottomRightResizer->setWindow(window);
 			this->updateComponents();
 		}
 
@@ -623,7 +637,51 @@ namespace luce {
 			auto messageManager = juce::MessageManager::getInstance();
 			if (!messageManager) { return; }
 
-			auto menu = FlowMenu::createContainerMenu(isTab, isFree, isMulti, isVertical);
+			auto windowCallback = [messageManager, window = this->window, tabIndex, isTab, this](int windowIndex) {
+				int windowSize = FlowWindowHub::getSize();
+				int currentIndex = FlowWindowHub::findWindow(window);
+
+				if (windowIndex == currentIndex) { return; }
+				else {
+					if (windowIndex == windowSize) {
+						new FlowWindow();
+					}
+
+					auto comp = isTab ? this->components[tabIndex] : nullptr;
+					auto targetWindow = FlowWindowHub::getWindow(windowIndex);
+					if (targetWindow) {
+						messageManager->callAsync(
+							[currentWindow = window, targetWindow, comp, messageManager, this] {
+								if (comp) {
+									currentWindow->closeComponent(comp);
+									targetWindow->openComponent(comp);
+									messageManager->callAsync(
+										[targetWindow] {
+											targetWindow->toFront(true);
+										}
+									);
+								}
+								else {
+									auto currentManager = currentWindow->getManager();
+									auto targetManager = targetWindow->getManager();
+
+									if (currentManager->removeContainer(this)) {
+										targetManager->addContainer(this);
+										this->setWindow(targetWindow);
+										messageManager->callAsync(
+											[targetWindow] {
+												targetWindow->toFront(true);
+											}
+										);
+									}
+								}
+							}
+						);
+					}
+				}
+			};
+
+			auto menu = FlowMenu::createContainerMenu(this->window, windowCallback, isTab, isFree, isMulti, isVertical);
 
 			int result = menu.show();
 			switch (result) {

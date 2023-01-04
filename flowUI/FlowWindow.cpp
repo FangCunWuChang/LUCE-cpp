@@ -1,10 +1,12 @@
 ﻿#include "../Defs.h"
 #include "utils/FlowWindow.h"
 #include "utils/FlowComponent.h"
+#include "utils/FlowWindowHub.h"
 
 namespace luce {
 	using utils::FlowWindow;
 	using utils::FlowComponent;
+	using utils::FlowWindowHub;
 
 	LUCE_METHOD(openComponent) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowWindow);
@@ -36,10 +38,18 @@ namespace luce {
 		closeComponent,
 		hasComponent
 	);
-	LUCE_STATIC_METHOD_LIST(FlowWindow);
+
+	LUCE_METHOD(shutdown) {
+		FlowWindowHub::shutdown();
+		return 0;
+	}
+
+	LUCE_STATIC_METHOD_LIST(FlowWindow,
+		shutdown
+	);
 
 	LUCE_NEW(FlowWindow) {
-		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, FlowWindow, pInstance);
+		LUCE_PUSH_USERDATA(L, FlowWindow, pInstance, *new FlowWindow);
 		return 1;
 	}
 }

@@ -8,6 +8,7 @@ namespace luce {
 		class FlowWindow : public juce::DocumentWindow {
 		public:
 			FlowWindow();
+			~FlowWindow();
 
 			FlowManager* getManager() const;
 			const juce::Rectangle<int> getScreenSize() const;

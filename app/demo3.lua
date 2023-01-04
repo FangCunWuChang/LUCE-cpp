@@ -15,7 +15,7 @@ luce.initialise = function(commandLineParameters)
 	luce.FlowStyle.setButtonAdsorbTopIcon("./icons/layout-top-2-line.svg")
 	luce.FlowStyle.setButtonAdsorbBottomIcon("./icons/layout-bottom-2-line.svg")
 
-	mainWindow = luce.FlowWindow.new()
+	local mainWindow = luce.FlowWindow.new()
 
 	luce.FlowComponent.bind("paint", function(self, g)
 		g:fillAll(luce.Colours.dimgrey)
@@ -36,7 +36,7 @@ end
 
 luce.shutdown = function()
 	print("app shutdown")
-	mainWindow = nil
+	luce.FlowWindow.shutdown()
 end
 
 luce.anotherInstanceStarted = function(commandLine)

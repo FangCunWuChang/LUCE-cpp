@@ -37,6 +37,10 @@ namespace luce {
 			}
 		}
 
+		void FlowContainerResizer::setWindow(FlowWindow* window) {
+			this->window = window;
+		}
+
 		void FlowContainerResizer::mouseDrag(const juce::MouseEvent& event) {
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {

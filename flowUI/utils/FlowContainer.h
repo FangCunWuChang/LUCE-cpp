@@ -21,7 +21,7 @@ namespace luce {
 			virtual const juce::Point<float> getMinSize() const = 0;
  
 		protected:
-			FlowWindow* const window = nullptr;
+			FlowWindow* window = nullptr;
 			const bool isContainer = true;
 
 		private:
@@ -46,6 +46,7 @@ namespace luce {
 
 			void setResizerShown(bool resizerShown);
 			void setVertical(bool isVertical);
+			void setWindow(FlowWindow* window);
 
 		private:
 			void resized() override;

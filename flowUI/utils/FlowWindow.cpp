@@ -1,4 +1,5 @@
 ﻿#include "FlowWindow.h"
+#include "FlowWindowHub.h"
 
 namespace luce {
 	namespace utils {
@@ -10,12 +11,31 @@ namespace luce {
 				),
 				juce::DocumentWindow::TitleBarButtons::allButtons
 			) {
+			FlowWindowHub::addWindow(this);
+
 			this->setContentOwned(new FlowManager(this), false);
 			this->setUsingNativeTitleBar(true);
 			this->setResizable(true, false);
 			this->centreWithSize(800, 600);
 			this->getContentComponent()->setVisible(true);
 			this->setVisible(true);
+		}
+
+		FlowWindow::~FlowWindow() {
+			FlowWindowHub::closeWindow(this);
+
+			if (FlowWindowHub::getSize() > 0) {
+				auto window = FlowWindowHub::getWindow(0);
+				if (window) {
+					auto list = this->getManager()->getAllContainers();
+					for (auto i : list) {
+						if (this->getManager()->removeContainer(i)) {
+							window->getManager()->addContainer(i);
+							i->setWindow(window);
+						}
+					}
+				}
+			}
 		}
 
 		FlowManager* FlowWindow::getManager() const {
@@ -104,8 +124,12 @@ namespace luce {
 		}
 
 		void FlowWindow::closeButtonPressed() {
-			/** TODO */
-			juce::JUCEApplication::quit();
+			if (FlowWindowHub::getSize() <= 1) {
+				juce::JUCEApplication::getInstance()->systemRequestedQuit();
+			}
+			else {
+				delete this;
+			}
 		}
 	}
 }

@@ -4,7 +4,7 @@
 
 namespace luce {
 	namespace utils {
-		class FlowStyle final : public juce::DeletedAtShutdown{
+		class FlowStyle final : public juce::DeletedAtShutdown {
 		public:
 			FlowStyle() = default;
 

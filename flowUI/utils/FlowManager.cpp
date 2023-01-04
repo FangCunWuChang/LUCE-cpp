@@ -1,6 +1,7 @@
 ﻿#include "FlowManager.h"
 #include "FlowWindow.h"
 #include "FlowStyle.h"
+#include "FlowWindowHub.h"
 #include "../../adapters/gui/utils/IconManager.h"
 
 namespace luce {
@@ -29,13 +30,29 @@ namespace luce {
 		bool FlowManager::removeContainer(FlowContainer* container) {
 			if (!container) { return false; }
 
+			auto checkCloseFunc = [this] {
+				if (this->grid->isEmpty() && this->freeContainers.size() == 0 && FlowWindowHub::getSize() > 1) {
+					auto messageManager = juce::MessageManager::getInstance();
+					if (messageManager) {
+						messageManager->callAsync(
+							[window = this->window] {
+								delete window;
+							}
+						);
+					}
+				}
+			};
+
 			if (this->grid->releaseContainer(container)) {
+				checkCloseFunc();
 				return true;
 			}
 			else {
 				if (this->freeContainers.contains(container)) {
 					this->removeChildComponent(container);
 					this->freeContainers.removeObject(container, false);
+
+					checkCloseFunc();
 					return true;
 				}
 				return false;
@@ -93,6 +110,12 @@ namespace luce {
 				}
 			}
 			return nullptr;
+		}
+
+		const juce::Array<FlowContainer*> FlowManager::getAllContainers() const {
+			auto result = this->grid->getAllContainers();
+			result.addArray(this->freeContainers);
+			return result;
 		}
 
 		void FlowManager::moveProgressing(

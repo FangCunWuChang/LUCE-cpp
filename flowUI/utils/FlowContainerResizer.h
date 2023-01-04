@@ -24,12 +24,14 @@ namespace luce {
 				BottomRight = Right | Bottom
 			};
 
+			void setWindow(FlowWindow* window);
+
 		public:
 			void mouseDrag(const juce::MouseEvent& event) override;
 
 		private:
 			const ResizerPlace place;
-			FlowWindow* const window = nullptr;
+			FlowWindow* window = nullptr;
 			FlowContainer* const container = nullptr;
 			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowContainerResizer)
 		};

@@ -22,6 +22,8 @@ namespace luce {
 
 			FlowContainer* findComponent(FlowComponent* comp) const;
 
+			const juce::Array<FlowContainer*> getAllContainers() const;
+
 		private:
 			friend class FlowContainer;
 
