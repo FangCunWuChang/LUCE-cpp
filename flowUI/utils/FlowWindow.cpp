@@ -131,5 +131,28 @@ namespace luce {
 				delete this;
 			}
 		}
+
+		void FlowWindow::moved() {
+			/** Screen Temp */
+			static auto screenTemp = juce::Desktop::getInstance().getDisplays()
+				.getDisplayForRect(this->getScreenBounds());
+
+			/** Current Screen */
+			auto currentScreen = juce::Desktop::getInstance().getDisplays()
+				.getDisplayForRect(this->getScreenBounds());
+
+			/** Check Screen Changed */
+			if (currentScreen != screenTemp) {
+				screenTemp = currentScreen;
+
+				/** Refresh Window */
+				auto content = this->getContentComponent();
+				if (content) {
+					auto bounds = content->getBounds();
+					content->setBounds(bounds.withSize(bounds.getWidth() * 2, bounds.getHeight() * 2));
+					content->setBounds(bounds);
+				}
+			}
+		}
 	}
 }

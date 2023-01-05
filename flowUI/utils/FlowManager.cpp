@@ -35,8 +35,10 @@ namespace luce {
 					auto messageManager = juce::MessageManager::getInstance();
 					if (messageManager) {
 						messageManager->callAsync(
-							[window = this->window] {
-								delete window;
+							[window = juce::Component::SafePointer(this->window)] {
+								if (window) {
+									delete window;
+								}
 							}
 						);
 					}

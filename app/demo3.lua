@@ -1,5 +1,6 @@
 ﻿require "luce.Debug"
 require "luce.Colours"
+require "luce.FlowComponent"
 
 luce.initialise = function(commandLineParameters)
 	print("command:", commandLineParameters)
@@ -17,15 +18,21 @@ luce.initialise = function(commandLineParameters)
 
 	local mainWindow = luce.FlowWindow.new()
 
-	luce.FlowComponent.bind("paint", function(self, g)
-		g:fillAll(luce.Colours.dimgrey)
-	end)
-
 	comp1 = luce.FlowComponent.new("comp1")
 	comp2 = luce.FlowComponent.new("comp2")
 	comp3 = luce.FlowComponent.new("comp3")
 	comp4 = luce.FlowComponent.new("comp4")
 	comp5 = luce.FlowComponent.new("comp5")
+
+	local paintFunc = function(self, g)
+		g:fillAll(luce.Colours.dimgrey)
+	end
+
+	comp1:data().paint = paintFunc
+	comp2:data().paint = paintFunc
+	comp3:data().paint = paintFunc
+	comp4:data().paint = paintFunc
+	comp5:data().paint = paintFunc
 
 	mainWindow:openComponent(comp1)
 	mainWindow:openComponent(comp2, false)

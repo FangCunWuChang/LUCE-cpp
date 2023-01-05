@@ -44,8 +44,26 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(getWindowNum) {
+		lua_pushinteger(L, FlowWindowHub::getSize());
+		return 1;
+	}
+
+	LUCE_METHOD(getWindow) {
+		auto window = FlowWindowHub::getWindow(luaL_checkinteger(L, 1));
+		if (window) {
+			LUCE_PUSH_USERDATA(L, FlowWindow, pInstance, *window);
+		}
+		else {
+			lua_pushnil(L);
+		}
+		return 1;
+	}
+
 	LUCE_STATIC_METHOD_LIST(FlowWindow,
-		shutdown
+		shutdown,
+		getWindowNum,
+		getWindow
 	);
 
 	LUCE_NEW(FlowWindow) {

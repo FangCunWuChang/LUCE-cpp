@@ -19,6 +19,7 @@ namespace luce {
 
 		protected:
 			void closeButtonPressed() override;
+			void moved() override;
 
 		private:
 			mutable const juce::Displays::Display* ptrCurrentDisplay = nullptr;
