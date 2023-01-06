@@ -60,10 +60,16 @@ namespace luce {
 		return 1;
 	}
 
+	LUCE_METHOD(setIcon) {
+		FlowWindowHub::setIcon(luaL_checkstring(L, 1));
+		return 0;
+	}
+
 	LUCE_STATIC_METHOD_LIST(FlowWindow,
 		shutdown,
 		getWindowNum,
-		getWindow
+		getWindow,
+		setIcon
 	);
 
 	LUCE_NEW(FlowWindow) {

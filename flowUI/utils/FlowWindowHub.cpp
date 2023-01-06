@@ -9,6 +9,8 @@ namespace luce {
 				if (size < INT_MAX - 1) {
 					FlowWindowHub::getInstance()->windows.add(window);
 					window->setName(juce::translate("Window") + " " + juce::String(size + 1));
+					window->setIcon(FlowWindowHub::getInstance()->iconTemp);
+					window->getPeer()->setIcon(FlowWindowHub::getInstance()->iconTemp);
 				}
 				else {
 					delete window;
@@ -41,6 +43,16 @@ namespace luce {
 
 		void FlowWindowHub::shutdown() {
 			FlowWindowHub::getInstance()->windows.clear();
+		}
+
+		void FlowWindowHub::setIcon(const juce::String& iconPath) {
+			juce::File iconFile = juce::File::getCurrentWorkingDirectory().getChildFile(iconPath);
+			FlowWindowHub::getInstance()->iconTemp = juce::ImageFileFormat::loadFrom(iconFile);
+
+			for (auto i : FlowWindowHub::getInstance()->windows) {
+				i->setIcon(FlowWindowHub::getInstance()->iconTemp);
+				i->getPeer()->setIcon(FlowWindowHub::getInstance()->iconTemp);
+			}
 		}
 
 		FlowWindowHub* FlowWindowHub::getInstance() {

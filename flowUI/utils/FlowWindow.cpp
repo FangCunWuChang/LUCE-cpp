@@ -11,12 +11,13 @@ namespace luce {
 				),
 				juce::DocumentWindow::TitleBarButtons::allButtons
 			) {
-			FlowWindowHub::addWindow(this);
-
 			this->setContentOwned(new FlowManager(this), false);
 			this->setUsingNativeTitleBar(true);
 			this->setResizable(true, false);
 			this->centreWithSize(800, 600);
+
+			FlowWindowHub::addWindow(this);
+
 			this->getContentComponent()->setVisible(true);
 			this->setVisible(true);
 		}

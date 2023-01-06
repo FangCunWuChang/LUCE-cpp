@@ -19,8 +19,11 @@ namespace luce {
 
 			static void shutdown();
 
+			static void setIcon(const juce::String& iconPath);
+
 		private:
 			juce::OwnedArray<FlowWindow> windows;
+			juce::Image iconTemp;
 
 		private:
 			static FlowWindowHub* getInstance();
