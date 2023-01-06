@@ -286,6 +286,7 @@ file (GLOB_RECURSE LUCE_MODULE_SRC
 )
 add_library (libLUCE SHARED ${LUCE_SRC} ${LUCE_MODULE_SRC})
 add_dependencies (libLUCE libJUCE libLua)
+target_include_directories (libLUCE PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC)
     target_compile_definitions (libLUCE PUBLIC "JUCE_DLL=1" "JUCE_DISABLE_DLL_ALLOCATORS=1")
