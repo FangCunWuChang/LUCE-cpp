@@ -11,8 +11,16 @@ namespace luce {
 		return 1;
 	}
 
+	LUCE_METHOD(setColour) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, LookAndFeel);
+		auto& pColor = LUCE_CHECK_USERDATA(L, 3, Colour);
+		pInstance->setColour(luaL_checkinteger(L, 2), *pColor);
+		return 0;
+	}
+
 	LUCE_METHOD_LIST(LookAndFeel,
-		findColour
+		findColour,
+		setColour
 	);
 	LUCE_STATIC_METHOD_LIST(LookAndFeel);
 

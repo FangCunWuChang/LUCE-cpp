@@ -33,10 +33,17 @@ namespace luce {
 		return 1;
 	}
 
+	LUCE_METHOD(setFullScreen) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowWindow);
+		pInstance->setFullScreen(lua_toboolean(L, 2));
+		return 0;
+	}
+
 	LUCE_METHOD_LIST(FlowWindow,
 		openComponent,
 		closeComponent,
-		hasComponent
+		hasComponent,
+		setFullScreen
 	);
 
 	LUCE_METHOD(shutdown) {
