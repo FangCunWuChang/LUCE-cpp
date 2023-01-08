@@ -9,6 +9,7 @@ namespace luce {
 	using juce::Desktop;
 	using juce::LookAndFeel;
 	using juce::ResizableWindow;
+	using juce::PopupMenu;
 
 	int loadGUI(lua_State* L) {
 		LUCE_REG(L, DocumentWindow);
@@ -19,6 +20,7 @@ namespace luce {
 		LUCE_REG(L, Desktop);
 		LUCE_REG(L, LookAndFeel);
 		LUCE_REG(L, ResizableWindow);
+		LUCE_REG(L, PopupMenu);
 
 		return 0;
 	}
