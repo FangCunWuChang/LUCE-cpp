@@ -1,5 +1,5 @@
 local ColourIds = {
-	backgroundColourId = 0x1000700,			        -- A colour to use to fill the window's background.
+	backgroundColourId = 0x1000700,			        -- The colour to fill the menu's background with.
     textColourId = 0x1000600,                       -- The colour for normal menu item text, (unless the colour is specified when the item is added).
     headerTextColourId = 0x1000601,                 -- The colour for section header item text (see the addSectionHeader() method).
     highlightedBackgroundColourId = 0x1000900,      -- The colour to fill the background of the currently highlighted menu item.
