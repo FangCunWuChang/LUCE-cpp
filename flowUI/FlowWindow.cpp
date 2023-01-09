@@ -7,6 +7,7 @@ namespace luce {
 	using utils::FlowWindow;
 	using utils::FlowComponent;
 	using utils::FlowWindowHub;
+	using RectangleInt = juce::Rectangle<int>;
 
 	LUCE_METHOD(openComponent) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowWindow);
@@ -39,11 +40,19 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(getScreenSize) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowWindow);
+		auto screenSize = pInstance->getScreenSize();
+		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, RectangleInt, pRect, screenSize);
+		return 1;
+	}
+
 	LUCE_METHOD_LIST(FlowWindow,
 		openComponent,
 		closeComponent,
 		hasComponent,
-		setFullScreen
+		setFullScreen,
+		getScreenSize
 	);
 
 	LUCE_METHOD(shutdown) {
@@ -72,11 +81,31 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(autoLayout) {
+		auto path = luaL_checkstring(L, 1);
+
+		juce::Array<FlowComponent*> list;
+		lua_pushvalue(L, 2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2)) {
+			auto& pComp = LUCE_CHECK_USERDATA(L, -1, FlowComponent);
+			list.add(pComp);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+
+		FlowWindowHub::autoLayout(path, list);
+
+		return 0;
+	}
+
 	LUCE_STATIC_METHOD_LIST(FlowWindow,
 		shutdown,
 		getWindowNum,
 		getWindow,
-		setIcon
+		setIcon,
+		autoLayout
 	);
 
 	LUCE_NEW(FlowWindow) {

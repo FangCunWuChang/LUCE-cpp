@@ -5,6 +5,7 @@
 namespace luce {
 	namespace utils {
 		class FlowWindow;
+		class FlowComponent;
 
 		class FlowWindowHub final : public juce::DeletedAtShutdown {
 		public:
@@ -20,6 +21,8 @@ namespace luce {
 			static void shutdown();
 
 			static void setIcon(const juce::String& iconPath);
+
+			static void autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list);
 
 		private:
 			juce::OwnedArray<FlowWindow> windows;

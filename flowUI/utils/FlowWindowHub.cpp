@@ -55,6 +55,20 @@ namespace luce {
 			}
 		}
 
+		void FlowWindowHub::autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list) {
+			/** Close All Windows */
+			FlowWindowHub::getInstance()->windows.clear();
+
+			/** Load Layout File */
+			juce::File layoutFile = juce::File::getCurrentWorkingDirectory().getChildFile(layoutPath);
+			auto layoutData = juce::JSON::parse(layoutFile);
+
+			/** Error */
+			if (!layoutData.isObject()) { return; }
+
+			/** TODO */
+		}
+
 		FlowWindowHub* FlowWindowHub::getInstance() {
 			return FlowWindowHub::instance;
 		}
