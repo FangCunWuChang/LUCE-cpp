@@ -18,9 +18,28 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(setDefaultSansSerifTypeface) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, LookAndFeel);
+		juce::String path = luaL_checkstring(L, 2);
+
+		juce::File file = juce::File::getCurrentWorkingDirectory().getChildFile(path);
+		
+		auto size = file.getSize();
+		auto ptrData = std::unique_ptr<char[]>(new char[size]);
+
+		auto stream = file.createInputStream();
+		stream->read(ptrData.get(), size);
+
+		auto ptrTypeface = juce::Typeface::createSystemTypefaceFor(ptrData.get(), size);
+		pInstance->setDefaultSansSerifTypeface(ptrTypeface);
+
+		return 0;
+	}
+
 	LUCE_METHOD_LIST(LookAndFeel,
 		findColour,
-		setColour
+		setColour,
+		setDefaultSansSerifTypeface
 	);
 	LUCE_STATIC_METHOD_LIST(LookAndFeel);
 
