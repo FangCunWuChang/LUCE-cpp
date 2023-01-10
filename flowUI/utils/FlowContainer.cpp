@@ -147,6 +147,45 @@ namespace luce {
 			this->updateComponents();
 		}
 
+		void FlowContainer::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+			/** Error */
+			if (!grid.isObject()) { jassertfalse;  return; }
+
+			/** Clear Comps */
+			for (auto i : this->components) {
+				this->removeChildComponent(i);
+			}
+			this->components.clear();
+
+			/** Add Comps */
+			this->isVertical = grid["vertical"];
+
+			auto id = grid.getProperty("id", juce::var());
+			if (!id.isArray()) {
+				jassertfalse;
+				this->updateComponents();
+				return;
+			}
+			auto idList = id.getArray();
+
+			for (auto& i : *idList) {
+				int index = i;
+				if (index >= 0 && index < list.size()) {
+					auto comp = list.getUnchecked(index);
+					if (!comp->getParentComponent()) {
+						this->components.add(comp);
+						this->addChildComponent(comp);
+					}
+				}
+			}
+			if (this->components.size() > 0) {
+				this->current = 0;
+			}
+
+			/** Refresh */
+			this->updateComponents();
+		}
+
 		void FlowContainer::resized() {
 			this->updateComponents(false);
 		}

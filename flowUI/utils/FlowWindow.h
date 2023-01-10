@@ -17,6 +17,8 @@ namespace luce {
 			void closeComponent(FlowComponent* comp);
 			bool hasComponent(FlowComponent* comp) const;
 
+			void autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list);
+
 		protected:
 			void closeButtonPressed() override;
 			void moved() override;

@@ -120,6 +120,10 @@ namespace luce {
 			return result;
 		}
 
+		void FlowManager::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+			this->grid->autoLayout(grid, list);
+		}
+
 		void FlowManager::moveProgressing(
 			const juce::Point<int> currentPoint,
 			const juce::Point<int> topLeftDistance,

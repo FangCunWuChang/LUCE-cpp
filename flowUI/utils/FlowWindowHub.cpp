@@ -66,7 +66,19 @@ namespace luce {
 			/** Error */
 			if (!layoutData.isObject()) { return; }
 
-			/** TODO */
+			/** Windows List */
+			auto window = layoutData.getProperty("window", juce::var());
+			if (!window.isArray()) { return; }
+
+			auto windowArray = window.getArray();
+			for (auto& i : *windowArray) {
+				auto grid = i.getProperty("grid", juce::var());
+				if (!grid.isObject()) { return; }
+
+				/** Window */
+				auto ptrWindow = new FlowWindow();
+				ptrWindow->autoLayout(grid, list);
+			}
 		}
 
 		FlowWindowHub* FlowWindowHub::getInstance() {

@@ -124,6 +124,10 @@ namespace luce {
 			return this->getManager()->findComponent(comp);
 		}
 
+		void FlowWindow::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+			this->getManager()->autoLayout(grid, list);
+		}
+
 		void FlowWindow::closeButtonPressed() {
 			if (FlowWindowHub::getSize() <= 1) {
 				juce::JUCEApplication::getInstance()->systemRequestedQuit();

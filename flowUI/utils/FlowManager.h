@@ -24,6 +24,8 @@ namespace luce {
 
 			const juce::Array<FlowContainer*> getAllContainers() const;
 
+			void autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list);
+
 		private:
 			friend class FlowContainer;
 

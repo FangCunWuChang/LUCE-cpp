@@ -48,6 +48,8 @@ namespace luce {
 			void setVertical(bool isVertical);
 			void setWindow(FlowWindow* window);
 
+			void autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list);
+
 		private:
 			void resized() override;
 			void paint(juce::Graphics& g) override;

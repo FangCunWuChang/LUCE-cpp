@@ -384,6 +384,84 @@ namespace luce {
 			return result;
 		}
 
+		void FlowGrid::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+			/** Error */
+			if (!grid.isObject()) { jassertfalse;  return; }
+			
+			/** Clear Units */
+			for (auto i : this->units) {
+				this->removeChildComponent(i);
+			}
+			this->units.clear();
+
+			/** Get Units */
+			this->isVertical = grid["vertical"];
+
+			auto size = grid.getProperty("size", juce::var());
+			if (!size.isArray()) {
+				jassertfalse;
+				this->updateComponents();
+				return;
+			}
+			auto sizeList = size.getArray();
+
+			auto unit = grid.getProperty("unit", juce::var());
+			if (!unit.isArray()) {
+				jassertfalse;
+				this->updateComponents();
+				return;
+			}
+			auto unitList = unit.getArray();
+
+			if (unitList->size() != sizeList->size()) {
+				jassertfalse;
+				this->updateComponents();
+				return;
+			}
+
+			for (int i = 0; i < unitList->size(); i++) {
+				auto& unit = unitList->getReference(i);
+
+				/** Error */
+				if (!unit.isObject()) {
+					jassertfalse;
+					this->updateComponents();
+					return;
+				}
+
+				/** Size */
+				auto screenSize = this->window->getScreenSize();
+				auto unitWidth = this->isVertical ? this->getWidth() : (float)sizeList->getReference(i) * this->getWidth();
+				auto unitHeight = this->isVertical ? (float)sizeList->getReference(i) * this->getHeight() : this->getHeight();
+				auto defaultWidth = FlowStyle::getContainerDefaultWidth() * screenSize.getWidth();
+				auto defaultHeight = FlowStyle::getContainerDefaultHeight() * screenSize.getHeight();
+				juce::Point<int> defaultSize(defaultWidth, defaultHeight);
+
+				/** Container */
+				if (unit.hasProperty("id")) {
+					auto container = new FlowContainer(this->window);
+					this->addChildComponent(container);
+					this->units.add(container);
+					container->setSize(unitWidth, unitHeight);
+					container->setSizeTemp(defaultSize);
+					
+					container->autoLayout(unit, list);
+				}
+				/** Grid */
+				else {
+					auto grid = new FlowGrid(this->window);
+					this->addChildComponent(grid);
+					this->units.add(grid);
+					grid->setSize(unitWidth, unitHeight);
+
+					grid->autoLayout(unit, list);
+				}
+			}
+
+			/** Refresh */
+			this->updateComponents();
+		}
+
 		bool FlowGrid::addUniqueUnit(FlowContainer* container) {
 			if (this->units.size() > 0) {
 				jassertfalse;
