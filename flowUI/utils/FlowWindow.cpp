@@ -128,6 +128,16 @@ namespace luce {
 			this->getManager()->autoLayout(grid, list);
 		}
 
+		void FlowWindow::setOpenGL(bool openGLOn) {
+			if (openGLOn) {
+				this->openGLContext = std::make_unique<juce::OpenGLContext>();
+				this->openGLContext->attachTo(*this);
+			}
+			else {
+				this->openGLContext = nullptr;
+			}
+		}
+
 		void FlowWindow::closeButtonPressed() {
 			if (FlowWindowHub::getSize() <= 1) {
 				juce::JUCEApplication::getInstance()->systemRequestedQuit();

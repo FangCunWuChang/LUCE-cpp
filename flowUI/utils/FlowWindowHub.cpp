@@ -11,6 +11,7 @@ namespace luce {
 					window->setName(juce::translate("Window") + " " + juce::String(size + 1));
 					window->setIcon(FlowWindowHub::getInstance()->iconTemp);
 					window->getPeer()->setIcon(FlowWindowHub::getInstance()->iconTemp);
+					window->setOpenGL(FlowWindowHub::getInstance()->openGLOn);
 				}
 				else {
 					delete window;
@@ -78,6 +79,13 @@ namespace luce {
 				/** Window */
 				auto ptrWindow = new FlowWindow();
 				ptrWindow->autoLayout(grid, list);
+			}
+		}
+
+		void FlowWindowHub::setOpenGL(bool openGLOn) {
+			FlowWindowHub::getInstance()->openGLOn = openGLOn;
+			for (auto i : FlowWindowHub::getInstance()->windows) {
+				i->setOpenGL(openGLOn);
 			}
 		}
 

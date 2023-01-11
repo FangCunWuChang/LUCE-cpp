@@ -19,6 +19,8 @@ namespace luce {
 
 			void autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list);
 
+			void setOpenGL(bool openGLOn);
+
 		protected:
 			void closeButtonPressed() override;
 			void moved() override;
@@ -27,6 +29,9 @@ namespace luce {
 			mutable const juce::Displays::Display* ptrCurrentDisplay = nullptr;
 			mutable juce::Rectangle<int> sizeTemp;
 			mutable double currentScale = 1.;
+
+		private:
+			std::unique_ptr<juce::OpenGLContext> openGLContext = nullptr;
 
 			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowWindow)
 		};

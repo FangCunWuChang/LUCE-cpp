@@ -100,12 +100,18 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(setOpenGL) {
+		FlowWindowHub::setOpenGL(lua_toboolean(L, 1));
+		return 0;
+	}
+
 	LUCE_STATIC_METHOD_LIST(FlowWindow,
 		shutdown,
 		getWindowNum,
 		getWindow,
 		setIcon,
-		autoLayout
+		autoLayout,
+		setOpenGL
 	);
 
 	LUCE_NEW(FlowWindow) {

@@ -24,9 +24,12 @@ namespace luce {
 
 			static void autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list);
 
+			static void setOpenGL(bool openGLOn);
+
 		private:
 			juce::OwnedArray<FlowWindow> windows;
 			juce::Image iconTemp;
+			bool openGLOn = false;
 
 		private:
 			static FlowWindowHub* getInstance();
