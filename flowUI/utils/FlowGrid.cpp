@@ -67,7 +67,44 @@ namespace luce {
 					
 					/** Grid Size */
 					this->addChildComponent(newGrid);
-					newGrid->setBounds(base->getBounds());
+					auto containerBounds = container->getBounds();
+					auto baseBounds = base->getBounds();
+					if (place == ContainerAddPlace::Left) {
+						if (containerBounds.getWidth() <= baseBounds.getWidth() / 2) {
+							newGrid->setBounds(baseBounds.withTrimmedLeft(containerBounds.getWidth()));
+						}
+						else {
+							newGrid->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
+							container->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
+						}
+					}
+					else if (place == ContainerAddPlace::Right) {
+						if (containerBounds.getWidth() <= baseBounds.getWidth() / 2) {
+							newGrid->setBounds(baseBounds.withTrimmedRight(containerBounds.getWidth()));
+						}
+						else {
+							newGrid->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
+							container->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
+						}
+					}
+					else if (place == ContainerAddPlace::Top) {
+						if (containerBounds.getHeight() <= baseBounds.getHeight() / 2) {
+							newGrid->setBounds(baseBounds.withTrimmedTop(containerBounds.getHeight()));
+						}
+						else {
+							newGrid->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
+							container->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
+						}
+					}
+					else {
+						if (containerBounds.getHeight() <= baseBounds.getHeight() / 2) {
+							newGrid->setBounds(baseBounds.withTrimmedBottom(containerBounds.getHeight()));
+						}
+						else {
+							newGrid->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
+							container->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
+						}
+					}
 					this->removeChildComponent(base);
 
 					/** Layer Relative */
@@ -92,15 +129,27 @@ namespace luce {
 						baseIndex += 1;
 
 						/** Resize */
-						if (place == ContainerAddPlace::Left) {
+						{
 							auto baseBounds = base->getBounds();
-							base->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
-							container->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
-						}
-						else {
-							auto baseBounds = base->getBounds();
-							base->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
-							container->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
+							auto containerBounds = container->getBounds();
+							if (place == ContainerAddPlace::Left) {
+								if (containerBounds.getWidth() <= baseBounds.getWidth() / 2) {
+									base->setBounds(baseBounds.withTrimmedLeft(containerBounds.getWidth()));
+								}
+								else {
+									base->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
+									container->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
+								}
+							}
+							else {
+								if (containerBounds.getHeight() <= baseBounds.getHeight() / 2) {
+									base->setBounds(baseBounds.withTrimmedTop(containerBounds.getHeight()));
+								}
+								else {
+									base->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
+									container->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
+								}
+							}
 						}
 					}
 					else {
@@ -108,15 +157,27 @@ namespace luce {
 						this->units.insert(baseIndex + 1, container);
 
 						/** Resize */
-						if (place == ContainerAddPlace::Right) {
+						{
 							auto baseBounds = base->getBounds();
-							base->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
-							container->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
-						}
-						else {
-							auto baseBounds = base->getBounds();
-							base->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
-							container->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
+							auto containerBounds = container->getBounds();
+							if (place == ContainerAddPlace::Right) {
+								if (containerBounds.getWidth() <= baseBounds.getWidth() / 2) {
+									base->setBounds(baseBounds.withTrimmedRight(containerBounds.getWidth()));
+								}
+								else {
+									base->setBounds(baseBounds.withTrimmedRight(baseBounds.getWidth() / 2));
+									container->setBounds(baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2));
+								}
+							}
+							else {
+								if (containerBounds.getHeight() <= baseBounds.getHeight() / 2) {
+									base->setBounds(baseBounds.withTrimmedBottom(containerBounds.getHeight()));
+								}
+								else {
+									base->setBounds(baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2));
+									container->setBounds(baseBounds.withTrimmedTop(baseBounds.getHeight() / 2));
+								}
+							}
 						}
 					}
 
@@ -180,28 +241,49 @@ namespace luce {
 
 				/** Grid Size */
 				auto bounds = this->getLocalBounds();
+				auto containerBounds = container->getBounds();
 				/** Add Relative Of THe New Container */
 				this->addChildComponent(container);
 				/** Set The Size Of The New Layer And The Container */
 				if (place == ContainerAddPlace::Left) {
 					this->units.insert(0, container);
-					newGrid->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
-					container->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
+					if (containerBounds.getWidth() <= bounds.getWidth() / 2) {
+						newGrid->setBounds(bounds.withTrimmedLeft(containerBounds.getWidth()));
+					}
+					else {
+						newGrid->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
+						container->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
+					}
 				}
 				else if (place == ContainerAddPlace::Right) {
 					this->units.add(container);
-					newGrid->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
-					container->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
+					if (containerBounds.getWidth() <= bounds.getWidth() / 2) {
+						newGrid->setBounds(bounds.withTrimmedRight(containerBounds.getWidth()));
+					}
+					else {
+						newGrid->setBounds(bounds.withTrimmedRight(bounds.getWidth() / 2));
+						container->setBounds(bounds.withTrimmedLeft(bounds.getWidth() / 2));
+					}
 				}
 				else if (place == ContainerAddPlace::Top) {
 					this->units.insert(0, container);
-					newGrid->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
-					container->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
+					if (containerBounds.getHeight() <= bounds.getHeight() / 2) {
+						newGrid->setBounds(bounds.withTrimmedTop(containerBounds.getHeight()));
+					}
+					else {
+						newGrid->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
+						container->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
+					}
 				}
 				else {
 					this->units.add(container);
-					newGrid->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
-					container->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
+					if (containerBounds.getHeight() <= bounds.getHeight() / 2) {
+						newGrid->setBounds(bounds.withTrimmedBottom(containerBounds.getHeight()));
+					}
+					else {
+						newGrid->setBounds(bounds.withTrimmedBottom(bounds.getHeight() / 2));
+						container->setBounds(bounds.withTrimmedTop(bounds.getHeight() / 2));
+					}
 				}
 
 				/** Refresh */
@@ -219,11 +301,33 @@ namespace luce {
 					this->addChildComponent(container);
 
 					/** Set Container Size */
+					auto bounds = this->getLocalBounds();
+					auto containerBounds = container->getBounds();
 					if (place == ContainerAddPlace::Left) {
-						container->setBounds(this->getLocalBounds());
+						if (containerBounds.getWidth() <= bounds.getWidth() / 2) {
+							for (int i = 1; i < this->units.size(); i++) {
+								auto unit = this->units.getUnchecked(i);
+								unit->setSize(
+									unit->getWidth() - containerBounds.getWidth() * ((float)unit->getWidth() / bounds.getWidth()),
+									unit->getHeight());
+							}
+						}
+						else {
+							container->setBounds(bounds);
+						}
 					}
 					else {
-						container->setBounds(this->getLocalBounds());
+						if (containerBounds.getHeight() <= bounds.getHeight() / 2) {
+							for (int i = 1; i < this->units.size(); i++) {
+								auto unit = this->units.getUnchecked(i);
+								unit->setSize(
+									unit->getWidth(),
+									unit->getHeight() - containerBounds.getHeight() * ((float)unit->getHeight() / bounds.getHeight()));
+							}
+						}
+						else {
+							container->setBounds(bounds);
+						}
 					}
 				}
 				else {
@@ -232,11 +336,33 @@ namespace luce {
 					this->addChildComponent(container);
 
 					/** Set Container Size */
+					auto bounds = this->getLocalBounds();
+					auto containerBounds = container->getBounds();
 					if (place == ContainerAddPlace::Right) {
-						container->setBounds(this->getLocalBounds());
+						if (containerBounds.getWidth() <= bounds.getWidth() / 2) {
+							for (int i = 1; i < this->units.size(); i++) {
+								auto unit = this->units.getUnchecked(i);
+								unit->setSize(
+									unit->getWidth() - containerBounds.getWidth() * ((float)unit->getWidth() / bounds.getWidth()),
+									unit->getHeight());
+							}
+						}
+						else {
+							container->setBounds(bounds);
+						}
 					}
 					else {
-						container->setBounds(this->getLocalBounds());
+						if (containerBounds.getHeight() <= bounds.getHeight() / 2) {
+							for (int i = 1; i < this->units.size(); i++) {
+								auto unit = this->units.getUnchecked(i);
+								unit->setSize(
+									unit->getWidth(),
+									unit->getHeight() - containerBounds.getHeight() * ((float)unit->getHeight() / bounds.getHeight()));
+							}
+						}
+						else {
+							container->setBounds(bounds);
+						}
 					}
 				}
 
@@ -443,7 +569,6 @@ namespace luce {
 					this->addChildComponent(container);
 					this->units.add(container);
 					container->setSize(unitWidth, unitHeight);
-					container->setSizeTemp(defaultSize);
 					
 					container->autoLayout(unit, list);
 				}

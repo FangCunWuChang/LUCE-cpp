@@ -41,9 +41,6 @@ namespace luce {
 			FlowContainer* findComponent(FlowComponent* comp) const override;
 			const juce::Point<float> getMinSize() const override;
 
-			void setSizeTemp(const juce::Point<int> sizeTemp);
-			const juce::Point<int> getSizeTemp() const;
-
 			void setResizerShown(bool resizerShown);
 			void setVertical(bool isVertical);
 			void setWindow(FlowWindow* window);
@@ -71,8 +68,6 @@ namespace luce {
 			using TabSizeTempElement = std::tuple<juce::String, float, int>;
 			juce::Array<TabSizeTempElement> tabSizeTemp;
 			juce::Point<int> mousePosTemp;
-
-			juce::Point<int> freeSizeTemp;
 
 			std::unique_ptr<FlowContainerResizer> leftResizer, rightResizer, topResizer, bottomResizer,
 				topLeftResizer, topRightResizer, bottomLeftResizer, bottomRightResizer;

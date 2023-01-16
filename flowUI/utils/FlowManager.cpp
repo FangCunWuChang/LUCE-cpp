@@ -91,14 +91,7 @@ namespace luce {
 			if (this->removeContainer(container)) {
 				this->addContainer(container);
 
-				auto containerSize = container->getSizeTemp();
-				if (container->getX() > this->getWidth()) {
-					containerSize.setX(this->getWidth());
-				}
-				if (container->getY() > this->getHeight()) {
-					containerSize.setY(this->getHeight());
-				}
-				container->centreWithSize(containerSize.getX(), containerSize.getY());
+				container->centreWithSize(container->getWidth(), container->getHeight());
 			}
 		}
 
@@ -140,15 +133,6 @@ namespace luce {
 				this->grid->releaseContainer(container);
 				this->addAndMakeVisible(container);
 				this->freeContainers.add(container);
-
-				auto containerSize = container->getSizeTemp();
-				if (container->getX() > this->getWidth()) {
-					containerSize.setX(this->getWidth());
-				}
-				if (container->getY() > this->getHeight()) {
-					containerSize.setY(this->getHeight());
-				}
-				container->setSize(containerSize.getX(), containerSize.getY());
 			}
 			
 			container->setTopLeftPosition(this->currentPoint + topLeftDistance);
@@ -237,8 +221,6 @@ namespace luce {
 			
 			if (this->movingContainer) {
 				if (rectLeft.contains(this->currentPoint.toFloat())) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Left)) {
@@ -247,8 +229,6 @@ namespace luce {
 					}
 				}
 				else if (rectRight.contains(this->currentPoint.toFloat())) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Right)) {
@@ -257,8 +237,6 @@ namespace luce {
 					}
 				}
 				else if (rectTop.contains(this->currentPoint.toFloat())) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Top)) {
@@ -267,8 +245,6 @@ namespace luce {
 					}
 				}
 				else if (rectBottom.contains(this->currentPoint.toFloat())) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (!this->grid->addContainerOutside(this->movingContainer, FlowGrid::ContainerAddPlace::Bottom)) {
@@ -278,8 +254,6 @@ namespace luce {
 				}
 				else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (adsorbContainer) {
@@ -297,8 +271,6 @@ namespace luce {
 				}
 				else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (adsorbContainer) {
@@ -316,8 +288,6 @@ namespace luce {
 				}
 				else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (adsorbContainer) {
@@ -335,8 +305,6 @@ namespace luce {
 				}
 				else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (adsorbContainer) {
@@ -354,8 +322,6 @@ namespace luce {
 				}
 				else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					this->movingContainer->setSizeTemp(
-						juce::Point<int>(this->movingContainer->getWidth(), this->movingContainer->getHeight()));
 					this->freeContainers.removeObject(this->movingContainer, false);
 					this->removeChildComponent(this->movingContainer);
 					if (adsorbContainer) {
@@ -545,17 +511,26 @@ namespace luce {
 				/** Adsorb Area */
 				juce::Rectangle<float> adsorbRect;
 				auto compBounds = this->getBounds().toFloat(), baseBounds = this->baseRect.toFloat();
+				auto movingBounds = this->movingContainer->getBounds().toFloat();
 				if (rectLeft.contains(this->currentPoint.toFloat())) {
-					adsorbRect = compBounds.withTrimmedRight(compBounds.getWidth() / 2);
+					adsorbRect = movingBounds.getWidth() <= compBounds.getWidth() / 2
+						? compBounds.withTrimmedRight(compBounds.getWidth() - movingBounds.getWidth())
+						: compBounds.withTrimmedRight(compBounds.getWidth() / 2);
 				}
 				else if (rectRight.contains(this->currentPoint.toFloat())) {
-					adsorbRect = compBounds.withTrimmedLeft(compBounds.getWidth() / 2);
+					adsorbRect = movingBounds.getWidth() <= compBounds.getWidth() / 2
+						? compBounds.withTrimmedLeft(compBounds.getWidth() - movingBounds.getWidth())
+						: compBounds.withTrimmedLeft(compBounds.getWidth() / 2);
 				}
 				else if (rectTop.contains(this->currentPoint.toFloat())) {
-					adsorbRect = compBounds.withTrimmedBottom(compBounds.getHeight() / 2);
+					adsorbRect = movingBounds.getHeight() <= compBounds.getHeight() / 2
+						? compBounds.withTrimmedBottom(compBounds.getHeight() - movingBounds.getHeight())
+						: compBounds.withTrimmedBottom(compBounds.getHeight() / 2);
 				}
 				else if (rectBottom.contains(this->currentPoint.toFloat())) {
-					adsorbRect = compBounds.withTrimmedTop(compBounds.getHeight() / 2);
+					adsorbRect = movingBounds.getHeight() <= compBounds.getHeight() / 2
+						? compBounds.withTrimmedTop(compBounds.getHeight() - movingBounds.getHeight())
+						: compBounds.withTrimmedTop(compBounds.getHeight() / 2);
 				}
 				else if (rectAdsorbCenter.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
@@ -563,19 +538,27 @@ namespace luce {
 				}
 				else if (rectAdsorbLeft.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					adsorbRect = baseBounds.withTrimmedRight(baseBounds.getWidth() / 2);
+					adsorbRect = movingBounds.getWidth() <= baseBounds.getWidth() / 2
+						? baseBounds.withTrimmedRight(baseBounds.getWidth() - movingBounds.getWidth())
+						: baseBounds.withTrimmedRight(baseBounds.getWidth() / 2);
 				}
 				else if (rectAdsorbRight.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					adsorbRect = baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2);
+					adsorbRect = movingBounds.getWidth() <= baseBounds.getWidth() / 2
+						? baseBounds.withTrimmedLeft(baseBounds.getWidth() - movingBounds.getWidth())
+						: baseBounds.withTrimmedLeft(baseBounds.getWidth() / 2);
 				}
 				else if (rectAdsorbTop.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					adsorbRect = baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2);
+					adsorbRect = movingBounds.getHeight() <= baseBounds.getHeight() / 2
+						? baseBounds.withTrimmedBottom(baseBounds.getHeight() - movingBounds.getHeight())
+						: baseBounds.withTrimmedBottom(baseBounds.getHeight() / 2);
 				}
 				else if (rectAdsorbBottom.contains(this->currentPoint.toFloat()) &&
 					this->baseRect.getWidth() > 0 && this->baseRect.getHeight() > 0) {
-					adsorbRect = baseBounds.withTrimmedTop(baseBounds.getHeight() / 2);
+					adsorbRect = movingBounds.getHeight() <= baseBounds.getHeight() / 2
+						? baseBounds.withTrimmedTop(baseBounds.getHeight() - movingBounds.getHeight())
+						: baseBounds.withTrimmedTop(baseBounds.getHeight() / 2);
 				}
 
 				g.setColour(FlowStyle::getAdsorbColor());

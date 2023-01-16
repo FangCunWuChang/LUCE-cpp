@@ -110,14 +110,6 @@ namespace luce {
 			);
 		}
 
-		void FlowContainer::setSizeTemp(const juce::Point<int> sizeTemp) {
-			this->freeSizeTemp = sizeTemp;
-		}
-
-		const juce::Point<int> FlowContainer::getSizeTemp() const {
-			return this->freeSizeTemp; 
-		}
-
 		void FlowContainer::setResizerShown(bool resizerShown) {
 			this->leftResizer->setVisible(resizerShown);
 			this->rightResizer->setVisible(resizerShown);
