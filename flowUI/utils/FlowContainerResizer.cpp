@@ -84,15 +84,12 @@ namespace luce {
 						}
 
 						/** Set Bounds */
-						auto messageManager = juce::MessageManager::getInstance();
-						if (messageManager) {
-							messageManager->callAsync(
-								[containerBounds, container = this->container] {
-									container->setBounds(containerBounds);
-									container->toFront(true);
-								}
-							);
-						}
+						juce::MessageManager::callAsync(
+							[containerBounds, container = this->container] {
+								container->setBounds(containerBounds);
+						container->toFront(true);
+							}
+						);
 					}
 				}
 			}

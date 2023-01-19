@@ -321,9 +321,7 @@ namespace luce {
 					);
 
 					if (tabArea.contains(event.getPosition().toFloat())) {
-						auto messageManager = juce::MessageManager::getInstance();
-						
-						messageManager->callAsync([ptr = juce::Component::SafePointer(this), i] {
+						juce::MessageManager::callAsync([ptr = juce::Component::SafePointer(this), i] {
 							if (ptr != nullptr) {
 								ptr->setCurrent(i);
 							}
@@ -351,16 +349,13 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto messageManager = juce::MessageManager::getInstance();
-					if (messageManager) {
-						messageManager->callAsync(
-							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
-							distance = -this->mousePosTemp,
-							manager = this->window->getManager()] {
-								manager->moveEnd(point, distance);
-							}
-						);
-					}
+					juce::MessageManager::callAsync(
+						[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+						distance = -this->mousePosTemp,
+						manager = this->window->getManager()] {
+							manager->moveEnd(point, distance);
+						}
+					);
 					this->mousePosTemp = juce::Point<int>();
 				}
 
@@ -410,15 +405,11 @@ namespace luce {
 						totalSize += tabSize;
 					}
 				}
-
-				auto messageManager = juce::MessageManager::getInstance();
-				if (messageManager) {
-					messageManager->callAsync(
-						[this, tabIndex] {
-							this->showMenu(tabIndex);
-						}
-					);
-				}
+				juce::MessageManager::callAsync(
+					[this, tabIndex] {
+						this->showMenu(tabIndex);
+					}
+				);
 			}
 		}
 
@@ -458,17 +449,14 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto messageManager = juce::MessageManager::getInstance();
-					if (messageManager) {
-						messageManager->callAsync(
-							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
-							distance = -this->mousePosTemp,
-							this,
-							manager = this->window->getManager()] {
-								manager->moveProgressing(point, distance, this);
-							}
-						);
-					}
+					juce::MessageManager::callAsync(
+						[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+						distance = -this->mousePosTemp,
+						this,
+						manager = this->window->getManager()] {
+							manager->moveProgressing(point, distance, this);
+						}
+					);
 
 					this->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
 				}
@@ -479,16 +467,13 @@ namespace luce {
 			/** Left Button */
 			if (event.mods.isLeftButtonDown()) {
 				if (event.mouseWasDraggedSinceMouseDown()) {
-					auto messageManager = juce::MessageManager::getInstance();
-					if (messageManager) {
-						messageManager->callAsync(
-							[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
-							distance = -this->mousePosTemp,
-							manager = this->window->getManager()] {
-								manager->moveEnd(point, distance);
-							}
-						);
-					}
+					juce::MessageManager::callAsync(
+						[point = event.getEventRelativeTo(this->window->getManager()).getPosition(),
+						distance = -this->mousePosTemp,
+						manager = this->window->getManager()] {
+							manager->moveEnd(point, distance);
+						}
+					);
 					this->mousePosTemp = juce::Point<int>();
 				}
 			}
@@ -665,10 +650,7 @@ namespace luce {
 			bool isMulti = this->components.size() > 1;
 			bool isVertical = this->isVertical;
 
-			auto messageManager = juce::MessageManager::getInstance();
-			if (!messageManager) { return; }
-
-			auto windowCallback = [messageManager, window = this->window, tabIndex, isTab, this](int windowIndex) {
+			auto windowCallback = [window = this->window, tabIndex, isTab, this](int windowIndex) {
 				int windowSize = FlowWindowHub::getSize();
 				int currentIndex = FlowWindowHub::findWindow(window);
 
@@ -681,12 +663,12 @@ namespace luce {
 					auto comp = isTab ? this->components[tabIndex] : nullptr;
 					auto targetWindow = FlowWindowHub::getWindow(windowIndex);
 					if (targetWindow) {
-						messageManager->callAsync(
-							[currentWindow = window, targetWindow, comp, messageManager, this] {
+						juce::MessageManager::callAsync(
+							[currentWindow = window, targetWindow, comp, this] {
 								if (comp) {
 									currentWindow->closeComponent(comp);
 									targetWindow->openComponent(comp);
-									messageManager->callAsync(
+									juce::MessageManager::callAsync(
 										[targetWindow] {
 											targetWindow->toFront(true);
 										}
@@ -699,7 +681,7 @@ namespace luce {
 									if (currentManager->removeContainer(this)) {
 										targetManager->addContainer(this);
 										this->setWindow(targetWindow);
-										messageManager->callAsync(
+										juce::MessageManager::callAsync(
 											[targetWindow] {
 												targetWindow->toFront(true);
 											}
@@ -717,7 +699,7 @@ namespace luce {
 			int result = menu.show();
 			switch (result) {
 			case 1:
-				messageManager->callAsync(
+				juce::MessageManager::callAsync(
 					[manager = this->window->getManager(),
 					comp = this->components[tabIndex]] {
 						manager->releaseComponent(comp);
@@ -725,7 +707,7 @@ namespace luce {
 				);
 				break;
 			case 2:
-				messageManager->callAsync(
+				juce::MessageManager::callAsync(
 					[manager = this->window->getManager(),
 					this] {
 						manager->releaseContainer(this);
@@ -733,7 +715,7 @@ namespace luce {
 				);
 				break;
 			case 3:
-				messageManager->callAsync(
+				juce::MessageManager::callAsync(
 					[this, vertical = !isVertical] {
 						this->setVertical(vertical);
 					}

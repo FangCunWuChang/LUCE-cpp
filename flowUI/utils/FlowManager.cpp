@@ -32,16 +32,13 @@ namespace luce {
 
 			auto checkCloseFunc = [this] {
 				if (this->grid->isEmpty() && this->freeContainers.size() == 0 && FlowWindowHub::getSize() > 1) {
-					auto messageManager = juce::MessageManager::getInstance();
-					if (messageManager) {
-						messageManager->callAsync(
-							[window = juce::Component::SafePointer(this->window)] {
-								if (window) {
-									delete window;
-								}
+					juce::MessageManager::callAsync(
+						[window = juce::Component::SafePointer(this->window)] {
+							if (window) {
+								delete window;
 							}
-						);
-					}
+						}
+					);
 				}
 			};
 
