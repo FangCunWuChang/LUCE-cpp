@@ -88,12 +88,20 @@ if (UNIX AND NOT APPLE)
     find_library (GL GL)
 endif (UNIX AND NOT APPLE)
 
+if (JUCE_ASIO)
+    if (DEFINED ASIO_SRC_PATH)
+        set (JUCE_ASIO_INC_PATH ${ASIO_SRC_PATH})
+    else (DEFINED ASIO_SRC_PATH)
+        message (CHECK_FAIL "ASIO SDK notfound!")
+    endif (DEFINED ASIO_SRC_PATH)
+endif (JUCE_ASIO)
+
 file (GLOB_RECURSE JUCE_SRC "JuceLibraryCode/*.cpp" "JuceLibraryCode/*.h")
 add_library (libJUCE SHARED ${JUCE_SRC})
 set_target_properties (libJUCE PROPERTIES
   PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "JUCE")
 set_source_files_properties ("JuceLibraryCode/JuceHeader.h" PROPERTIES HEADER_FILE_ONLY TRUE)
-target_include_directories (libJUCE PUBLIC ${JUCE_INC})
+target_include_directories (libJUCE PUBLIC ${JUCE_INC} ${JUCE_ASIO_INC_PATH})
 
 set (JUCE_DEBUG_DEF "DEBUG=1" "_DEBUG=1")
 set (JUCE_NDEBUG_DEF "NDEBUG=1")
