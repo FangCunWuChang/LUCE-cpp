@@ -314,7 +314,7 @@ namespace luce {
 	 * @tparam T	The LUCE object class which you want to register as Lua userdata.
 	 */	 
 	template<class T>
-	class LUCE_API LUCE_Container : public utils::LUCE_ContainerBase {
+	class LUCE_Container : public utils::LUCE_ContainerBase {
 	public:
 		virtual ~LUCE_Container() override = default;
 
@@ -334,7 +334,7 @@ namespace luce {
 	 * @see			LUCE_AdapterBase
 	 */
 	template<class T>
-	class LUCE_API LUCE_FullContainer : public LUCE_Container<T> {
+	class LUCE_FullContainer : public LUCE_Container<T> {
 		std::unique_ptr<T> __data = nullptr;
 
 	public:
@@ -355,7 +355,7 @@ namespace luce {
 	 * @see			LUCE_AdapterBase
 	 */
 	template<class T>
-	class LUCE_API LUCE_LightContainer : public LUCE_Container<T> {
+	class LUCE_LightContainer : public LUCE_Container<T> {
 		T* __data = nullptr;
 
 	public:
@@ -381,7 +381,7 @@ namespace luce {
 	 * @see			LUCE_AdapterBase
 	 */
 	template<class T>
-	class LUCE_API LUCE_Adapter : public utils::LUCE_AdapterBase {
+	class LUCE_Adapter : public utils::LUCE_AdapterBase {
 	public:
 		LUCE_Adapter() = delete;
 		/**

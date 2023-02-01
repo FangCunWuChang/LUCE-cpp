@@ -44,6 +44,21 @@ endif (NOT DEFINED JucePlugin_Build_Standalone)
 if (NOT DEFINED JucePlugin_Build_Unity)
     set (JucePlugin_Build_Unity OFF)
 endif (NOT DEFINED JucePlugin_Build_Unity)
+if (NOT DEFINED JUCE_USE_WINRT_MIDI)
+    set (JUCE_USE_WINRT_MIDI OFF)
+endif (NOT DEFINED JUCE_USE_WINRT_MIDI)
+if (NOT DEFINED JUCE_ASIO)
+    set (JUCE_ASIO OFF)
+endif (NOT DEFINED JUCE_ASIO)
+if (NOT DEFINED JUCE_JACK)
+    set (JUCE_JACK OFF)
+endif (NOT DEFINED JUCE_JACK)
+if (NOT DEFINED JUCE_BELA)
+    set (JUCE_BELA OFF)
+endif (NOT DEFINED JUCE_BELA)
+if (NOT DEFINED JUCE_USE_ANDROID_OPENSLES)
+    set (JUCE_USE_ANDROID_OPENSLES OFF)
+endif (NOT DEFINED JUCE_USE_ANDROID_OPENSLES)
 
 set (LUCE_APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/app CACHE STRING INTERNAL)
 
@@ -119,6 +134,11 @@ set (JUCE_MODULE_DEF
     "JucePlugin_Build_AAX=$<IF:$<BOOL:${JucePlugin_Build_AAX}>,1,0>"
     "JucePlugin_Build_Standalone=$<IF:$<BOOL:${JucePlugin_Build_Standalone}>,1,0>"
     "JucePlugin_Build_Unity=$<IF:$<BOOL:${JucePlugin_Build_Unity}>,1,0>"
+    "JUCE_USE_WINRT_MIDI=$<IF:$<BOOL:${JUCE_USE_WINRT_MIDI}>,1,0>"
+    "JUCE_ASIO=$<IF:$<BOOL:${JUCE_ASIO}>,1,0>"
+    "JUCE_JACK=$<IF:$<BOOL:${JUCE_JACK}>,1,0>"
+    "JUCE_BELA=$<IF:$<BOOL:${JUCE_BELA}>,1,0>"
+    "JUCE_USE_ANDROID_OPENSLES=$<IF:$<BOOL:${JUCE_USE_ANDROID_OPENSLES}>,1,0>"
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
