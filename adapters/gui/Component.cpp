@@ -32,6 +32,15 @@ namespace luce {
 		pInstance->addChildComponent(pChild);
 		return 0;
 	}
+	LUCE_METHOD(addAndMakeVisible) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
+		auto& pChild = LUCE_CHECK_USERDATA(L, 2, Component);
+		if (lua_isinteger(L, 3)) {
+			pInstance->addAndMakeVisible(pChild, luaL_checkinteger(L, 3));
+		}
+		pInstance->addAndMakeVisible(pChild);
+		return 0;
+	}
 
 	LUCE_METHOD(setBounds) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, Component);
@@ -58,6 +67,7 @@ namespace luce {
 		repaint,
 		setSize,
 		addChildComponent,
+		addAndMakeVisible,
 		setBounds,
 		getWidth,
 		getHeight

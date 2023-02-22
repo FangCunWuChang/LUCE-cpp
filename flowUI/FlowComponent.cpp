@@ -28,6 +28,16 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(addAndMakeVisible) {
+		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowComponent);
+		auto& pChild = LUCE_CHECK_USERDATA(L, 2, Component);
+		if (lua_isinteger(L, 3)) {
+			pInstance->addAndMakeVisible(pChild, luaL_checkinteger(L, 3));
+		}
+		pInstance->addAndMakeVisible(pChild);
+		return 0;
+	}
+
 	LUCE_METHOD(getWidth) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, FlowComponent);
 		lua_pushinteger(L, pInstance->getWidth());
@@ -44,6 +54,7 @@ namespace luce {
 		setVisible,
 		repaint,
 		addChildComponent,
+		addAndMakeVisible,
 		getWidth,
 		getHeight
 	);
