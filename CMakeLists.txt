@@ -141,9 +141,30 @@ if (JUCE_PLUGINHOST_VST3 AND JUCE_CUSTOM_VST3_SDK)
         message (SEND_ERROR "VST3 SDK notfound!")
     endif (DEFINED VST3_SRC_PATH)
 endif (JUCE_PLUGINHOST_VST3 AND JUCE_CUSTOM_VST3_SDK)
+if (JUCE_PLUGINHOST_LV2)
+    if (DEFINED LV2_SRC_PATH)
+        set (JUCE_LV2_INC_PATH ${LV2_SRC_PATH})
+    else (DEFINED LV2_SRC_PATH)
+        #LV2 SDK Path
+        set (JUCE_LV2_INC_PATH
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/serd"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord"
+            "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sratom"
+        )
+    endif (DEFINED LV2_SRC_PATH)
+
+    #LV2 SDK Src
+    set (JUCE_LV2_SRC_FIX
+        "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/juce_audio_processors_lv2_libs.cpp"
+    )
+endif (JUCE_PLUGINHOST_LV2)
 
 file (GLOB_RECURSE JUCE_SRC "JuceLibraryCode/*.cpp" "JuceLibraryCode/*.h")
-add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_VST3_SRC_FIX})
+add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_VST3_SRC_FIX} ${JUCE_LV2_SRC_FIX})
 set_target_properties (libJUCE PROPERTIES
   PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "JUCE")
 set_source_files_properties ("JuceLibraryCode/JuceHeader.h" PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -152,6 +173,7 @@ target_include_directories (libJUCE PUBLIC
     ${JUCE_ASIO_INC_PATH}
     ${JUCE_VST_INC_PATH}
     ${JUCE_VST3_INC_PATH}
+    ${JUCE_LV2_INC_PATH}
 )
 
 set (JUCE_DEBUG_DEF "DEBUG=1" "_DEBUG=1")
