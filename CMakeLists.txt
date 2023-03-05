@@ -162,9 +162,21 @@ if (JUCE_PLUGINHOST_LV2)
         "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/juce_audio_processors_lv2_libs.cpp"
     )
 endif (JUCE_PLUGINHOST_LV2)
+if (JUCE_PLUGINHOST_ARA)
+    if (DEFINED ARA_SRC_PATH)
+        set (JUCE_ARA_INC_PATH ${ARA_SRC_PATH})
+    else (DEFINED ARA_SRC_PATH)
+        message (SEND_ERROR "ARA SDK notfound!")
+    endif (DEFINED ARA_SRC_PATH)
+
+    #ARA SDK Src
+    set (JUCE_ARA_SRC_FIX
+        "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules/juce_audio_processors/juce_audio_processors_ara.cpp"
+    )
+endif (JUCE_PLUGINHOST_ARA)
 
 file (GLOB_RECURSE JUCE_SRC "JuceLibraryCode/*.cpp" "JuceLibraryCode/*.h")
-add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_VST3_SRC_FIX} ${JUCE_LV2_SRC_FIX})
+add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_VST3_SRC_FIX} ${JUCE_LV2_SRC_FIX} ${JUCE_ARA_SRC_FIX})
 set_target_properties (libJUCE PROPERTIES
   PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "JUCE")
 set_source_files_properties ("JuceLibraryCode/JuceHeader.h" PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -174,6 +186,7 @@ target_include_directories (libJUCE PUBLIC
     ${JUCE_VST_INC_PATH}
     ${JUCE_VST3_INC_PATH}
     ${JUCE_LV2_INC_PATH}
+    ${JUCE_ARA_INC_PATH}
 )
 
 set (JUCE_DEBUG_DEF "DEBUG=1" "_DEBUG=1")
