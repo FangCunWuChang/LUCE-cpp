@@ -138,11 +138,6 @@ endif (JUCE_PLUGINHOST_VST)
 if (JUCE_PLUGINHOST_VST3 AND JUCE_CUSTOM_VST3_SDK)
     if (DEFINED VST3_SRC_PATH)
         set (JUCE_VST3_INC_PATH ${VST3_SRC_PATH})
-        
-        #StringConvert Method For VST3 SDK Version 3.7.3 Or Later
-        set (JUCE_VST3_SRC_FIX
-            "${JUCE_VST3_INC_PATH}/public.sdk/source/vst/utility/stringconvert.cpp"
-        )
     else (DEFINED VST3_SRC_PATH)
         message (SEND_ERROR "VST3 SDK notfound!")
     endif (DEFINED VST3_SRC_PATH)
@@ -182,7 +177,7 @@ if (JUCE_PLUGINHOST_ARA)
 endif (JUCE_PLUGINHOST_ARA)
 
 file (GLOB_RECURSE JUCE_SRC "JuceLibraryCode/*.cpp" "JuceLibraryCode/*.h")
-add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_VST3_SRC_FIX} ${JUCE_LV2_SRC_FIX} ${JUCE_ARA_SRC_FIX})
+add_library (libJUCE SHARED ${JUCE_SRC} ${JUCE_LV2_SRC_FIX} ${JUCE_ARA_SRC_FIX})
 set_target_properties (libJUCE PROPERTIES
   PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "JUCE")
 set_source_files_properties ("JuceLibraryCode/JuceHeader.h" PROPERTIES HEADER_FILE_ONLY TRUE)
