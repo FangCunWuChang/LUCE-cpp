@@ -23,9 +23,8 @@ namespace luce {
 			FlowWindowHub::getInstance()->windows.removeObject(window, false);
 			int size = FlowWindowHub::getInstance()->windows.size();
 			for (int i = 0; i < size; i++) {
-				auto window = FlowWindowHub::getInstance()->windows[i];
-				if (window) {
-					window->setName(juce::translate("Window") + " " + juce::String(i + 1));
+				if (auto w = FlowWindowHub::getInstance()->windows[i]) {
+					w->setName(juce::translate("Window") + " " + juce::String(i + 1));
 				}
 			}
 		}

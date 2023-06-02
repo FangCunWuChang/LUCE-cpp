@@ -615,8 +615,7 @@ namespace luce {
 			this->units.removeAndReturn(0);
 
 			/** GC Layer */
-			auto parentLayer = dynamic_cast<FlowGrid*>(this->getParentComponent());
-			if (parentLayer) {
+			if (auto parentLayer = dynamic_cast<FlowGrid*>(this->getParentComponent())) {
 				parentLayer->gcLayer(this);
 			}
 			else {
@@ -634,8 +633,7 @@ namespace luce {
 				return;
 			}
 			
-			auto subLayer = dynamic_cast<FlowGrid*>(this->units.getUnchecked(0));
-			if (subLayer) {
+			if (auto subLayer = dynamic_cast<FlowGrid*>(this->units.getUnchecked(0))) {
 				/** Remove Relative Of SubLayer */
 				this->removeChildComponent(subLayer);
 				this->units.removeAndReturn(0);
