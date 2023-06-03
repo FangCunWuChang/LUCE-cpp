@@ -7,7 +7,7 @@ namespace luce {
 	LUCE_METHOD_LIST(LocalisedStrings);
 
 	LUCE_METHOD(loadData) {
-		juce::String dirPath = luaL_checkstring(L, 1);
+		juce::String dirPath = juce::String::fromUTF8(luaL_checkstring(L, 1));
 
 		juce::File dir = juce::File::getCurrentWorkingDirectory().getChildFile(dirPath);
 		auto list = dir.findChildFiles(juce::File::findFiles, true, "*.txt");

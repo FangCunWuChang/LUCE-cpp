@@ -16,7 +16,7 @@ namespace luce {
 
 	LUCE_NEW(Label) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, Label, pInstance,
-			juce::String(luaL_checkstring(L, 1)), juce::String(luaL_checkstring(L, 2)));
+			juce::String::fromUTF8(luaL_checkstring(L, 1)), juce::String::fromUTF8(luaL_checkstring(L, 2)));
 
 		return 1;
 	}

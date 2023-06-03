@@ -77,12 +77,12 @@ namespace luce {
 	}
 
 	LUCE_METHOD(setIcon) {
-		FlowWindowHub::setIcon(luaL_checkstring(L, 1));
+		FlowWindowHub::setIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(autoLayout) {
-		auto path = luaL_checkstring(L, 1);
+		auto path = juce::String::fromUTF8(luaL_checkstring(L, 1));
 
 		juce::Array<FlowComponent*> list;
 		lua_pushvalue(L, 2);

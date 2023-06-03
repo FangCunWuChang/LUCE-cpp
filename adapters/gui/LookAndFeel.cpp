@@ -20,7 +20,7 @@ namespace luce {
 
 	LUCE_METHOD(setDefaultSansSerifTypeface) {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, LookAndFeel);
-		juce::String path = luaL_checkstring(L, 2);
+		juce::String path = juce::String::fromUTF8(luaL_checkstring(L, 2));
 
 		juce::File file = juce::File::getCurrentWorkingDirectory().getChildFile(path);
 		

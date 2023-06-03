@@ -51,7 +51,7 @@ namespace luce {
 
 	LUCE_NEW(DocumentWindow) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, DocumentWindow, pInstance,
-			juce::String(luaL_checkstring(L, 1)), *LUCE_CHECK_USERDATA(L, 2, Colour),
+			juce::String::fromUTF8(luaL_checkstring(L, 1)), *LUCE_CHECK_USERDATA(L, 2, Colour),
 			(int)luaL_checkinteger(L, 3), (bool)lua_toboolean(L, 4));
 
 		LUCE_OBJ_STATE(pInstance) = L;

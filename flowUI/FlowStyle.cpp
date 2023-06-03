@@ -460,47 +460,47 @@ namespace luce {
 
 
 	LUCE_METHOD(setButtonLeftIcon) {
-		FlowStyle::setButtonLeftIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonLeftIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonRightIcon) {
-		FlowStyle::setButtonRightIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonRightIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonTopIcon) {
-		FlowStyle::setButtonTopIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonTopIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonBottomIcon) {
-		FlowStyle::setButtonBottomIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonBottomIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonAdsorbCenterIcon) {
-		FlowStyle::setButtonAdsorbCenterIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonAdsorbCenterIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonAdsorbLeftIcon) {
-		FlowStyle::setButtonAdsorbLeftIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonAdsorbLeftIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonAdsorbRightIcon) {
-		FlowStyle::setButtonAdsorbRightIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonAdsorbRightIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonAdsorbTopIcon) {
-		FlowStyle::setButtonAdsorbTopIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonAdsorbTopIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 
 	LUCE_METHOD(setButtonAdsorbBottomIcon) {
-		FlowStyle::setButtonAdsorbBottomIcon(luaL_checkstring(L, 1));
+		FlowStyle::setButtonAdsorbBottomIcon(juce::String::fromUTF8(luaL_checkstring(L, 1)));
 		return 0;
 	}
 

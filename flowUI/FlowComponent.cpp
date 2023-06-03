@@ -62,7 +62,7 @@ namespace luce {
 
 	LUCE_NEW(FlowComponent) {
 		LUCE_CREATE_USERDATA_WITH_METATABLE_THEN_INIT(L, FlowComponent, pInstance,
-			juce::translate(luaL_checkstring(L, 1)));
+			juce::translate(juce::String::fromUTF8(luaL_checkstring(L, 1))));
 
 		LUCE_OBJ_STATE(pInstance) = L;
 		LUCE_OBJ_REF(pInstance) = LUCE_REF(L, -1);
