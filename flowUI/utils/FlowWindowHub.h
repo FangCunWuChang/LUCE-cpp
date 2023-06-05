@@ -7,7 +7,7 @@ namespace luce {
 		class FlowWindow;
 		class FlowComponent;
 
-		class FlowWindowHub final : public juce::DeletedAtShutdown {
+		class FlowWindowHub final : private juce::DeletedAtShutdown {
 		public:
 			FlowWindowHub() = default;
 

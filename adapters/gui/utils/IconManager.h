@@ -4,7 +4,7 @@
 
 namespace luce {
 	namespace utils {
-		class LUCE_API IconManager final : public juce::DeletedAtShutdown {
+		class LUCE_API IconManager final : private juce::DeletedAtShutdown {
 		public:
 			IconManager() = default;
 
