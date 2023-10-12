@@ -46,7 +46,8 @@ namespace luce {
 		}
 
 		void FlowWindowHub::setIcon(const juce::String& iconPath) {
-			juce::File iconFile = juce::File::getCurrentWorkingDirectory().getChildFile(iconPath);
+			juce::File iconFile = juce::File::getSpecialLocation(
+				juce::File::SpecialLocationType::currentExecutableFile).getParentDirectory().getChildFile(iconPath);
 			FlowWindowHub::getInstance()->iconTemp = juce::ImageFileFormat::loadFrom(iconFile);
 
 			for (auto i : FlowWindowHub::getInstance()->windows) {
@@ -60,7 +61,8 @@ namespace luce {
 			FlowWindowHub::getInstance()->windows.clear();
 
 			/** Load Layout File */
-			juce::File layoutFile = juce::File::getCurrentWorkingDirectory().getChildFile(layoutPath);
+			juce::File layoutFile = juce::File::getSpecialLocation(
+				juce::File::SpecialLocationType::currentExecutableFile).getParentDirectory().getChildFile(layoutPath);
 			auto layoutData = juce::JSON::parse(layoutFile);
 
 			/** Error */

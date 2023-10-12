@@ -22,7 +22,8 @@ namespace luce {
 		auto& pInstance = LUCE_CHECK_USERDATA(L, 1, LookAndFeel);
 		juce::String path = juce::String::fromUTF8(luaL_checkstring(L, 2));
 
-		juce::File file = juce::File::getCurrentWorkingDirectory().getChildFile(path);
+		juce::File file = juce::File::getSpecialLocation(
+			juce::File::SpecialLocationType::currentExecutableFile).getParentDirectory().getChildFile(path);
 		
 		auto size = file.getSize();
 		auto ptrData = std::unique_ptr<char[]>(new char[size]);
