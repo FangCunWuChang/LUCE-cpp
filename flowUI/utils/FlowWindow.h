@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../../Defs.h"
-#include "FlowManager.h"
+#include "FlowWindowContent.h"
 
 namespace luce {
 	namespace utils {

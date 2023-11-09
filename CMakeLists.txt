@@ -401,8 +401,8 @@ target_include_directories (libLua PUBLIC "lua")
 #=============================================================================================================================
 #LUCE
 #=============================================================================================================================
-file (GLOB LUCE_SRC "*.cpp" "*.h")
-file (GLOB_RECURSE LUCE_MODULE_SRC 
+file (GLOB LUCE_SRC CONFIGURE_DEPENDS "*.cpp" "*.h")
+file (GLOB_RECURSE LUCE_MODULE_SRC CONFIGURE_DEPENDS
     "adapters/*.cpp"
     "adapters/*.h"
     "quickUI/*.cpp"

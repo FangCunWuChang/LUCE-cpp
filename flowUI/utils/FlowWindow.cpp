@@ -11,7 +11,7 @@ namespace luce {
 				),
 				juce::DocumentWindow::TitleBarButtons::allButtons
 			) {
-			this->setContentOwned(new FlowManager(this), false);
+			this->setContentOwned(new FlowWindowContent(this), false);
 			this->setUsingNativeTitleBar(true);
 			this->setResizable(true, false);
 			this->centreWithSize(800, 600);
@@ -40,7 +40,7 @@ namespace luce {
 		}
 
 		FlowManager* FlowWindow::getManager() const {
-			return dynamic_cast<FlowManager*>(this->getContentComponent());
+			return dynamic_cast<FlowWindowContent*>(this->getContentComponent())->getManager();
 		}
 
 		const juce::Rectangle<int> FlowWindow::getScreenSize() const {
