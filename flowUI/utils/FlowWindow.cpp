@@ -169,5 +169,15 @@ namespace luce {
 				}
 			}
 		}
+
+		void FlowWindow::setToolBar(juce::Component* toolBar, double size) {
+			dynamic_cast<FlowWindowContent*>(this->getContentComponent())
+				->setToolBar(toolBar, size);
+		}
+
+		void FlowWindow::removeToolBar() {
+			dynamic_cast<FlowWindowContent*>(this->getContentComponent())
+				->removeToolBar();
+		}
 	}
 }

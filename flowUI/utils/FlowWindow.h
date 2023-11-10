@@ -26,6 +26,11 @@ namespace luce {
 			void moved() override;
 
 		private:
+			friend class FlowWindowHub;
+			void setToolBar(juce::Component* toolBar, double size);
+			void removeToolBar();
+
+		private:
 			mutable const juce::Displays::Display* ptrCurrentDisplay = nullptr;
 			mutable juce::Rectangle<int> sizeTemp;
 			mutable double currentScale = 1.;

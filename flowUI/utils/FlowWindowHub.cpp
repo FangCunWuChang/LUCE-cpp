@@ -16,6 +16,9 @@ namespace luce {
 				else {
 					delete window;
 				}
+				FlowWindowHub::setToolBar(
+					FlowWindowHub::getInstance()->toolBar,
+					FlowWindowHub::getInstance()->toolBarSize);
 			}
 		}
 
@@ -25,6 +28,31 @@ namespace luce {
 			for (int i = 0; i < size; i++) {
 				if (auto w = FlowWindowHub::getInstance()->windows[i]) {
 					w->setName(juce::translate("Window") + " " + juce::String(i + 1));
+				}
+			}
+			FlowWindowHub::setToolBar(
+				FlowWindowHub::getInstance()->toolBar,
+				FlowWindowHub::getInstance()->toolBarSize);
+		}
+
+		void FlowWindowHub::setToolBar(juce::Component* toolBar, double size) {
+			FlowWindowHub::getInstance()->toolBar = toolBar;
+			FlowWindowHub::getInstance()->toolBarSize = size;
+
+			if (FlowWindowHub::getInstance()->getSize() > 0) {
+				if (auto window = FlowWindowHub::getInstance()->getWindow(0)) {
+					window->setToolBar(toolBar, size);
+				}
+			}
+		}
+
+		void FlowWindowHub::removeToolBar() {
+			FlowWindowHub::getInstance()->toolBar = nullptr;
+			FlowWindowHub::getInstance()->toolBarSize = 0;
+
+			if (FlowWindowHub::getInstance()->getSize() > 0) {
+				if (auto window = FlowWindowHub::getInstance()->getWindow(0)) {
+					window->removeToolBar();
 				}
 			}
 		}
@@ -59,6 +87,7 @@ namespace luce {
 		void FlowWindowHub::autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list) {
 			/** Close All Windows */
 			FlowWindowHub::getInstance()->windows.clear();
+			FlowWindowHub::removeToolBar();
 
 			/** Load Layout File */
 			juce::File layoutFile = juce::File::getSpecialLocation(
@@ -80,6 +109,17 @@ namespace luce {
 				/** Window */
 				auto ptrWindow = new FlowWindow();
 				ptrWindow->autoLayout(grid, list);
+			}
+
+			/** ToolBar */
+			auto toolBar = layoutData.getProperty("toolBar", juce::var());
+			if (toolBar.isObject()) {
+				int id = (int)toolBar.getProperty("id", juce::var{ -1 });
+				double size = (double)toolBar.getProperty("size", juce::var{ 0.0 });
+				if (id >= 0 && id < list.size()) {
+					FlowWindowHub::setToolBar(
+						list.getUnchecked(id), size);
+				}
 			}
 		}
 

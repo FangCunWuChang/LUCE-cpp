@@ -507,7 +507,7 @@ namespace luce {
 
 				/** Adsorb Area */
 				juce::Rectangle<float> adsorbRect;
-				auto compBounds = this->getBounds().toFloat(), baseBounds = this->baseRect.toFloat();
+				auto compBounds = this->getLocalBounds().toFloat(), baseBounds = this->baseRect.toFloat();
 				auto movingBounds = this->movingContainer->getBounds().toFloat();
 				if (rectLeft.contains(this->currentPoint.toFloat())) {
 					adsorbRect = movingBounds.getWidth() <= compBounds.getWidth() / 2

@@ -81,6 +81,17 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(setToolBar) {
+		FlowWindowHub::setToolBar(
+			LUCE_CHECK_USERDATA(L, 1, FlowComponent), luaL_checknumber(L, 2));
+		return 0;
+	}
+
+	LUCE_METHOD(removeToolBar) {
+		FlowWindowHub::removeToolBar();
+		return 0;
+	}
+
 	LUCE_METHOD(autoLayout) {
 		auto path = juce::String::fromUTF8(luaL_checkstring(L, 1));
 
@@ -110,6 +121,8 @@ namespace luce {
 		getWindowNum,
 		getWindow,
 		setIcon,
+		setToolBar,
+		removeToolBar,
 		autoLayout,
 		setOpenGL
 	);
