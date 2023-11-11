@@ -17,7 +17,8 @@ namespace luce {
 			void closeComponent(FlowComponent* comp);
 			bool hasComponent(FlowComponent* comp) const;
 
-			void autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list);
+			void autoLayout(const juce::var& grid, const juce::Array<FlowComponent*>& list);
+			const juce::var getLayout(const juce::Array<FlowComponent*>& list) const;
 
 			void setOpenGL(bool openGLOn);
 
@@ -27,7 +28,7 @@ namespace luce {
 
 		private:
 			friend class FlowWindowHub;
-			void setToolBar(juce::Component* toolBar, double size);
+			void setToolBar(FlowComponent* toolBar, double size);
 			void removeToolBar();
 
 		private:

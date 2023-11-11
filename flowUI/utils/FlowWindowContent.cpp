@@ -13,7 +13,7 @@ namespace luce {
 			return this->manager.get();
 		}
 
-		void FlowWindowContent::setToolBar(juce::Component* toolBar, double size) {
+		void FlowWindowContent::setToolBar(FlowComponent* toolBar, double size) {
 			this->removeToolBar();
 
 			if (!toolBar) { return; }

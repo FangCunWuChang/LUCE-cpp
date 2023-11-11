@@ -35,7 +35,7 @@ namespace luce {
 				FlowWindowHub::getInstance()->toolBarSize);
 		}
 
-		void FlowWindowHub::setToolBar(juce::Component* toolBar, double size) {
+		void FlowWindowHub::setToolBar(FlowComponent* toolBar, double size) {
 			FlowWindowHub::getInstance()->toolBar = toolBar;
 			FlowWindowHub::getInstance()->toolBarSize = size;
 
@@ -84,7 +84,7 @@ namespace luce {
 			}
 		}
 
-		void FlowWindowHub::autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list) {
+		void FlowWindowHub::autoLayout(const juce::String& layoutPath, const juce::Array<FlowComponent*>& list) {
 			/** Close All Windows */
 			FlowWindowHub::getInstance()->windows.clear();
 			FlowWindowHub::removeToolBar();
@@ -121,6 +121,43 @@ namespace luce {
 						list.getUnchecked(id), size);
 				}
 			}
+		}
+
+		void FlowWindowHub::saveLayout(const juce::String& layoutPath, const juce::Array<FlowComponent*>& list) {
+			auto layout = new juce::DynamicObject{};
+
+			/** ToolBar */
+			if (FlowWindowHub::getInstance()->toolBar) {
+				auto toolBar = new juce::DynamicObject{};
+
+				toolBar->setProperty("id", list.indexOf(FlowWindowHub::getInstance()->toolBar));
+				toolBar->setProperty("size", FlowWindowHub::getInstance()->toolBarSize);
+
+				layout->setProperty("toolBar", juce::var{ toolBar });
+			}
+
+			/** Windows List */
+			juce::Array<juce::var> windowList;
+			for (auto i : FlowWindowHub::getInstance()->windows) {
+				auto window = new juce::DynamicObject{};
+
+				window->setProperty("grid", i->getLayout(list));
+
+				windowList.add(juce::var{ window });
+			}
+			layout->setProperty("window", windowList);
+
+			juce::var layoutVar(layout);
+			
+			juce::File layoutFile = juce::File::getSpecialLocation(
+				juce::File::SpecialLocationType::currentExecutableFile).getParentDirectory().getChildFile(layoutPath);
+			juce::FileOutputStream layoutStream(layoutFile);
+			if (!layoutStream.openedOk()) { return; }
+
+			layoutStream.setPosition(0);
+			layoutStream.truncate();
+
+			juce::JSON::writeToStream(layoutStream, layoutVar);
 		}
 
 		void FlowWindowHub::setOpenGL(bool openGLOn) {

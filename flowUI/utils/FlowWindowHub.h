@@ -14,7 +14,7 @@ namespace luce {
 			static void addWindow(FlowWindow* window);
 			static void closeWindow(FlowWindow* window);
 
-			static void setToolBar(juce::Component* toolBar, double size);
+			static void setToolBar(FlowComponent* toolBar, double size);
 			static void removeToolBar();
 
 			static int getSize();
@@ -25,13 +25,14 @@ namespace luce {
 
 			static void setIcon(const juce::String& iconPath);
 
-			static void autoLayout(const juce::String& layoutPath, juce::Array<FlowComponent*> list);
+			static void autoLayout(const juce::String& layoutPath, const juce::Array<FlowComponent*>& list);
+			static void saveLayout(const juce::String& layoutPath, const juce::Array<FlowComponent*>& list);
 
 			static void setOpenGL(bool openGLOn);
 
 		private:
 			juce::OwnedArray<FlowWindow> windows;
-			juce::Component* toolBar = nullptr;
+			FlowComponent* toolBar = nullptr;
 			double toolBarSize = 0;
 			juce::Image iconTemp;
 			bool openGLOn = false;

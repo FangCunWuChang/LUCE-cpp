@@ -139,7 +139,7 @@ namespace luce {
 			this->updateComponents();
 		}
 
-		void FlowContainer::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+		void FlowContainer::autoLayout(const juce::var& grid, const juce::Array<FlowComponent*>& list) {
 			/** Error */
 			if (!grid.isObject()) { jassertfalse;  return; }
 
@@ -176,6 +176,20 @@ namespace luce {
 
 			/** Refresh */
 			this->updateComponents();
+		}
+
+		const juce::var FlowContainer::getLayout(const juce::Array<FlowComponent*>& list) const {
+			auto grid = new juce::DynamicObject{};
+
+			grid->setProperty("vertical", this->isVertical);
+
+			juce::Array<juce::var> idList;
+			for (auto i : this->components) {
+				idList.add(list.indexOf(i));
+			}
+			grid->setProperty("id", idList);
+
+			return juce::var{ grid };
 		}
 
 		void FlowContainer::resized() {

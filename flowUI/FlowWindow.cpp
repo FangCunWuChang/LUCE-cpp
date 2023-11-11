@@ -111,6 +111,25 @@ namespace luce {
 		return 0;
 	}
 
+	LUCE_METHOD(saveLayout) {
+		auto path = juce::String::fromUTF8(luaL_checkstring(L, 1));
+
+		juce::Array<FlowComponent*> list;
+		lua_pushvalue(L, 2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2)) {
+			auto& pComp = LUCE_CHECK_USERDATA(L, -1, FlowComponent);
+			list.add(pComp);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+
+		FlowWindowHub::saveLayout(path, list);
+
+		return 0;
+	}
+
 	LUCE_METHOD(setOpenGL) {
 		FlowWindowHub::setOpenGL(lua_toboolean(L, 1));
 		return 0;
@@ -124,6 +143,7 @@ namespace luce {
 		setToolBar,
 		removeToolBar,
 		autoLayout,
+		saveLayout,
 		setOpenGL
 	);
 

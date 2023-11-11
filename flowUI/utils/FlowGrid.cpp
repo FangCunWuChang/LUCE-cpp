@@ -510,7 +510,7 @@ namespace luce {
 			return result;
 		}
 
-		void FlowGrid::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+		void FlowGrid::autoLayout(const juce::var& grid, const juce::Array<FlowComponent*>& list) {
 			/** Error */
 			if (!grid.isObject()) { jassertfalse;  return; }
 			
@@ -585,6 +585,38 @@ namespace luce {
 
 			/** Refresh */
 			this->updateComponents();
+		}
+
+		const juce::var FlowGrid::getLayout(const juce::Array<FlowComponent*>& list) const {
+			auto grid = new juce::DynamicObject{};
+
+			grid->setProperty("vertical", this->isVertical);
+
+			juce::Array<juce::var> sizeList;
+			{
+				double totalSize = 0;
+				for (auto i : this->units) {
+					totalSize += this->isVertical ? i->getHeight() : i->getWidth();
+				}
+				for (auto i : this->units) {
+					sizeList.add(
+						(this->isVertical ? i->getHeight() : i->getWidth()) / totalSize);
+				}
+			}
+			grid->setProperty("size", sizeList);
+
+			juce::Array<juce::var> unitList;
+			for (auto i : this->units) {
+				if (auto ptr = dynamic_cast<FlowContainer*>(i)) {
+					unitList.add(ptr->getLayout(list));
+				}
+				else if (auto ptr = dynamic_cast<FlowGrid*>(i)) {
+					unitList.add(ptr->getLayout(list));
+				}
+			}
+			grid->setProperty("unit", unitList);
+
+			return juce::var{ grid };
 		}
 
 		bool FlowGrid::addUniqueUnit(FlowContainer* container) {

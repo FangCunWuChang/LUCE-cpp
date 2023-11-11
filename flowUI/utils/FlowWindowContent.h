@@ -15,7 +15,7 @@ namespace luce {
 
 		private:
 			friend class FlowWindow;
-			void setToolBar(juce::Component* toolBar, double size);
+			void setToolBar(FlowComponent* toolBar, double size);
 			void removeToolBar();
 
 		private:
@@ -24,7 +24,7 @@ namespace luce {
 		private:
 			FlowWindow* const parent = nullptr;
 			std::unique_ptr<FlowManager> manager = nullptr;
-			juce::Component* toolBar = nullptr;
+			FlowComponent* toolBar = nullptr;
 			double toolBarSize = 0;
 
 			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FlowWindowContent)

@@ -124,8 +124,12 @@ namespace luce {
 			return this->getManager()->findComponent(comp);
 		}
 
-		void FlowWindow::autoLayout(const juce::var& grid, juce::Array<FlowComponent*> list) {
+		void FlowWindow::autoLayout(const juce::var& grid, const juce::Array<FlowComponent*>& list) {
 			this->getManager()->autoLayout(grid, list);
+		}
+
+		const juce::var FlowWindow::getLayout(const juce::Array<FlowComponent*>& list) const {
+			return this->getManager()->getLayout(list);
 		}
 
 		void FlowWindow::setOpenGL(bool openGLOn) {
@@ -170,7 +174,7 @@ namespace luce {
 			}
 		}
 
-		void FlowWindow::setToolBar(juce::Component* toolBar, double size) {
+		void FlowWindow::setToolBar(FlowComponent* toolBar, double size) {
 			dynamic_cast<FlowWindowContent*>(this->getContentComponent())
 				->setToolBar(toolBar, size);
 		}
